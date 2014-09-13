@@ -152,7 +152,6 @@ function debug_self_command(command)
 	if fulldebug then
 		if fulldebug.count == 11 then
 			add_to_chat(7,"Command= "..tostring(command))
-			add_to_chat(7,"Status= "..tostring(old))
 		end
 	end
 end
