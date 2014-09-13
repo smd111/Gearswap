@@ -37,5 +37,6 @@ Features------------------------------------------------------------
 --NIN tool unboxing included for main and sub job
 --COR card uncasing included
 --auto ammo unsacking included for jobs that can use the specific ammo
---save specific settings between jobs and play times
+--save specific settings between jobs and play sessions
 --display showing user settings based on jobs and includes in use
+--it will automatically change your weaponskill if your using a weapon like Molva Maul to the 13ws unlocked weaponskill
