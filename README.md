@@ -1,6 +1,12 @@
 SMD's Gearswap Include files
 -------------------------------------------------------------------
-Commands
+Setup--------------------------------------------------------------
+
+you need to my basic.lua which has all the required info in the file
+at the top of Extras.lua are some toggles you can change on your own thay are self explanatory
+
+-------------------------------------------------------------------
+Commands-----------------------------------------------------------
 
 --- basic include commands ---
 toggledisplay toggles on and off the display(only when using the Display include)
@@ -24,4 +30,11 @@ conquestneck cycles you through the conquest neck gear types
 conquestring cycles you through the conquest ring gear types
 conquestneckchange toggles on and off weather you want to change neck gear to neck conquest gear
 conquestringchange toggles on and off weather you want to change ring gear to ring conquest gear
+
+--------------------------------------------------------------------
+Features------------------------------------------------------------
+
+--NIN tool unboxing included for main and sub job
+--COR card uncasing included
+--auto ammo unsacking included for jobs that can use the specific ammo
 

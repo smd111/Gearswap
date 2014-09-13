@@ -1,7 +1,14 @@
+--[[How To Use:
+	1. make sure that the files for this include setup is in the gearswap/data/<players name> directory
+	2. to create a new job file just coppy this and rename it to the correct job name I.e. for Dancer name it DNC.lua
+	3. add your gearsets in to function get_sets ware shown
+	4. add rules to each function below ware shown
+	5. your ready to use
+	notes: i have included basic layouts for 3 gearsets Engaged,Idle,Resting]]
 include('includes/Extras.lua')
 function get_sets()
-	jobneck = ""
-	jobring = ""
+	jobneck = "" --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
+	jobring = "" --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
 	sets.Engaged = {
 		main="",
 		sub="",
@@ -75,6 +82,9 @@ function status_change(new,old)
 	if _G['status_change_include'] then
 		_G['status_change_include'](new,old)
 	end
+	----------------------------------------
+	--you can change the below to anything you want
+	----------------------------------------
 	if new=='Engaged' then
 		equip(sets.Engaged)
 	elseif new=='Idle' then
@@ -154,7 +164,7 @@ function aftercast(spell)
 	if _G['aftercast_include'] then
 		_G['aftercast_include'](spell)
 	end
-	equip(sets[player.status])
+	equip(sets[player.status])--you can change this but the section above must be above your last gear change like it is now
 end
 function pet_aftercast(spell)
 	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
@@ -164,7 +174,7 @@ function pet_aftercast(spell)
 	if _G['pet_aftercast_include'] then
 		_G['pet_aftercast_include'](spell)
 	end
-	equip(sets[player.status])
+	equip(sets[player.status])--you can change this but the section above must be above your last gear change like it is now
 end
 function self_command(command)
 	---------------------------------------
