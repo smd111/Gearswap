@@ -37,4 +37,5 @@ Features------------------------------------------------------------
 --NIN tool unboxing included for main and sub job
 --COR card uncasing included
 --auto ammo unsacking included for jobs that can use the specific ammo
-
+--save specific settings between jobs and play times
+--display showing user settings based on jobs and includes in use
