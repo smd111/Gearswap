@@ -2,7 +2,7 @@ SMD's Gearswap Include files
 -------------------------------------------------------------------
 Setup--------------------------------------------------------------
 
-you need to my basic.lua which has all the required info in the file
+you need to use my basic.lua which has all the required info in the file
 at the top of Extras.lua are some toggles you can change on your own thay are self explanatory
 
 -------------------------------------------------------------------
