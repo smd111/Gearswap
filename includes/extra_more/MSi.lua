@@ -1,5 +1,9 @@
+if not Changestaff then
 	Changestaff = false --Togle with //gs c tchangestaff (true for change staves, false for do not change staves)
+end
+if not Usestaff then
 	Usestaff = 'Atk' --Togle with //gs c tstaveuse (Atk for Attack Staves, Acc for Accuracy Staves)
+end
 
 	sets.precast = {}
 	sets.precast.Atk = {

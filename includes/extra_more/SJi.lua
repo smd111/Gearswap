@@ -1,5 +1,9 @@
+if not Stepmax then
 	Stepmax = 1
+end
+if not Stopsteps then
 	Stopsteps = false
+end
 	Hwauto = false
 
 if gearswap.pathsearch({'includes/sjob/sub_job_'..player.sub_job..'.lua'}) then

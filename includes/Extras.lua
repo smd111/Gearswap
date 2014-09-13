@@ -1,6 +1,7 @@
 --[[how to use(all go at the top of the functions)
 	put extras_main() near the bottom of your getsets function
-	put spell_stopper(spell) in pretarget and precast these will stop spells/gear swaps if the spell is in recast/another spell is in midcast/if sleep is active/and stop gear swaps if a Teleport spell is used
+	put spell_stopper(spell) in pretarget and precast these will stop spells/gear swaps if the spell is in recast/another spell
+		is in midcast/if sleep is active/and stop gear swaps if a Teleport spell is used
 	put gearchang_stopper(spell) in midcast, pet_midcast, aftercast and pet_aftercast stops gear changes if sleep is active
 	put sleepset(name,gain) in buff_change changes to sleep gear/locks all necessary gear when sleep is active]]
 --include setup -------------------------------------------------------------------------------------------------------------------
@@ -36,55 +37,60 @@ autolock = false
 lvlwatch = true
 box = {}
 box.pos = {}
+Conquest = {}
+Conquest.neck = {}
+Conquest.ring = {}
+partynames = {}
 
-if Disable_All then
-	return
-end
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
-if gearswap.pathsearch({'Data/job_'..player.main_job..'var.lua'}) then
-	include('Data/job_'..player.main_job..'var.lua')
+if gearswap.pathsearch({'Saves/job_'..player.main_job..'var.lua'}) then
+	include('Saves/job_'..player.main_job..'var.lua')
 end
------------------------------------------------------------------------------------------------------------------------------------
 if gearswap.pathsearch({'includes/map.lua'}) then
 	include('includes/map.lua')
 else
 	add_to_chat(7,"Must Have includes/map.lua To Use Extras.lua")
 	return
 end
-if MJi and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'}) then
+-----------------------------------------------------------------------------------------------------------------------------------
+if MJi and not Disable_All and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'}) then
 	include('includes/mjob/main_job_'..player.main_job..'.lua')
 end
-if SJi and gearswap.pathsearch({'includes/extra_more/SJi.lua'}) then
+if SJi and not Disable_All and gearswap.pathsearch({'includes/extra_more/SJi.lua'}) then
 	include('includes/extra_more/SJi.lua')
 end
-if MSi and windower.wc_match(player.main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
+if MSi and not Disable_All and windower.wc_match(player.main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and 
+														gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
 	include('includes/extra_more/MSi.lua')
 end
-if WSi and gearswap.pathsearch({'includes/extra_more/WSi.lua'}) then
+if WSi and not Disable_All and gearswap.pathsearch({'includes/extra_more/WSi.lua'}) then
 	include('includes/extra_more/WSi.lua')
 end
-if Ammo and windower.wc_match(player.main_job, "WAR|RDM|THF|PLD|DRK|BST|RNG|SAM|NIN|COR") and gearswap.pathsearch({'includes/extra_more/Ammo.lua'}) then
+if Ammo and not Disable_All and windower.wc_match(player.main_job, "WAR|RDM|THF|PLD|DRK|BST|RNG|SAM|NIN|COR") and 
+															gearswap.pathsearch({'includes/extra_more/Ammo.lua'}) then
 	include('includes/extra_more/Ammo.lua')
 end
-if Special_Weapons and gearswap.pathsearch({'includes/extra_more/Special_Weapons.lua'}) then
+if Special_Weapons and not Disable_All and gearswap.pathsearch({'includes/extra_more/Special_Weapons.lua'}) then
 	include('includes/extra_more/Special_Weapons.lua')
 end
-if Conquest_Gear and gearswap.pathsearch({'includes/extra_more/Conquest_Gear.lua'}) then
+if Conquest_Gear and not Disable_All and gearswap.pathsearch({'includes/extra_more/Conquest_Gear.lua'}) then
 	include('includes/extra_more/Conquest_Gear.lua')
 end
-if File_Write and gearswap.pathsearch({'includes/extra_more/File_Write.lua'}) then
-	include('includes/extra_more/File_Write.lua')
-end
-if Registered_Events and gearswap.pathsearch({'includes/extra_more/Registered_Events.lua'}) then
+if Registered_Events and not Disable_All and gearswap.pathsearch({'includes/extra_more/Registered_Events.lua'}) then
 	include('includes/extra_more/Registered_Events.lua')
 end
-if Debug and gearswap.pathsearch({'includes/extra_more/Debug.lua'}) then
+if Debug and not Disable_All and gearswap.pathsearch({'includes/extra_more/Debug.lua'}) then
 	include('includes/extra_more/Debug.lua')
 end
-if Display and gearswap.pathsearch({'includes/extra_more/Display.lua'}) then
+if Display and not Disable_All and gearswap.pathsearch({'includes/extra_more/Display.lua'}) then
 	include('includes/extra_more/Display.lua')
 end
-
+if File_Write and not Disable_All and gearswap.pathsearch({'includes/extra_more/File_Write.lua'}) then
+	include('includes/extra_more/File_Write.lua')
+end
+if Disable_All then
+	return
+end
 ----------------------------------------------------------------------------------------------------------------------------------
 function file_unload_include()
 	if _G['main_job_file_unload'] then
@@ -95,6 +101,9 @@ function file_unload_include()
 	end
 end
 function status_change_include(new,old)
+	if _G['debug_status_change'] then
+		_G['debug_status_change'](new,old)
+	end
 	autoselftarget(new,old)
 	if _G['main_job_status_change'] then
 		_G['main_job_status_change'](new,old)
@@ -104,6 +113,9 @@ function status_change_include(new,old)
 	end
 end
 function filtered_action_include(spell)
+	if _G['debug_filtered_action'] then
+		_G['debug_filtered_action'](spell)
+	end
 	if _G['main_job_filtered_action'] then
 		_G['main_job_filtered_action'](spell)
 	end
@@ -112,6 +124,9 @@ function filtered_action_include(spell)
 	end
 end
 function pretarget_include(spell)
+	if _G['debug_pretarget'] then
+		_G['debug_pretarget'](spell)
+	end
 	if _G['main_job_pretarget'] then
 		_G['main_job_pretarget'](spell)
 	end
@@ -123,6 +138,9 @@ function pretarget_include(spell)
 	end
 end
 function precast_include(spell)
+	if _G['debug_precast'] then
+		_G['debug_precast'](spell)
+	end
 	if _G['equip_elemental_ws_Gear'] then
 		_G['equip_elemental_ws_Gear'](spell)
 	end
@@ -140,6 +158,9 @@ function precast_include(spell)
 	end
 end
 function buff_change_include(name,gain)
+	if _G['debug_buff_change'] then
+		_G['debug_buff_change'](name,gain)
+	end
 	if _G['main_job_buff_change'] then
 		_G['main_job_buff_change'](name,gain)
 	end
@@ -148,6 +169,9 @@ function buff_change_include(name,gain)
 	end
 end
 function midcast_include(spell)
+	if _G['debug_midcast'] then
+		_G['debug_midcast'](spell)
+	end
 	if _G['main_job_midcast'] then
 		_G['main_job_midcast'](spell)
 	end
@@ -156,6 +180,9 @@ function midcast_include(spell)
 	end
 end
 function aftercast_include(spell)
+	if _G['debug_aftercast'] then
+		_G['debug_aftercast'](spell)
+	end
 	if _G['main_job_aftercast'] then
 		_G['main_job_aftercast'](spell)
 	end
@@ -164,6 +191,9 @@ function aftercast_include(spell)
 	end
 end
 function self_command_include(command)
+	if _G['debug_self_command'] then
+		_G['debug_self_command'](command)
+	end
 	if _G['extracommands'] then
 		_G['extracommands'](command)
 	end
@@ -187,6 +217,9 @@ function self_command_include(command)
 	end
 end
 function pet_change_include(spell)
+	if _G['debug_pet_change'] then
+		_G['debug_pet_change'](spell)
+	end
 	if _G['main_job_pet_change'] then
 		_G['main_job_pet_change'](spell)
 	end
@@ -195,6 +228,9 @@ function pet_change_include(spell)
 	end
 end
 function pet_midcast_include(spell)
+	if _G['debug_pet_midcast'] then
+		_G['debug_pet_midcast'](spell)
+	end
 	if _G['main_job_pet_midcast'] then
 		_G['main_job_pet_midcast'](spell)
 	end
@@ -203,14 +239,17 @@ function pet_midcast_include(spell)
 	end
 end
 function pet_aftercast_include(spell)
-	if _G['main_job_pet_aftercast_'] then
-		_G['main_job_pet_aftercast_'](spell)
+	if _G['debug_pet_aftercast'] then
+		_G['debug_pet_aftercast'](spell)
 	end
-	if _G['sub_job_pet_aftercast_'] then
-		_G['sub_job_pet_aftercast_'](spell)
+	if _G['main_job_pet_aftercast'] then
+		_G['main_job_pet_aftercast'](spell)
+	end
+	if _G['sub_job_pet_aftercast'] then
+		_G['sub_job_pet_aftercast'](spell)
 	end
 end
---extra functions--
+--extra functions-----------------------------------------------------------------------------------------------------------------
 --Auto Self Target After Battle
 function autoselftarget(new,old)
 	if new == 'Idle' and old == 'Engaged' and autotarget then
@@ -221,27 +260,22 @@ end
 function extracommands(command)
 	if command == "autotarget" then
 		autotarget = not autotarget
-		--add_to_chat(7,'----- Will ' .. (autotarget and '' or 'Not ') .. 'Auto Self Target After Battle -----')
 		initialize(window, box)
 	end
 	if command == "autostoponskillcaptype" and Registered_Events then
 		stopskill_count = (stopskill_count % #stopskilltyp) + 1
-		--add_to_chat(7,'----- Auto Stop Bots On '..stopskilltyp[stopskill_count]..' Cap -----')
 	end
 	if command == "autostoponskillcap" and Registered_Events then
 		stoponskillcap = not stoponskillcap
-		--add_to_chat(7,'----- Will ' .. (stoponskillcap and '' or 'Not ') .. 'Auto Stop Bots On Cap Of Skill '..string.gsub(stopskilltyp[stopskill_count], "_", " ")..' -----')
 		initialize(window, box)
 	end
 	if command == "toggledisplay" and Display then
-		if not window:visible() then
-			add_to_chat(7,"window:visible()="..tostring(window:visible()))
-			window:show()
-			window_hidden = false
-		else
-			add_to_chat(7,"window:visible()="..tostring(window:visible()))
+		if window:visible() then
 			window:hide()
 			window_hidden = true
+		else
+			window:show()
+			window_hidden = false
 		end
 	end
 end
@@ -354,7 +388,6 @@ function sleepset(name,gain)
 		end
 	end
 end
-
 function main_job_change()
 	if _G['file_write'] then
 		_G['file_write'](true)
@@ -363,7 +396,7 @@ end
 if _G['file_write'] then
 	_G['file_write'](true)
 end
---has buff functions--
+--has buff functions--------------------------------------------------------------------------------------------------------------
 function has_any_buff_of(buff_set)
     return buff_set:any(has_buff())
 end

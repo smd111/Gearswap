@@ -1,24 +1,26 @@
-	conquestalways = S{"Al'Taieu","Auroral Updraft","Empyreal Paradox","The Garden of Ru'Hmet","Grand Palace of Hu'Xzoi","Apollyon","Temenos","Hall of Transference"}
-	Conquest = {
-		neck = {
-			change = false,
-			case = {"Mage","Tank","Normal"},
-			case_id = 1,
-			Mage = {[1] = "Rep.Gold Medal", [2] = jobneck},
-			Tank = {[1] = "Windurstian Scarf", [2] = jobneck},
-			Normal = {[1] = "Grand Temple Knight's Collar",[2] = jobneck},
-			},
-		ring = {
-			change = false,
-			case = {"Mage","Tank","Normal"},
-			case_id = 1,
-			Mage = {[1] = "Grand Knight's Ring", [2] = jobring},
-			Tank = {[1] = "Patriarch Protector's Ring",[2] = jobring},
-			Normal = {[1] = "Gold Musketeer's Ring",[2] = jobring},
-			},
-		}
-	neckid = 2
-	ringid = 2
+conquestalways = S{"Al'Taieu","Auroral Updraft","Empyreal Paradox","The Garden of Ru'Hmet","Grand Palace of Hu'Xzoi","Apollyon","Temenos","Hall of Transference"}
+Conquest.neck.case = {"Mage","Tank","Normal"}
+Conquest.neck.Mage = {[1] = "Rep.Gold Medal", [2] = jobneck}
+Conquest.neck.Tank = {[1] = "Windurstian Scarf", [2] = jobneck}
+Conquest.neck.Normal = {[1] = "Grand Temple Knight's Collar",[2] = jobneck}
+if not Conquest.neck.change then
+	Conquest.neck.change = false
+end
+if not Conquest.neck.case_id then
+	Conquest.neck.case_id = 1
+end
+Conquest.ring.case = {"Mage","Tank","Normal"}
+Conquest.ring.Mage = {[1] = "Grand Knight's Ring", [2] = jobring}
+Conquest.ring.Tank = {[1] = "Patriarch Protector's Ring",[2] = jobring}
+Conquest.ring.Normal = {[1] = "Gold Musketeer's Ring",[2] = jobring}
+if not Conquest.ring.change then
+	Conquest.ring.change = false
+end
+if not Conquest.ring.case_id then
+	Conquest.ring.case_id = 1
+end
+neckid = 2
+ringid = 2
 
 function conquest_Gear()
 	if has_any_buff_of(S{"Signet","Sanction","Sigil","Prowess"}) then
@@ -108,22 +110,14 @@ end
 function conquest_Gear_command(command)
 	if command == "conquestneck" then
 		Conquest.neck.case_id = (Conquest.neck.case_id % #Conquest.neck.case) + 1
-		add_to_chat(7,'Conquest Neck Type = ' .. tostring(Conquest.neck.case[Conquest.neck.case_id]))
-		--updatedisplay()
 	end
 	if command == "conquestring" then
 		Conquest.ring.case_id = (Conquest.ring.case_id % #Conquest.ring.case) + 1
-		add_to_chat(7,'Conquest Ring Type = ' .. tostring(Conquest.ring.case[Conquest.ring.case_id]))
-		--updatedisplay()
 	end
 	if command == 'conquestneckchange' then
 		Conquest.neck.change = not Conquest.neck.change
-		add_to_chat(7, '----- Conquest Neck Will ' .. (Conquest.neck.change and '' or 'Not ') .. 'Change -----')
-		--updatedisplay()
 	end
 	if command == 'conquestringchange' then
 		Conquest.ring.change = not Conquest.ring.change
-		add_to_chat(7, '----- Conquest Neck Will ' .. (Conquest.ring.change and '' or 'Not ') .. 'Change -----')
-		--updatedisplay()
 	end
 end

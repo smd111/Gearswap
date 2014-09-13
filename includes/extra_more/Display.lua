@@ -7,7 +7,7 @@ box.bg.alpha = 100
 box.flags = {}
 box.flags.draggable = true
 window_hidden = false
---display functions--
+--display functions---------------------------------------------------------------------------------------------------------------
 --Display Creator
 window = texts.new(box)
 function initialize(text, settings)

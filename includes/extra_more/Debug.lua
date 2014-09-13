@@ -24,16 +24,14 @@ function debug_status_change(new,old)
 		end
 	end
 end
-
 function debug_pet_change(pet,gain)
 	if fulldebug then
 		if fulldebug.count == 2 or fulldebug.count == 11 then
-			add_to_chat(7,"Pet= "..pet..", Gain= "..tostring(gain))
+			add_to_chat(7,"Pet= "..tostring(pet)..", Gain= "..tostring(gain))
 			add_to_chat(7,"Pet Element= "..tostring(pet.element))
 		end
 	end
 end
-
 function debug_filtered_action(spell)
 	if fulldebug then
 		if fulldebug.count == 3 or fulldebug.count == 11 then
@@ -48,7 +46,6 @@ function debug_filtered_action(spell)
 		end
 	end
 end
-
 function debug_pretarget(spell)
 	if fulldebug then
 		if fulldebug.count == 4 or fulldebug.count == 11 then
@@ -63,7 +60,6 @@ function debug_pretarget(spell)
 		end
 	end
 end
-
 function debug_precast(spell)
 	if fulldebug then
 		if fulldebug.count == 5 or fulldebug.count == 11 then
@@ -78,15 +74,13 @@ function debug_precast(spell)
 		end
 	end
 end
-
 function debug_buff_change(name,gain)
 	if fulldebug then
 		if fulldebug.count == 6 or fulldebug.count == 11 then
-			add_to_chat(7,"Buff= "..name..', Gain='..tostring(gain))
+			add_to_chat(7,"Buff= "..tostring(name)..', Gain='..tostring(gain))
 		end
 	end
 end
-
 function debug_midcast(spell)
 	if fulldebug then
 		if fulldebug.count == 7 or fulldebug.count == 11 then
@@ -102,7 +96,6 @@ function debug_midcast(spell)
 	end
 	return
 end
-
 function debug_pet_midcast(spell)
 	if fulldebug then
 		if fulldebug.count == 8 or fulldebug.count == 11 then
@@ -117,7 +110,6 @@ function debug_pet_midcast(spell)
 		end
 	end
 end
-
 function debug_aftercast(spell)
 	if fulldebug then
 		if fulldebug.count == 9 or fulldebug.count == 11 then
@@ -132,7 +124,6 @@ function debug_aftercast(spell)
 		end
 	end
 end
-
 function debug_pet_aftercast(spell)
 	if fulldebug then
 		if fulldebug.count == 10 or fulldebug.count == 11 then
@@ -147,9 +138,7 @@ function debug_pet_aftercast(spell)
 		end
 	end
 end
-
 function debug_self_command(command)
-	--add_to_chat(7,"Command= "..tostring(command))
 	if command == 'Debug' then
 		fulldebug = not fulldebug
 		send_command('clear log')
@@ -159,5 +148,11 @@ function debug_self_command(command)
 	if command == 'Debugtype' then
 		fulldebug.count = (fulldebug.count % #fulldebug.type) + 1
 		add_to_chat(7,'Debug Mode Type = ' .. tostring(fulldebug.type[fulldebug.count]))
+	end
+	if fulldebug then
+		if fulldebug.count == 11 then
+			add_to_chat(7,"Command= "..tostring(command))
+			add_to_chat(7,"Status= "..tostring(old))
+		end
 	end
 end

@@ -1,4 +1,6 @@
-specialweaponwscount = 0
+if not specialweaponwscount then
+	specialweaponwscount = 0
+end
 function special_weapon()
 	if spell.type == "WeaponSkill" then
 		if player.equipment.main == "Molva Maul" then --club
