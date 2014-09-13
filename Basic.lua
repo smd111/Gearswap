@@ -1,7 +1,7 @@
 include('includes/Extras.lua')
 function get_sets()
-	jobneck = { name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}}
-	jobring = {"Rajas Ring"}
+	jobneck = ""
+	jobring = ""
 	sets.Engaged = {
 		main="",
 		sub="",
