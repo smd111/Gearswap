@@ -23,9 +23,4 @@ function sub_jobs_command(command)
 		Hwauto = not Hwauto
 		add_to_chat(7, '----- Auto Healing Waltz Is ' .. (Hwauto and 'Enabled' or 'Disabled'))
 	end
-	if command == 'xpring' then
-		equip(sets.xpring)
-		disable("right_ring")
-		send_command('wait 15.0,/item "Undecennial Ring" <me>,gs enable all')
-	end
 end

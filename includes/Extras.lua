@@ -31,10 +31,9 @@ Debug = false
 Display = true
 
 --Variable Set-up -----------------------------------------------------------------------------------------------------------------
-tool_bag_id = 0
-autotarget = false
-autolock = false
+tool_bag_id = 
 lvlwatch = true
+autolock = false
 box = {}
 box.pos = {}
 Conquest = {}
@@ -104,7 +103,6 @@ function status_change_include(new,old)
 	if _G['debug_status_change'] then
 		_G['debug_status_change'](new,old)
 	end
-	autoselftarget(new,old)
 	if _G['main_job_status_change'] then
 		_G['main_job_status_change'](new,old)
 	end
@@ -250,24 +248,9 @@ function pet_aftercast_include(spell)
 	end
 end
 --extra functions-----------------------------------------------------------------------------------------------------------------
---Auto Self Target After Battle
-function autoselftarget(new,old)
-	if new == 'Idle' and old == 'Engaged' and autotarget then
-		--send_command('wait 1.0;input /target '..player.name..';wait 1.0;setkey ctrl down;setkey n down;wait .1;setkey n up;setkey ctrl up')
-		send_command('wait 1.0;input /target '..player.name)
-	end
-end
 function extracommands(command)
-	if command == "autotarget" then
-		autotarget = not autotarget
-		initialize(window, box)
-	end
-	if command == "autostoponskillcaptype" and Registered_Events then
-		stopskill_count = (stopskill_count % #stopskilltyp) + 1
-	end
-	if command == "autostoponskillcap" and Registered_Events then
-		stoponskillcap = not stoponskillcap
-		initialize(window, box)
+	if command == "tautolock" and Display then
+		autolock = not autolock
 	end
 	if command == "toggledisplay" and Display then
 		if window:visible() then
