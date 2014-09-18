@@ -31,7 +31,7 @@ Debug = false
 Display = true
 
 --Variable Set-up -----------------------------------------------------------------------------------------------------------------
-tool_bag_id = 
+tool_bag_id = 0
 lvlwatch = true
 autolock = false
 box = {}
@@ -40,6 +40,12 @@ Conquest = {}
 Conquest.neck = {}
 Conquest.ring = {}
 partynames = {}
+equip_status_change = {}
+equip_pre_cast = {}
+equip_mid_cast = {}
+equip_after_cast = {}
+equip_petmidcast = {}
+equip_petaftercast = {}
 
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
 if gearswap.pathsearch({'Saves/job_'..player.main_job..'var.lua'}) then
@@ -49,45 +55,6 @@ if gearswap.pathsearch({'includes/map.lua'}) then
 	include('includes/map.lua')
 else
 	add_to_chat(7,"Must Have includes/map.lua To Use Extras.lua")
-	return
-end
------------------------------------------------------------------------------------------------------------------------------------
-if MJi and not Disable_All and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'}) then
-	include('includes/mjob/main_job_'..player.main_job..'.lua')
-end
-if SJi and not Disable_All and gearswap.pathsearch({'includes/extra_more/SJi.lua'}) then
-	include('includes/extra_more/SJi.lua')
-end
-if MSi and not Disable_All and windower.wc_match(player.main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and 
-														gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
-	include('includes/extra_more/MSi.lua')
-end
-if WSi and not Disable_All and gearswap.pathsearch({'includes/extra_more/WSi.lua'}) then
-	include('includes/extra_more/WSi.lua')
-end
-if Ammo and not Disable_All and windower.wc_match(player.main_job, "WAR|RDM|THF|PLD|DRK|BST|RNG|SAM|NIN|COR") and 
-															gearswap.pathsearch({'includes/extra_more/Ammo.lua'}) then
-	include('includes/extra_more/Ammo.lua')
-end
-if Special_Weapons and not Disable_All and gearswap.pathsearch({'includes/extra_more/Special_Weapons.lua'}) then
-	include('includes/extra_more/Special_Weapons.lua')
-end
-if Conquest_Gear and not Disable_All and gearswap.pathsearch({'includes/extra_more/Conquest_Gear.lua'}) then
-	include('includes/extra_more/Conquest_Gear.lua')
-end
-if Registered_Events and not Disable_All and gearswap.pathsearch({'includes/extra_more/Registered_Events.lua'}) then
-	include('includes/extra_more/Registered_Events.lua')
-end
-if Debug and not Disable_All and gearswap.pathsearch({'includes/extra_more/Debug.lua'}) then
-	include('includes/extra_more/Debug.lua')
-end
-if Display and not Disable_All and gearswap.pathsearch({'includes/extra_more/Display.lua'}) then
-	include('includes/extra_more/Display.lua')
-end
-if File_Write and not Disable_All and gearswap.pathsearch({'includes/extra_more/File_Write.lua'}) then
-	include('includes/extra_more/File_Write.lua')
-end
-if Disable_All then
 	return
 end
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -109,6 +76,10 @@ function status_change_include(new,old)
 	if _G['sub_job_status_change'] then
 		_G['sub_job_status_change'](new,old)
 	end
+	if _G['conquest_Gear'] then
+		_G['conquest_Gear']()
+	end
+	equip(equip_status_change)
 end
 function filtered_action_include(spell)
 	if _G['debug_filtered_action'] then
@@ -139,21 +110,19 @@ function precast_include(spell)
 	if _G['debug_precast'] then
 		_G['debug_precast'](spell)
 	end
-	if _G['equip_elemental_ws_Gear'] then
-		_G['equip_elemental_ws_Gear'](spell)
-	end
-	if _G['equip_elemental_magic_staves'] then
-		_G['equip_elemental_magic_staves'](spell)
-	end
-	if _G['equip_elemental_magic_obi'] and sets.obi then
-		_G['equip_elemental_magic_obi'](spell)
-	end
 	if _G['main_job_precast'] then
 		_G['main_job_precast'](spell)
 	end
 	if _G['sub_job_precast'] then
 		_G['sub_job_precast'](spell)
 	end
+	if _G['equip_elemental_ws_Gear'] then
+		_G['equip_elemental_ws_Gear'](spell)
+	end
+	if _G['conquest_Gear'] then
+		_G['conquest_Gear']()
+	end
+	equip(equip_pre_cast)
 end
 function buff_change_include(name,gain)
 	if _G['debug_buff_change'] then
@@ -176,6 +145,16 @@ function midcast_include(spell)
 	if _G['sub_job_midcast'] then
 		_G['sub_job_midcast'](spell)
 	end
+	if _G['conquest_Gear'] then
+		_G['conquest_Gear']()
+	end
+	if _G['equip_elemental_magic_staves'] then
+		_G['equip_elemental_magic_staves'](spell)
+	end
+	if _G['equip_elemental_magic_obi'] and sets.obi then
+		_G['equip_elemental_magic_obi'](spell)
+	end
+	equip(equip_mid_cast)
 end
 function aftercast_include(spell)
 	if _G['debug_aftercast'] then
@@ -187,6 +166,10 @@ function aftercast_include(spell)
 	if _G['sub_job_aftercast'] then
 		_G['sub_job_aftercast'](spell)
 	end
+	if _G['conquest_Gear'] then
+		_G['conquest_Gear']()
+	end
+	equip(equip_after_cast)
 end
 function self_command_include(command)
 	if _G['debug_self_command'] then
@@ -235,6 +218,10 @@ function pet_midcast_include(spell)
 	if _G['sub_job_pet_midcast'] then
 		_G['sub_job_pet_midcast'](spell)
 	end
+	if _G['conquest_Gear'] then
+		_G['conquest_Gear']()
+	end
+	equip(equip_petmidcast)
 end
 function pet_aftercast_include(spell)
 	if _G['debug_pet_aftercast'] then
@@ -246,6 +233,49 @@ function pet_aftercast_include(spell)
 	if _G['sub_job_pet_aftercast'] then
 		_G['sub_job_pet_aftercast'](spell)
 	end
+	if _G['conquest_Gear'] then
+		_G['conquest_Gear']()
+	end
+	equip(equip_petaftercast)
+end
+-----------------------------------------------------------------------------------------------------------------------------------
+if MJi and not Disable_All and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'}) then
+	include('includes/mjob/main_job_'..player.main_job..'.lua')
+end
+if SJi and not Disable_All and gearswap.pathsearch({'includes/extra_more/SJi.lua'}) then
+	include('includes/extra_more/SJi.lua')
+end
+if MSi and not Disable_All and windower.wc_match(player.main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and 
+														gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
+	include('includes/extra_more/MSi.lua')
+end
+if WSi and not Disable_All and gearswap.pathsearch({'includes/extra_more/WSi.lua'}) then
+	include('includes/extra_more/WSi.lua')
+end
+if Ammo and not Disable_All and windower.wc_match(player.main_job, "WAR|RDM|THF|PLD|DRK|BST|RNG|SAM|NIN|COR") and 
+															gearswap.pathsearch({'includes/extra_more/Ammo.lua'}) then
+	include('includes/extra_more/Ammo.lua')
+end
+if Special_Weapons and not Disable_All and gearswap.pathsearch({'includes/extra_more/Special_Weapons.lua'}) then
+	include('includes/extra_more/Special_Weapons.lua')
+end
+if Conquest_Gear and not Disable_All and gearswap.pathsearch({'includes/extra_more/Conquest_Gear.lua'}) then
+	include('includes/extra_more/Conquest_Gear.lua')
+end
+if Registered_Events and not Disable_All and gearswap.pathsearch({'includes/extra_more/Registered_Events.lua'}) then
+	include('includes/extra_more/Registered_Events.lua')
+end
+if Debug and not Disable_All and gearswap.pathsearch({'includes/extra_more/Debug.lua'}) then
+	include('includes/extra_more/Debug.lua')
+end
+if Display and not Disable_All and gearswap.pathsearch({'includes/extra_more/Display.lua'}) then
+	include('includes/extra_more/Display.lua')
+end
+if File_Write and not Disable_All and gearswap.pathsearch({'includes/extra_more/File_Write.lua'}) then
+	include('includes/extra_more/File_Write.lua')
+end
+if Disable_All then
+	return
 end
 --extra functions-----------------------------------------------------------------------------------------------------------------
 function extracommands(command)
@@ -292,7 +322,7 @@ end
 function equip_elemental_magic_obi(spell)
 	if not Typ.abilitys:contains(spell.prefix) then
 		if spell.element == world.weather_element or spell.element == world.day_element then
-			equip(sets.obi[spell.element])
+			equip_mid_cast = set_combine(equip_mid_cast, sets.obi[spell.element])
 		end
 	end
 end
@@ -380,6 +410,9 @@ if _G['file_write'] then
 	_G['file_write'](true)
 end
 --has buff functions--------------------------------------------------------------------------------------------------------------
+function equipsets(set)
+	equip(set)
+end
 function has_any_buff_of(buff_set)
     return buff_set:any(has_buff())
 end

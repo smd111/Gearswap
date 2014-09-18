@@ -39,9 +39,9 @@ function equip_elemental_magic_staves(spell)
 	if Changestaff then
 		if Typ.spells:contains(spell.type) then
 			if Cure.spells:contains(spell.english) then
-				equip(sets.precast.Cur)
+				equip_mid_cast = set_combine(equip_mid_cast, sets.precast.Cur)
 			else
-				equip(sets.precast[Usestaff][spell.element])
+				equip_mid_cast = set_combine(equip_mid_cast, sets.precast[Usestaff][spell.element])
 			end
 		end
 	end

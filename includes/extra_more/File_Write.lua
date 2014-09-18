@@ -19,33 +19,4 @@ function file_write(a)
 			'')
 	end
 	file:close()
-	local fileb = io.open(lua_base_path..'data/'..player.name..'/Saves/last_job.lua',"w")
-	fileb:write(
-		'last_main_job = "'..tostring(player.main_job)..'"'..
-		'')
-	fileb:close()
-	if a then
-		local filea = io.open(lua_base_path..'data/'..player.name..'/Saves/registered_events.lua',"w")
-		if id_action then
-			filea:write(
-				'\nid_action = '..tostring(id_action)..
-				'')
-		end
-		if id_incoming_chunk then
-			filea:write(
-				'\nid_incoming_chunk = '..tostring(id_incoming_chunk)..
-				'')
-		end
-		if id_outgoing_chunk then
-			filea:write(
-				'\nid_outgoing_chunk = '..tostring(id_outgoing_chunk)..
-				'')
-		end
-		if id_target_change then
-			filea:write(
-				'\nid_target_change = '..tostring(id_target_change)..
-				'')
-		end
-		filea:close()
-	end
 end

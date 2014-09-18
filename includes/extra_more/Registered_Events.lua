@@ -2,19 +2,6 @@ require 'actions'
 partynames ={}
 seqid = string.char(0,0)
 
-if gearswap.pathsearch({'Data/registered_events.lua'}) then
-	include('Data/registered_events.lua')
-end
---clear old added events
--- if id_action then
-	-- windower.unregister_event(id_action)
--- end
--- if id_incoming_chunk then
-	-- windower.unregister_event(id_incoming_chunk)
--- end
--- if id_target_change then
-	-- windower.unregister_event(id_target_change)
--- end
 -- added events--
 -- Action event
 function event_action(act)
@@ -26,7 +13,14 @@ function event_action(act)
 		end
     end
 end
-id_action = windower.raw_register_event('action', event_action)
+windower.raw_register_event('action', event_action)
+-- LVL up event
+function level_up()
+	if _G['updatedisplay'] then
+		_G['updatedisplay']()
+	end
+end
+windower.raw_register_event('level up','level down', level_up)
 --Incoming Chunk Event(Packets Received)
 function incoming_chunk(id, data, modified, injected, blocked)
 	if triggered and data:sub(3,4) ~= seqid then
@@ -55,7 +49,7 @@ function incoming_chunk(id, data, modified, injected, blocked)
 	end
 	seqid = data:sub(3,4)
 end
-id_incoming_chunk = windower.raw_register_event('incoming chunk', incoming_chunk)
+windower.raw_register_event('incoming chunk', incoming_chunk)
 --Target Change Event
 function target_change(number)
     local target = windower.ffxi.get_mob_by_target("t")
@@ -76,4 +70,4 @@ function target_change(number)
         end
     end
 end
-id_target_change = windower.raw_register_event('target change', target_change)
+windower.raw_register_event('target change', target_change)

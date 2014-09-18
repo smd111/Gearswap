@@ -5,10 +5,13 @@
 	4. add rules to each function below ware shown
 	5. your ready to use
 	notes: i have included basic layouts for 3 gearsets Engaged,Idle,Resting]]
+jobneck = {neck=""} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
+jobring = {left_ring=""} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
+-- example:
+-- jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},}
+-- jobring = {left_ring="Prouesse Ring",}
 include('includes/Extras.lua')
 function get_sets()
-	jobneck = "" --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
-	jobring = "" --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
 	sets.Engaged = {
 		main="",
 		sub="",
@@ -79,18 +82,20 @@ function file_unload()
 	end
 end
 function status_change(new,old)
-	if _G['status_change_include'] then
-		_G['status_change_include'](new,old)
-	end
 	----------------------------------------
-	--you can change the below to anything you want
+	--put your status_change rules here
+	----------------------------------------
+	--equip example: equip_status_change = set_combine(equip_status_change, sets.Engaged)
 	----------------------------------------
 	if new=='Engaged' then
-		equip(sets.Engaged)
+		equip_status_change = set_combine(equip_status_change, sets.Engaged)
 	elseif new=='Idle' then
-		equip(sets.Idle)
+		equip_status_change = set_combine(equip_status_change, sets.Idle)
 	elseif new=='Resting' then
-		equip(sets.Resting)
+		equip_status_change = set_combine(equip_status_change, sets.Resting)
+	end
+	if _G['status_change_include'] then
+		_G['status_change_include'](new,old)
 	end
 end
 function pet_change(pet,gain)
@@ -123,6 +128,8 @@ function precast(spell)
 	---------------------------------------
 	--put your precast rules here
 	---------------------------------------
+	--equip example: equip_pre_cast = set_combine(equip_pre_cast, sets.Engaged)
+	---------------------------------------
 	if _G['precast_include'] then
 		_G['precast_include'](spell)
 	end
@@ -143,6 +150,8 @@ function midcast(spell)
 	---------------------------------------
 	--put your midcast rules here
 	---------------------------------------
+	--equip example: equip_mid_cast = set_combine(equip_mid_cast, sets.Engaged)
+	---------------------------------------
 	if _G['midcast_include'] then
 		_G['midcast_include'](spell)
 	end
@@ -151,6 +160,8 @@ function pet_midcast(spell)
 	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
 	---------------------------------------
 	--put your pet_midcast rules here
+	---------------------------------------
+	--equip example: equip_petmidcast = set_combine(equip_petmidcast, sets.Engaged)
 	---------------------------------------
 	if _G['pet_midcast_include'] then
 		_G['pet_midcast_include'](spell)
@@ -161,20 +172,24 @@ function aftercast(spell)
 	---------------------------------------
 	--put your aftercast rules here
 	---------------------------------------
+	--equip example: equip_after_cast = set_combine(equip_after_cast, sets.Engaged)
+	---------------------------------------
+	equip_after_cast = set_combine(equip_after_cast, sets[player.status])--you can change this
 	if _G['aftercast_include'] then
 		_G['aftercast_include'](spell)
 	end
-	equip(sets[player.status])--you can change this but the section above must be above your last gear change like it is now
 end
 function pet_aftercast(spell)
 	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
 	---------------------------------------
 	--put your pet_aftercast rules here
 	---------------------------------------
+	--equip example: equip_petaftercast = set_combine(equip_petaftercast, sets.Engaged)
+	---------------------------------------
+	equip_petaftercast = set_combine(equip_petaftercast, sets[player.status])--you can change this 
 	if _G['pet_aftercast_include'] then
 		_G['pet_aftercast_include'](spell)
 	end
-	equip(sets[player.status])--you can change this but the section above must be above your last gear change like it is now
 end
 function self_command(command)
 	---------------------------------------
