@@ -1,10 +1,3 @@
---[[how to use(all go at the top of the functions)
-	put extras_main() near the bottom of your getsets function
-	put spell_stopper(spell) in pretarget and precast these will stop spells/gear swaps if the spell is in recast/another spell
-		is in midcast/if sleep is active/and stop gear swaps if a Teleport spell is used
-	put gearchang_stopper(spell) in midcast, pet_midcast, aftercast and pet_aftercast stops gear changes if sleep is active
-	put sleepset(name,gain) in buff_change changes to sleep gear/locks all necessary gear when sleep is active]]
-
 --Variable Set-up -----------------------------------------------------------------------------------------------------------------
 tool_bag_id = 0
 lvlwatch = true
