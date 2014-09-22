@@ -30,6 +30,8 @@ Registered_Events = true
 Debug = false
 --Use Display Include (Default: true)
 Display = true
+--Display Main Job and LVL in Display (Default: false)
+lvlwatch = false
 -----------------------------------------------------------------------------------------------------------------------------------
 jobneck = {neck=""} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
 jobring = {left_ring=""} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
