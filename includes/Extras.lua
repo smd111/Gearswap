@@ -218,7 +218,7 @@ if SJi and not Disable_All and gearswap.pathsearch({'includes/extra_more/SJi.lua
 	include('includes/extra_more/SJi.lua')
 end
 if MSi and not Disable_All and windower.wc_match(player.main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and 
-														gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
+						gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
 	include('includes/extra_more/MSi.lua')
 end
 if WSi and not Disable_All and gearswap.pathsearch({'includes/extra_more/WSi.lua'}) then
@@ -394,9 +394,6 @@ if file_write then
 	file_write()
 end
 --has buff functions--------------------------------------------------------------------------------------------------------------
-function equipsets(set)
-	equip(set)
-end
 function has_any_buff_of(buff_set)
     return buff_set:any(has_buff())
 end
