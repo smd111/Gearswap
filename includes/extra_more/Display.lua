@@ -69,3 +69,11 @@ function updatedisplay()
 		window:show()
 	end
 end
+function auto_hide_window()
+	if windower.ffxi.get_info().menu_open and not windower.ffxi.get_player().in_combat and not window_hidden then
+		window:hide()
+	elseif not windower.ffxi.get_info().menu_open and not windower.ffxi.get_player().in_combat and not window_hidden then
+		window:show()
+	end
+end
+windower.raw_register_event('prerender', auto_hide_window)
