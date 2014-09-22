@@ -16,11 +16,12 @@ end
 windower.raw_register_event('action', event_action)
 -- LVL up event
 function level_up()
-	if _G['updatedisplay'] then
-		_G['updatedisplay']()
+	if updatedisplay then
+		coroutine.schedule(updatedisplay, 3)
 	end
 end
-windower.raw_register_event('level up','level down', level_up)
+windower.raw_register_event('level up', level_up)
+windower.raw_register_event('level down', level_up)
 --Incoming Chunk Event(Packets Received)
 function incoming_chunk(id, data, modified, injected, blocked)
 	if triggered and data:sub(3,4) ~= seqid then
