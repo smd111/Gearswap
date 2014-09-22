@@ -1,7 +1,3 @@
-	-- How To Use
-	-- 1. put include('Weapon Skill include.lua') in function get_sets()
-	-- 2. put equip_elemental_ws_Gear(spell) in function precast(spell)
-
 sets.weaponskill = {
 	element = {
 		Transfixion={
@@ -170,7 +166,7 @@ function equip_elemental_ws_Gear(spell)
 		dwelement = world.weather_element
 	end
 	if spell.type == "WeaponSkill" and not spell.skillchain_a == nil then
-		equip(sets.weaponskill.types[spell.skill])
-		equip(sets.weaponskill.element[spell.skillchain_a][dwelement])
+		equip_pre_cast = set_combine(equip_pre_cast, sets.weaponskill.types[spell.skill])
+		equip_pre_cast = set_combine(equip_pre_cast, sets.weaponskill.element[spell.skillchain_a][dwelement])
 	end
 end
