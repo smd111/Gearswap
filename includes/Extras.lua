@@ -4,31 +4,6 @@
 		is in midcast/if sleep is active/and stop gear swaps if a Teleport spell is used
 	put gearchang_stopper(spell) in midcast, pet_midcast, aftercast and pet_aftercast stops gear changes if sleep is active
 	put sleepset(name,gain) in buff_change changes to sleep gear/locks all necessary gear when sleep is active]]
---include setup -------------------------------------------------------------------------------------------------------------------
---Disable All Includes (Default: false)
-Disable_All = false
---Use Main Job includes (Default: true)
-MJi = true
---Use Sub Job Includes (Default: true)
-SJi = true
---Use Mage Stave Include (Default: true)
-MSi = true
---Use Weapon Skill Include (Default: true)
-WSi = true
---Use Ammo Include (Default: true)
-Ammo = true
---Use Special_Weapons Include (Default: true)
-Special_Weapons = true
---Use Conquest_Gear Include (Default: true)
-Conquest_Gear = true
---Use File_Write Include (Default: true)
-File_Write = true
---Use Registered_Events Include (Default: true)
-Registered_Events = false
---Use Debug Include (Default: false)
-Debug = false
---Use Display Include (Default: true)
-Display = true
 
 --Variable Set-up -----------------------------------------------------------------------------------------------------------------
 tool_bag_id = 0
@@ -36,6 +11,8 @@ lvlwatch = true
 autolock = false
 box = {}
 box.pos = {}
+box.pos.x = 0
+box.pos.y = 0
 Conquest = {}
 Conquest.neck = {}
 Conquest.ring = {}
@@ -59,182 +36,185 @@ else
 end
 ----------------------------------------------------------------------------------------------------------------------------------
 function file_unload_include()
-	if _G['main_job_file_unload'] then
-		_G['main_job_file_unload']()
+	if main_job_file_unload then
+		main_job_file_unload()
 	end
-	if _G['sub_job_file_unload'] then
-		_G['sub_job_file_unload']()
+	if sub_job_file_unload then
+		sub_job_file_unload()
+	end
+	if window and Display then
+		window:destroy()
 	end
 end
 function status_change_include(new,old)
-	if _G['debug_status_change'] then
-		_G['debug_status_change'](new,old)
+	if debug_status_change then
+		debug_status_change(new,old)
 	end
-	if _G['main_job_status_change'] then
-		_G['main_job_status_change'](new,old)
+	if main_job_status_change then
+		main_job_status_change(new,old)
 	end
-	if _G['sub_job_status_change'] then
-		_G['sub_job_status_change'](new,old)
+	if sub_job_status_change then
+		sub_job_status_change(new,old)
 	end
-	if _G['conquest_Gear'] then
-		_G['conquest_Gear']()
+	if conquest_Gear then
+		conquest_Gear()
 	end
 	equip(equip_status_change)
 end
 function filtered_action_include(spell)
-	if _G['debug_filtered_action'] then
-		_G['debug_filtered_action'](spell)
+	if debug_filtered_action then
+		debug_filtered_action(spell)
 	end
-	if _G['main_job_filtered_action'] then
-		_G['main_job_filtered_action'](spell)
+	if main_job_filtered_action then
+		main_job_filtered_action(spell)
 	end
-	if _G['sub_job_filtered_action'] then
-		_G['sub_job_filtered_action'](spell)
+	if sub_job_filtered_action then
+		sub_job_filtered_action(spell)
 	end
 end
 function pretarget_include(spell)
-	if _G['debug_pretarget'] then
-		_G['debug_pretarget'](spell)
+	if debug_pretarget then
+		debug_pretarget(spell)
 	end
-	if _G['main_job_pretarget'] then
-		_G['main_job_pretarget'](spell)
+	if main_job_pretarget then
+		main_job_pretarget(spell)
 	end
-	if _G['sub_job_pretarget'] then
-		_G['sub_job_pretarget'](spell)
+	if sub_job_pretarget then
+		sub_job_pretarget(spell)
 	end
-	if _G['ammo_rule'] then
-		_G['ammo_rule'](spell)
+	if ammo_rule then
+		ammo_rule(spell)
 	end
 end
 function precast_include(spell)
-	if _G['debug_precast'] then
-		_G['debug_precast'](spell)
+	if debug_precast then
+		debug_precast(spell)
 	end
-	if _G['main_job_precast'] then
-		_G['main_job_precast'](spell)
+	if main_job_precast then
+		main_job_precast(spell)
 	end
-	if _G['sub_job_precast'] then
-		_G['sub_job_precast'](spell)
+	if sub_job_precast then
+		sub_job_precast(spell)
 	end
-	if _G['equip_elemental_ws_Gear'] then
-		_G['equip_elemental_ws_Gear'](spell)
+	if equip_elemental_ws_Gear then
+		equip_elemental_ws_Gear(spell)
 	end
-	if _G['conquest_Gear'] then
-		_G['conquest_Gear']()
+	if conquest_Gear then
+		conquest_Gear()
 	end
 	equip(equip_pre_cast)
 end
 function buff_change_include(name,gain)
-	if _G['debug_buff_change'] then
-		_G['debug_buff_change'](name,gain)
+	if debug_buff_change then
+		debug_buff_change(name,gain)
 	end
-	if _G['main_job_buff_change'] then
-		_G['main_job_buff_change'](name,gain)
+	if main_job_buff_change then
+		main_job_buff_change(name,gain)
 	end
-	if _G['sub_job_buff_change'] then
-		_G['sub_job_buff_change'](name,gain)
+	if sub_job_buff_change then
+		sub_job_buff_change(name,gain)
 	end
 end
 function midcast_include(spell)
-	if _G['debug_midcast'] then
-		_G['debug_midcast'](spell)
+	if debug_midcast then
+		debug_midcast(spell)
 	end
-	if _G['main_job_midcast'] then
-		_G['main_job_midcast'](spell)
+	if main_job_midcast then
+		main_job_midcast(spell)
 	end
-	if _G['sub_job_midcast'] then
-		_G['sub_job_midcast'](spell)
+	if sub_job_midcast then
+		sub_job_midcast(spell)
 	end
-	if _G['conquest_Gear'] then
-		_G['conquest_Gear']()
+	if conquest_Gear then
+		conquest_Gear()
 	end
-	if _G['equip_elemental_magic_staves'] then
-		_G['equip_elemental_magic_staves'](spell)
+	if equip_elemental_magic_staves then
+		equip_elemental_magic_staves(spell)
 	end
-	if _G['equip_elemental_magic_obi'] and sets.obi then
-		_G['equip_elemental_magic_obi'](spell)
+	if equip_elemental_magic_obi and sets.obi then
+		equip_elemental_magic_obi(spell)
 	end
 	equip(equip_mid_cast)
 end
 function aftercast_include(spell)
-	if _G['debug_aftercast'] then
-		_G['debug_aftercast'](spell)
+	if debug_aftercast then
+		debug_aftercast(spell)
 	end
-	if _G['main_job_aftercast'] then
-		_G['main_job_aftercast'](spell)
+	if main_job_aftercast then
+		main_job_aftercast(spell)
 	end
-	if _G['sub_job_aftercast'] then
-		_G['sub_job_aftercast'](spell)
+	if sub_job_aftercast then
+		sub_job_aftercast(spell)
 	end
-	if _G['conquest_Gear'] then
-		_G['conquest_Gear']()
+	if conquest_Gear then
+		conquest_Gear()
 	end
 	equip(equip_after_cast)
 end
 function self_command_include(command)
-	if _G['debug_self_command'] then
-		_G['debug_self_command'](command)
+	if debug_self_command then
+		debug_self_command(command)
 	end
-	if _G['extracommands'] then
-		_G['extracommands'](command)
+	if extracommands then
+		extracommands(command)
 	end
-	if _G['main_jobs_command'] then
-		_G['main_jobs_command'](command)
+	if main_jobs_command then
+		main_jobs_command(command)
 	end
-	if _G['sub_jobs_command'] then
-		_G['sub_jobs_command'](command)
+	if sub_jobs_command then
+		sub_jobs_command(command)
 	end
-	if _G['equip_elemental_magic_Gear_command'] then
-		_G['equip_elemental_magic_Gear_command'](command)
+	if equip_elemental_magic_Gear_command then
+		equip_elemental_magic_Gear_command(command)
 	end
-	if _G['conquest_Gear_command'] then
-		_G['conquest_Gear_command'](command)
+	if conquest_Gear_command then
+		conquest_Gear_command(command)
 	end
-	if _G['file_write'] then
-		_G['file_write']()
+	if file_write then
+		file_write()
 	end
-	if _G['updatedisplay'] then
-		_G['updatedisplay']()
+	if updatedisplay then
+		updatedisplay()
 	end
 end
 function pet_change_include(spell)
-	if _G['debug_pet_change'] then
-		_G['debug_pet_change'](spell)
+	if debug_pet_change then
+		debug_pet_change(spell)
 	end
-	if _G['main_job_pet_change'] then
-		_G['main_job_pet_change'](spell)
+	if main_job_pet_change then
+		main_job_pet_change(spell)
 	end
-	if _G['sub_job_pet_change'] then
-		_G['sub_job_pet_change'](spell)
+	if sub_job_pet_change then
+		sub_job_pet_change(spell)
 	end
 end
 function pet_midcast_include(spell)
-	if _G['debug_pet_midcast'] then
-		_G['debug_pet_midcast'](spell)
+	if debug_pet_midcast then
+		debug_pet_midcast(spell)
 	end
-	if _G['main_job_pet_midcast'] then
-		_G['main_job_pet_midcast'](spell)
+	if main_job_pet_midcast then
+		main_job_pet_midcast(spell)
 	end
-	if _G['sub_job_pet_midcast'] then
-		_G['sub_job_pet_midcast'](spell)
+	if sub_job_pet_midcast then
+		sub_job_pet_midcast(spell)
 	end
-	if _G['conquest_Gear'] then
-		_G['conquest_Gear']()
+	if conquest_Gear then
+		conquest_Gear()
 	end
 	equip(equip_petmidcast)
 end
 function pet_aftercast_include(spell)
-	if _G['debug_pet_aftercast'] then
-		_G['debug_pet_aftercast'](spell)
+	if debug_pet_aftercast then
+		debug_pet_aftercast(spell)
 	end
-	if _G['main_job_pet_aftercast'] then
-		_G['main_job_pet_aftercast'](spell)
+	if main_job_pet_aftercast then
+		main_job_pet_aftercast(spell)
 	end
-	if _G['sub_job_pet_aftercast'] then
-		_G['sub_job_pet_aftercast'](spell)
+	if sub_job_pet_aftercast then
+		sub_job_pet_aftercast(spell)
 	end
-	if _G['conquest_Gear'] then
-		_G['conquest_Gear']()
+	if conquest_Gear then
+		conquest_Gear()
 	end
 	equip(equip_petaftercast)
 end
@@ -279,6 +259,12 @@ if Disable_All then
 end
 --extra functions-----------------------------------------------------------------------------------------------------------------
 function extracommands(command)
+	if command == "reload_gearswap" then
+		if file_write then
+			file_write()
+		end
+		send_command("gs r")
+	end
 	if command == "tautolock" and Display then
 		autolock = not autolock
 	end
@@ -291,6 +277,12 @@ function extracommands(command)
 			window_hidden = false
 		end
 	end
+	if command == "test" and Display then
+		table.foreach(windower.ffxi.get_info() , PrintSomething)
+	end
+end
+function PrintSomething(_index)
+	print( _index, windower.ffxi.get_info()[_index] ) 
 end
 function spell_range_check(spell)
 	local range_mult = {
@@ -402,12 +394,12 @@ function sleepset(name,gain)
 	end
 end
 function main_job_change()
-	if _G['file_write'] then
-		_G['file_write'](true)
+	if file_write then
+		file_write()
 	end
 end
-if _G['file_write'] then
-	_G['file_write'](true)
+if file_write then
+	file_write()
 end
 --has buff functions--------------------------------------------------------------------------------------------------------------
 function equipsets(set)
