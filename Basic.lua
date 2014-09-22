@@ -5,6 +5,32 @@
 	4. add rules to each function below ware shown
 	5. your ready to use
 	notes: i have included basic layouts for 3 gearsets Engaged,Idle,Resting]]
+--include setup -------------------------------------------------------------------------------------------------------------------
+--Disable All Includes (Default: false)
+Disable_All = false
+--Use Main Job includes (Default: true)
+MJi = true
+--Use Sub Job Includes (Default: true)
+SJi = true
+--Use Mage Stave Include (Default: true)
+MSi = true
+--Use Weapon Skill Include (Default: true)
+WSi = true
+--Use Ammo Include (Default: true)
+Ammo = true
+--Use Special_Weapons Include (Default: true)
+Special_Weapons = true
+--Use Conquest_Gear Include (Default: true)
+Conquest_Gear = true
+--Use File_Write Include (Default: true)
+File_Write = true
+--Use Registered_Events Include (Default: true)
+Registered_Events = true
+--Use Debug Include (Default: false)
+Debug = false
+--Use Display Include (Default: true)
+Display = true
+-----------------------------------------------------------------------------------------------------------------------------------
 jobneck = {neck=""} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
 jobring = {left_ring=""} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
 -- example:
