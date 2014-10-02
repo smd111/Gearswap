@@ -17,6 +17,10 @@ function initialize(text, settings)
 		properties:append('\\cs(255,0,0)Max Step = \\cs(255,255,0)${stepm}')
 		properties:append('\\cs(255,0,0)Steps\n  \\cs(255,255,0)Will ${ssteps|Not }Stop')
 	end
+	if player.main_job == 'DNC' and MJi then
+		properties:append('\\cs(255,0,0)Max Step = \\cs(255,255,0)${stepm}')
+		properties:append('\\cs(255,0,0)Steps\n  \\cs(255,255,0)Will ${ssteps|Not }Stop')
+	end
 	if windower.wc_match(player.main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and WSi then
 		properties:append('\\cs(255,0,0)Staves\n  \\cs(255,255,0)Will ${cstaff|Not }Change')
 		properties:append('\\cs(255,0,0)Staves Set To \\cs(255,255,0)${ustaff|Atk}')

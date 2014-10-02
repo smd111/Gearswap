@@ -12,7 +12,8 @@ function file_write()
 		'\nbox.pos.x = '..tostring(box.pos.x)..
 		'\nbox.pos.y = '..tostring(box.pos.y)..
 		'')
-	if windower.wc_match(player.main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") then
+	if player.main_job == 'WHM' or player.main_job == 'BLM' or player.main_job == 'RDM' or player.main_job == 'BRD' or player.main_job == 'SMN'
+																					or player.main_job == 'SCH' or player.main_job == 'GEO' then
 		file:write(
 			'\nChangestaff = '..tostring(Changestaff)..
 			'\nUsestaff = "'..tostring(Usestaff)..'"'..
