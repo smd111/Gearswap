@@ -1,5 +1,5 @@
 --File Write
-function file_write(a)
+function file_write()
 	local file = io.open(lua_base_path..'data/'..player.name..'/Saves/job_'..player.main_job..'var.lua',"w")
 	file:write(
 		'Stepmax = '..tostring(Stepmax)..

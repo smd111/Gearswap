@@ -5,7 +5,7 @@ seqid = string.char(0,0)
 -- added events--
 -- Action event
 function event_action(act)
-	action = Action(act)
+	local action = Action(act)
     if action:get_category_string() == 'item_finish' then
         if action.raw.param == tbid and player.id == action.raw.actor_id then
 			send_command('wait 1.0;input /ma "'..last_nin_spell..'" <me>')

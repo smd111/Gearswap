@@ -7,6 +7,7 @@ box.bg.alpha = 100
 box.flags = {}
 box.flags.draggable = true
 window_hidden = false
+auto_hide_cycle = 0
 --display functions---------------------------------------------------------------------------------------------------------------
 --Display Creator
 window = texts.new(box)
@@ -70,10 +71,15 @@ function updatedisplay()
 	end
 end
 function auto_hide_window()
-	if windower.ffxi.get_info().menu_open and not windower.ffxi.get_player().in_combat and not window_hidden then
-		window:hide()
-	elseif not windower.ffxi.get_info().menu_open and not windower.ffxi.get_player().in_combat and not window_hidden then
-		window:show()
+	if auto_hide_cycle == 3 then
+		if windower.ffxi.get_info().menu_open and not windower.ffxi.get_player().in_combat and not window_hidden then
+			window:hide()
+		elseif not windower.ffxi.get_info().menu_open and not windower.ffxi.get_player().in_combat and not window_hidden then
+			window:show()
+		end
+		auto_hide_cycle = 0
+	else
+		auto_hide_cycle = auto_hide_cycle +1
 	end
 end
-windower.raw_register_event('prerender', auto_hide_window)
+--windower.raw_register_event('prerender', auto_hide_window)

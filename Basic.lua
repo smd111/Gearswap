@@ -1,36 +1,48 @@
 --[[How To Use:
-	1. make sure that the files for this include setup is in the gearswap/data/<players name> directory
-	2. to create a new job file just coppy this and rename it to the correct job name I.e. for Dancer name it DNC.lua
+	1. make sure that the files for this include set-up is in the gearswap/data/<players name> directory
+	2. to create a new job file just copy this and rename it to the correct job name I.e. for Dancer name it DNC.lua
 	3. add your gearsets in to function get_sets ware shown
 	4. add rules to each function below ware shown
 	5. your ready to use
 	notes: i have included basic layouts for 3 gearsets Engaged,Idle,Resting]]
---include setup -------------------------------------------------------------------------------------------------------------------
+--include set-up -------------------------------------------------------------------------------------------------------------------
 --Disable All Includes (Default: false)
+--this will disable all includes with one change so you can find bugs in your job file easer
 Disable_All = false
 --Use Main Job includes (Default: true)
+--these files are used primarily for things like large tables and there rules to keep your main file smaller and easer to read
 MJi = true
 --Use Sub Job Includes (Default: true)
+--these files are used primarily for rules you want the same for all main jobs that you use the specific sub job with
 SJi = true
 --Use Mage Stave Include (Default: true)
+--this include will automatically equip top lvl Magians staves (like Atar I)  
 MSi = true
 --Use Weapon Skill Include (Default: true)
+--this include will automatically equip weapon skill belts/gorgets and Hachimaki
 WSi = true
 --Use Ammo Include (Default: true)
+--this include has rules to automatically get more ammo from Quiver's/Box's/Pouch's as long as there in your gobbie bag
 Ammo = true
 --Use Special_Weapons Include (Default: true)
+--this include automatically changes your weapon skill when using false relic weapons like Molva Maul 
+--and if you also use the File_Write include will remember how many you have done between jobs and play cycles
 Special_Weapons = true
 --Use Conquest_Gear Include (Default: true)
+--this include will automatically changes your neck and left_ring depending on the zones Conquest info
 Conquest_Gear = true
 --Use File_Write Include (Default: true)
+--this include is used to save specific settings that my include has like what mage staves you prefer to use
 File_Write = true
 --Use Registered_Events Include (Default: true)
 Registered_Events = true
 --Use Debug Include (Default: false)
+--with this enabled it will output to chat lots of info about the spell you are using
 Debug = false
 --Use Display Include (Default: true)
+--this include creats a display on your screen so you can see your settings
 Display = true
---Display Main Job and LVL in Display (Default: false)
+--Display Main Job and LVL (Default: false)
 lvlwatch = false
 -----------------------------------------------------------------------------------------------------------------------------------
 jobneck = {neck=""} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
@@ -97,19 +109,17 @@ function get_sets()
 	---------------------------------------
 	--put your sets here
 	---------------------------------------
-	if _G['updatedisplay'] then
-		_G['updatedisplay']()
+	if updatedisplay then
+		coroutine.schedule(updatedisplay, 3)
 	end
 end
-function file_unload()
+function mf_file_unload()
 	---------------------------------------
 	--put your file_unload rules here
 	---------------------------------------
-    if _G['file_unload_include'] then
-		_G['file_unload_include']()
-	end
+	return false
 end
-function status_change(new,old)
+function mf_status_change(new,old)
 	----------------------------------------
 	--put your status_change rules here
 	----------------------------------------
@@ -122,108 +132,84 @@ function status_change(new,old)
 	elseif new=='Resting' then
 		equip_status_change = set_combine(equip_status_change, sets.Resting)
 	end
-	if _G['status_change_include'] then
-		_G['status_change_include'](new,old)
-	end
+	return false
 end
-function pet_change(pet,gain)
+function mf_pet_change(pet,gain)
 	---------------------------------------
 	--put your pet_change rules here
+	--to stop processing of all precast rules use: return true
 	---------------------------------------
-	if _G['pet_change_include'] then
-		_G['pet_change_include'](spell)
-	end
+	return false
 end
-function filtered_action(spell)
+function mf_filtered_action(spell)
 	---------------------------------------
 	--put your filtered_action rules here
+	--to stop processing of all precast rules use: return true
 	---------------------------------------
-	if _G['filtered_action_include'] then
-		_G['filtered_action_include'](spell)
-	end
 end
-function pretarget(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+function mf_pretarget(spell)
 	---------------------------------------
 	--put your pretarget rules here
 	---------------------------------------
-	if _G['pretarget_include'] then
-		_G['pretarget_include'](spell)
-	end
+	return false
 end
-function precast(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+function mf_precast(spell)
 	---------------------------------------
 	--put your precast rules here
+	--to stop processing of all precast rules use: return true
 	---------------------------------------
 	--equip example: equip_pre_cast = set_combine(equip_pre_cast, sets.Engaged)
 	---------------------------------------
-	if _G['precast_include'] then
-		_G['precast_include'](spell)
-	end
+	return false
 end
-function buff_change(name,gain)
+function mf_buff_change(name,gain)
 	---------------------------------------
 	--put your buff_change rules here
 	---------------------------------------
-	if _G['sleepset'] then
-		_G['sleepset'](name,gain)
-	end
-	if _G['buff_change_include'] then
-		_G['buff_change_include'](name,gain)
-	end
+	return false
 end
-function midcast(spell)
-	if gearchang_stopper(spell) and not Disable_All then return end
+function mf_midcast(spell)
 	---------------------------------------
 	--put your midcast rules here
+	--to stop processing of all midcast rules use: return true
 	---------------------------------------
 	--equip example: equip_mid_cast = set_combine(equip_mid_cast, sets.Engaged)
 	---------------------------------------
-	if _G['midcast_include'] then
-		_G['midcast_include'](spell)
-	end
+	return false
 end
-function pet_midcast(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+function mf_pet_midcast(spell)
 	---------------------------------------
 	--put your pet_midcast rules here
+	--to stop processing of all pet_midcast rules use: return true
 	---------------------------------------
 	--equip example: equip_petmidcast = set_combine(equip_petmidcast, sets.Engaged)
 	---------------------------------------
-	if _G['pet_midcast_include'] then
-		_G['pet_midcast_include'](spell)
-	end
+	return false
 end
-function aftercast(spell)
-	if gearchang_stopper(spell) and not Disable_All then return end
+function mf_aftercast(spell)
 	---------------------------------------
 	--put your aftercast rules here
+	--to stop processing of all aftercast rules use: return true
 	---------------------------------------
 	--equip example: equip_after_cast = set_combine(equip_after_cast, sets.Engaged)
 	---------------------------------------
 	equip_after_cast = set_combine(equip_after_cast, sets[player.status])--you can change this
-	if _G['aftercast_include'] then
-		_G['aftercast_include'](spell)
-	end
+	return false
 end
-function pet_aftercast(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+function mf_pet_aftercast(spell)
 	---------------------------------------
 	--put your pet_aftercast rules here
+	--to stop processing of all pet_aftercast rules use: return true
 	---------------------------------------
 	--equip example: equip_petaftercast = set_combine(equip_petaftercast, sets.Engaged)
 	---------------------------------------
 	equip_petaftercast = set_combine(equip_petaftercast, sets[player.status])--you can change this 
-	if _G['pet_aftercast_include'] then
-		_G['pet_aftercast_include'](spell)
-	end
+	return false
 end
-function self_command(command)
+function mf_self_command(command)
 	---------------------------------------
 	--put your self_command rules here
+	--to stop processing of all self_command rules use: return true
 	---------------------------------------
-	if _G['self_command_include'] then
-		_G['self_command_include'](command)
-	end
+	return false
 end

@@ -27,18 +27,24 @@ else
 	return
 end
 ----------------------------------------------------------------------------------------------------------------------------------
-function file_unload_include()
+function file_unload()
+	mf_file_unload()
 	if main_job_file_unload then
 		main_job_file_unload()
 	end
 	if sub_job_file_unload then
 		sub_job_file_unload()
 	end
+	if file_write then
+		file_write()
+	end
 	if window and Display then
 		window:destroy()
 	end
 end
-function status_change_include(new,old)
+function status_change(new,old)
+	equip_status_change = sets[player.status]
+	mf_status_change(new,old)
 	if debug_status_change then
 		debug_status_change(new,old)
 	end
@@ -53,7 +59,9 @@ function status_change_include(new,old)
 	end
 	equip(equip_status_change)
 end
-function filtered_action_include(spell)
+function filtered_action(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	if mf_filtered_action(spell) then return end
 	if debug_filtered_action then
 		debug_filtered_action(spell)
 	end
@@ -64,7 +72,9 @@ function filtered_action_include(spell)
 		sub_job_filtered_action(spell)
 	end
 end
-function pretarget_include(spell)
+function pretarget(spell)
+	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+	if mf_pretarget(spell) then return end
 	if debug_pretarget then
 		debug_pretarget(spell)
 	end
@@ -78,7 +88,10 @@ function pretarget_include(spell)
 		ammo_rule(spell)
 	end
 end
-function precast_include(spell)
+function precast(spell)
+	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+	equip_pre_cast = sets[player.status]
+	if mf_precast(spell) then return end
 	if debug_precast then
 		debug_precast(spell)
 	end
@@ -89,14 +102,18 @@ function precast_include(spell)
 		sub_job_precast(spell)
 	end
 	if equip_elemental_ws_Gear then
-		equip_elemental_ws_Gear(spell)
+		equip_elemental_ws_Gear(spell, false)
 	end
 	if conquest_Gear then
 		conquest_Gear()
 	end
 	equip(equip_pre_cast)
 end
-function buff_change_include(name,gain)
+function buff_change(name,gain)
+	if sleepset then
+		sleepset(name,gain)
+	end
+	mf_buff_change(name,gain)
 	if debug_buff_change then
 		debug_buff_change(name,gain)
 	end
@@ -107,7 +124,10 @@ function buff_change_include(name,gain)
 		sub_job_buff_change(name,gain)
 	end
 end
-function midcast_include(spell)
+function midcast(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	equip_mid_cast = sets[player.status]
+	if mf_midcast(spell) then return end
 	if debug_midcast then
 		debug_midcast(spell)
 	end
@@ -116,6 +136,9 @@ function midcast_include(spell)
 	end
 	if sub_job_midcast then
 		sub_job_midcast(spell)
+	end
+	if equip_elemental_ws_Gear then
+		equip_elemental_ws_Gear(spell, true)
 	end
 	if conquest_Gear then
 		conquest_Gear()
@@ -128,7 +151,10 @@ function midcast_include(spell)
 	end
 	equip(equip_mid_cast)
 end
-function aftercast_include(spell)
+function aftercast(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	equip_after_cast = sets[player.status]
+	if mf_aftercast(spell) then return end
 	if debug_aftercast then
 		debug_aftercast(spell)
 	end
@@ -143,7 +169,8 @@ function aftercast_include(spell)
 	end
 	equip(equip_after_cast)
 end
-function self_command_include(command)
+function self_command(command)
+	mf_self_command(command)
 	if debug_self_command then
 		debug_self_command(command)
 	end
@@ -169,7 +196,9 @@ function self_command_include(command)
 		updatedisplay()
 	end
 end
-function pet_change_include(spell)
+function pet_change(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	if mf_pet_change(spell) then return end
 	if debug_pet_change then
 		debug_pet_change(spell)
 	end
@@ -180,7 +209,10 @@ function pet_change_include(spell)
 		sub_job_pet_change(spell)
 	end
 end
-function pet_midcast_include(spell)
+function pet_midcast(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	equip_petmidcast = sets[player.status]
+	if mf_pet_midcast(spell) then return end
 	if debug_pet_midcast then
 		debug_pet_midcast(spell)
 	end
@@ -195,7 +227,10 @@ function pet_midcast_include(spell)
 	end
 	equip(equip_petmidcast)
 end
-function pet_aftercast_include(spell)
+function pet_aftercast(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	equip_petaftercast = sets[player.status]
+	if mf_pet_aftercast(spell) then return end
 	if debug_pet_aftercast then
 		debug_pet_aftercast(spell)
 	end
@@ -214,11 +249,11 @@ end
 if MJi and not Disable_All and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'}) then
 	include('includes/mjob/main_job_'..player.main_job..'.lua')
 end
-if SJi and not Disable_All and gearswap.pathsearch({'includes/extra_more/SJi.lua'}) then
-	include('includes/extra_more/SJi.lua')
+if SJi and not Disable_All and gearswap.pathsearch({'includes/sjob/sub_job_'..player.sub_job..'.lua'}) then
+	include('includes/sjob/sub_job_'..player.sub_job..'.lua')
 end
 if MSi and not Disable_All and windower.wc_match(player.main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and 
-						gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
+														gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
 	include('includes/extra_more/MSi.lua')
 end
 if WSi and not Disable_All and gearswap.pathsearch({'includes/extra_more/WSi.lua'}) then
@@ -394,6 +429,9 @@ if file_write then
 	file_write()
 end
 --has buff functions--------------------------------------------------------------------------------------------------------------
+function equipsets(set)
+	equip(set)
+end
 function has_any_buff_of(buff_set)
     return buff_set:any(has_buff())
 end

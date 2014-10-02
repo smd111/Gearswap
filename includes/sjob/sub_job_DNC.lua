@@ -1,3 +1,11 @@
+if not Stepmax then
+	Stepmax = 1
+end
+if not Stopsteps then
+	Stopsteps = false
+end
+	Hwauto = false
+
 function sub_job_precast(spell)
 	if spell.type == 'Waltz' and spell.target.type == 'SELF' then
 		if player.hpp >= 75 and has_any_buff_of(Waltz.debuff) and player.sub_job_level > 34 then
@@ -51,7 +59,7 @@ function sub_job_precast(spell)
 			cancel_spell()
 		end
 	end
-	if spell.english:startswith('Drain Samba') then
+	if spell.type == 'Samba' then
 		if player.tp >= 250 and player.sub_job_level >= 35 then
 			if spell.english ~= 'Drain Samba II' then
 				cancel_spell()
@@ -90,11 +98,24 @@ function sub_job_precast(spell)
 		end
 	end
 end 
-
 function sub_job_buff_change(name,gain)
 	if Hwauto and windower.wc_match(name, "Max * Down|Magic * Down|* Down|bane|Bio|blindness|curse|Dia|disease|Shock|Rasp|Choke|Frost|Burn|Drown|Flash|paralysis|plague|poison|silence|slow|weight") then
 		if gain and player.tp >= 200 and player.sub_job_level > 34 then
 			send_command('@input /ja "Healing Waltz" <me>')
 		end
+	end
+end
+function sub_jobs_command(command)
+	if command == 'tstopsteps' then
+		Stopsteps = not Stopsteps
+		-- add_to_chat(7, '----- Steps Will ' .. (Stopsteps and '' or 'Not ') .. 'Stop -----')
+	end
+	if command == 'stepcount' then
+		Stepmax = (Stepmax % 5) + 1
+		-- add_to_chat(7,'Max step = ' ..Stepmax)
+	end
+	if command == 'autohw' then
+		Hwauto = not Hwauto
+		add_to_chat(7, '----- Auto Healing Waltz Is ' .. (Hwauto and 'Enabled' or 'Disabled'))
 	end
 end
