@@ -12,12 +12,13 @@
 	-- 11. use this command to enable/disable verbose debug mode //gs c Debug
 	-- 12. use this command to cycle through debug types //gs c Debugtype
 
-	fulldebug = false
+	full_debug = false
+	fulldebug = {}
 	fulldebug.type = {"status_change","pet_change","filtered_action","pretarget","precast","buff_change","midcast","pet_midcast","aftercast","pet_aftercast","All"}
 	fulldebug.count = 1
 
 function debug_status_change(new,old)
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 1 or fulldebug.count == 11 then
 			add_to_chat(7,"Status= "..tostring(new))
 			add_to_chat(7,"Status= "..tostring(old))
@@ -25,7 +26,7 @@ function debug_status_change(new,old)
 	end
 end
 function debug_pet_change(pet,gain)
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 2 or fulldebug.count == 11 then
 			add_to_chat(7,"Pet= "..tostring(pet)..", Gain= "..tostring(gain))
 			add_to_chat(7,"Pet Element= "..tostring(pet.element))
@@ -33,7 +34,7 @@ function debug_pet_change(pet,gain)
 	end
 end
 function debug_filtered_action(spell)
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 3 or fulldebug.count == 11 then
 			add_to_chat(7,"Spell Name= "..tostring(spell.english))
 			add_to_chat(7,"Spell Type= "..tostring(spell.type))
@@ -47,7 +48,7 @@ function debug_filtered_action(spell)
 	end
 end
 function debug_pretarget(spell)
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 4 or fulldebug.count == 11 then
 			add_to_chat(7,"Spell Name= "..tostring(spell.english))
 			add_to_chat(7,"Spell Type= "..tostring(spell.type))
@@ -61,7 +62,7 @@ function debug_pretarget(spell)
 	end
 end
 function debug_precast(spell)
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 5 or fulldebug.count == 11 then
 			add_to_chat(7,"Spell Name= "..tostring(spell.english))
 			add_to_chat(7,"Spell Type= "..tostring(spell.type))
@@ -75,14 +76,14 @@ function debug_precast(spell)
 	end
 end
 function debug_buff_change(name,gain)
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 6 or fulldebug.count == 11 then
 			add_to_chat(7,"Buff= "..tostring(name)..', Gain='..tostring(gain))
 		end
 	end
 end
 function debug_midcast(spell)
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 7 or fulldebug.count == 11 then
 			add_to_chat(7,"Spell Name= "..tostring(spell.english))
 			add_to_chat(7,"Spell Type= "..tostring(spell.type))
@@ -97,7 +98,7 @@ function debug_midcast(spell)
 	return
 end
 function debug_pet_midcast(spell)
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 8 or fulldebug.count == 11 then
 			add_to_chat(7,"Spell Name= "..tostring(spell.english))
 			add_to_chat(7,"Spell Type= "..tostring(spell.type))
@@ -111,7 +112,7 @@ function debug_pet_midcast(spell)
 	end
 end
 function debug_aftercast(spell)
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 9 or fulldebug.count == 11 then
 			add_to_chat(7,"Spell Name= "..tostring(spell.english))
 			add_to_chat(7,"Spell Type= "..tostring(spell.type))
@@ -125,7 +126,7 @@ function debug_aftercast(spell)
 	end
 end
 function debug_pet_aftercast(spell)
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 10 or fulldebug.count == 11 then
 			add_to_chat(7,"Spell Name= "..tostring(spell.english))
 			add_to_chat(7,"Spell Type= "..tostring(spell.type))
@@ -140,16 +141,16 @@ function debug_pet_aftercast(spell)
 end
 function debug_self_command(command)
 	if command == 'Debug' then
-		fulldebug = not fulldebug
+		full_debug = not full_debug
 		send_command('clear log')
 		send_command('gs debug_mode;wait 0.3;gs show_swaps')
-		add_to_chat(7,'Debug Mode = ' .. (fulldebug and 'ON' or 'OFF'))
+		add_to_chat(7,'Debug Mode = ' .. (full_debug and 'ON' or 'OFF'))
 	end
 	if command == 'Debugtype' then
 		fulldebug.count = (fulldebug.count % #fulldebug.type) + 1
 		add_to_chat(7,'Debug Mode Type = ' .. tostring(fulldebug.type[fulldebug.count]))
 	end
-	if fulldebug then
+	if full_debug then
 		if fulldebug.count == 11 then
 			add_to_chat(7,"Command= "..tostring(command))
 		end

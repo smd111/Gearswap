@@ -18,10 +18,10 @@
 	
 function sub_job_precast(spell)
 	if spell.type == "CorsairShot" and card_check() then
-		cancel_spell()
+		status.end_spell=true
 		send_command('input /item "'..card_getmore()..'" <me>')
 	elseif spell.type == "CorsairShot" and not card_check() then
-		cancel_spell()
+		status.end_spell=true
 		send_command('input /item "'..card_getmore()..'" <me>')
 	end
 end

@@ -32,6 +32,8 @@ Debug = false
 Display = true
 --Display Main Job and LVL (Default: false)
 lvlwatch = true
+--Start with minimized window (Default: false)
+window_hidden = true
 -----------------------------------------------------------------------------------------------------------------------------------
 jobneck = {neck="Scholar's Torque",} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
 jobring = {left_ring="Bastokan Ring",} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
@@ -85,8 +87,8 @@ function get_sets()
 	---------------------------------------
 	--put your sets here
 	---------------------------------------
-	if updatedisplay then
-		coroutine.schedule(updatedisplay, 3)
+	if update_display then
+		coroutine.schedule(update_display, 3)
 	end
 end
 function mf_file_unload()
@@ -95,91 +97,79 @@ function mf_file_unload()
 	---------------------------------------
 	return false
 end
-function mf_status_change(new,old)
+function mf_status_change(new,old, status, set_gear)
 	----------------------------------------
 	--put your status_change rules here
 	----------------------------------------
-	--equip example: equip_status_change = set_combine(equip_status_change, sets.Engaged)
-	----------------------------------------
 	if new=='Engaged' then
-		equip_status_change = set_combine(equip_status_change, sets.Engaged)
+		equip_set(set_gear, sets.Engaged)
 	elseif new=='Idle' then
-		equip_status_change = set_combine(equip_status_change, sets.Idle)
+		equip_set(set_gear, sets.Idle)
 	elseif new=='Resting' then
-		equip_status_change = set_combine(equip_status_change, sets.Resting)
+		equip_set(set_gear, ets.Resting)
 	end
 	return false
 end
-function mf_pet_change(pet,gain)
+function mf_pet_change(pet,gain,status,set_gear)
 	---------------------------------------
 	--put your pet_change rules here
 	--to stop processing of all precast rules use: return true
 	---------------------------------------
 	return false
 end
-function mf_filtered_action(spell)
+function mf_filtered_action(spell,status,set_gear)
 	---------------------------------------
 	--put your filtered_action rules here
 	--to stop processing of all precast rules use: return true
 	---------------------------------------
 end
-function mf_pretarget(spell)
+function mf_pretarget(spell,status,set_gear)
 	---------------------------------------
 	--put your pretarget rules here
 	---------------------------------------
 	return false
 end
-function mf_precast(spell)
+function mf_precast(spell,status,set_gear)
 	---------------------------------------
 	--put your precast rules here
 	--to stop processing of all precast rules use: return true
 	---------------------------------------
-	--equip example: equip_pre_cast = set_combine(equip_pre_cast, sets.Engaged)
-	---------------------------------------
 	return false
 end
-function mf_buff_change(name,gain)
+function mf_buff_change(name,gain,status,set_gear)
 	---------------------------------------
 	--put your buff_change rules here
 	---------------------------------------
 	return false
 end
-function mf_midcast(spell)
+function mf_midcast(spell,status,set_gear)
 	---------------------------------------
 	--put your midcast rules here
 	--to stop processing of all midcast rules use: return true
 	---------------------------------------
-	--equip example: equip_mid_cast = set_combine(equip_mid_cast, sets.Engaged)
-	---------------------------------------
 	return false
 end
-function mf_pet_midcast(spell)
+function mf_pet_midcast(spell,status,set_gear)
 	---------------------------------------
 	--put your pet_midcast rules here
 	--to stop processing of all pet_midcast rules use: return true
 	---------------------------------------
-	--equip example: equip_petmidcast = set_combine(equip_petmidcast, sets.Engaged)
-	---------------------------------------
 	return false
 end
-function mf_aftercast(spell)
+function mf_aftercast(spell,status,set_gear)
 	---------------------------------------
 	--put your aftercast rules here
 	--to stop processing of all aftercast rules use: return true
 	---------------------------------------
-	--equip example: equip_after_cast = set_combine(equip_after_cast, sets.Engaged)
-	---------------------------------------
-	equip_after_cast = set_combine(equip_after_cast, sets[player.status])--you can change this
+	equip_set(set_gear, sets[player.status])--you can change this
 	return false
 end
-function mf_pet_aftercast(spell)
+function mf_pet_aftercast(spell,status,set_gear)
 	---------------------------------------
 	--put your pet_aftercast rules here
 	--to stop processing of all pet_aftercast rules use: return true
 	---------------------------------------
-	--equip example: equip_petaftercast = set_combine(equip_petaftercast, sets.Engaged)
-	---------------------------------------
-	equip_petaftercast = set_combine(equip_petaftercast, sets[player.status])--you can change this 
+	equip_set(set_gear, sets[player.status])--you can change this 
 	return false
 end
 function mf_self_command(command)

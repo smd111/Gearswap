@@ -16,12 +16,12 @@
     ammo=empty,
 	}
 
-function main_job_precast(spell)
+function main_job_precast(spell,status,set_gear)
 	if spell.type == "CorsairShot" and card_check() then
-		cancel_spell()
+		status.end_spell=true
 		send_command('input /item "'..card_getmore()..'" <me>')
 	elseif spell.type == "CorsairShot" and not card_check() then
-		cancel_spell()
+		status.end_spell=true
 	end
 end
 

@@ -48,9 +48,9 @@
 		["Migawari: Ichi"] = {tool='Mokujin',tool_bag="Toolbag (Moku)",tool_bag_id=5866,uni_tool="Shikanofuda",uni_tool_bag="Toolbag (Shika)",uni_tool_bag_id=5868},
 		}
 
-function sub_job_filtered_action(spell)
+function sub_job_filtered_action(spell,status,set_gear)
 	if spell.type == "Ninjutsu" and nin_tool_check() then
-		cancel_spell()
+		status.end_spell=true
 		send_command('input /item "'..nin_tool_open()..'" <me>')
 	end
 end

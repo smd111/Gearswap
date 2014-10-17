@@ -32,6 +32,8 @@ Debug = false
 Display = true
 --Display Main Job and LVL (Default: false)
 lvlwatch = true
+--Start with minimized window (Default: false)
+window_hidden = true
 -----------------------------------------------------------------------------------------------------------------------------------
 jobneck = {neck={ name="Magus Torque", augments={'MP+10','Mag. Acc.+1',}},} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
 jobring = {left_ring="Onyx Ring",} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
@@ -85,132 +87,96 @@ function get_sets()
 	---------------------------------------
 	--put your sets here
 	---------------------------------------
-	if updatedisplay then
-		coroutine.schedule(updatedisplay, 3)
+	if update_display then
+		coroutine.schedule(update_display, 3)
 	end
 	send_command('@lua load azuresets')
 end
 function mf_file_unload()
-	send_command('@lua unload azuresets')
 	---------------------------------------
 	--put your file_unload rules here
 	---------------------------------------
+	return false
 end
-function status_change(new,old)
+function mf_status_change(new,old, status, set_gear)
 	----------------------------------------
 	--put your status_change rules here
 	----------------------------------------
-	--equip example: equip_status_change = set_combine(equip_status_change, sets.Engaged)
-	----------------------------------------
 	if new=='Engaged' then
-		equip_status_change = set_combine(equip_status_change, sets.Engaged)
+		equip_set(set_gear, sets.Engaged)
 	elseif new=='Idle' then
-		equip_status_change = set_combine(equip_status_change, sets.Idle)
+		equip_set(set_gear, sets.Idle)
 	elseif new=='Resting' then
-		equip_status_change = set_combine(equip_status_change, sets.Resting)
+		equip_set(set_gear, sets.Resting)
 	end
-	if _G['status_change_include'] then
-		_G['status_change_include'](new,old)
-	end
+	return false
 end
-function pet_change(pet,gain)
+function mf_pet_change(pet,gain,status,set_gear)
 	---------------------------------------
 	--put your pet_change rules here
+	--to stop processing of all precast rules use: return true
 	---------------------------------------
-	if _G['pet_change_include'] then
-		_G['pet_change_include'](spell)
-	end
+	return false
 end
-function filtered_action(spell)
+function mf_filtered_action(spell,status,set_gear)
 	---------------------------------------
 	--put your filtered_action rules here
+	--to stop processing of all precast rules use: return true
 	---------------------------------------
-	if _G['filtered_action_include'] then
-		_G['filtered_action_include'](spell)
-	end
 end
-function pretarget(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+function mf_pretarget(spell,status,set_gear)
 	---------------------------------------
 	--put your pretarget rules here
 	---------------------------------------
-	if _G['pretarget_include'] then
-		_G['pretarget_include'](spell)
-	end
+	return false
 end
-function precast(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+function mf_precast(spell,status,set_gear)
 	---------------------------------------
 	--put your precast rules here
+	--to stop processing of all precast rules use: return true
 	---------------------------------------
-	--equip example: equip_pre_cast = set_combine(equip_pre_cast, sets.Engaged)
-	---------------------------------------
-	if _G['precast_include'] then
-		_G['precast_include'](spell)
-	end
+	return false
 end
-function buff_change(name,gain)
+function mf_buff_change(name,gain,status,set_gear)
 	---------------------------------------
 	--put your buff_change rules here
 	---------------------------------------
-	if _G['sleepset'] then
-		_G['sleepset'](name,gain)
-	end
-	if _G['buff_change_include'] then
-		_G['buff_change_include'](name,gain)
-	end
+	return false
 end
-function midcast(spell)
-	if gearchang_stopper(spell) and not Disable_All then return end
+function mf_midcast(spell,status,set_gear)
 	---------------------------------------
 	--put your midcast rules here
+	--to stop processing of all midcast rules use: return true
 	---------------------------------------
-	--equip example: equip_mid_cast = set_combine(equip_mid_cast, sets.Engaged)
-	---------------------------------------
-	if _G['midcast_include'] then
-		_G['midcast_include'](spell)
-	end
+	return false
 end
-function pet_midcast(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+function mf_pet_midcast(spell,status,set_gear)
 	---------------------------------------
 	--put your pet_midcast rules here
+	--to stop processing of all pet_midcast rules use: return true
 	---------------------------------------
-	--equip example: equip_petmidcast = set_combine(equip_petmidcast, sets.Engaged)
-	---------------------------------------
-	if _G['pet_midcast_include'] then
-		_G['pet_midcast_include'](spell)
-	end
+	return false
 end
-function aftercast(spell)
-	if gearchang_stopper(spell) and not Disable_All then return end
+function mf_aftercast(spell,status,set_gear)
 	---------------------------------------
 	--put your aftercast rules here
+	--to stop processing of all aftercast rules use: return true
 	---------------------------------------
-	--equip example: equip_after_cast = set_combine(equip_after_cast, sets.Engaged)
-	---------------------------------------
-	equip_after_cast = set_combine(equip_after_cast, sets[player.status])--you can change this
-	if _G['aftercast_include'] then
-		_G['aftercast_include'](spell)
-	end
+	equip_set(set_gear, sets[player.status])--you can change this
+	return false
 end
-function pet_aftercast(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+function mf_pet_aftercast(spell,status,set_gear)
 	---------------------------------------
 	--put your pet_aftercast rules here
+	--to stop processing of all pet_aftercast rules use: return true
 	---------------------------------------
-	--equip example: equip_petaftercast = set_combine(equip_petaftercast, sets.Engaged)
-	---------------------------------------
-	equip_petaftercast = set_combine(equip_petaftercast, sets[player.status])--you can change this 
-	if _G['pet_aftercast_include'] then
-		_G['pet_aftercast_include'](spell)
-	end
+	equip_set(set_gear, sets[player.status])--you can change this 
+	return false
 end
-function self_command(command)
+function mf_self_command(command)
 	---------------------------------------
 	--put your self_command rules here
+	--to stop processing of all self_command rules use: return true
 	---------------------------------------
-	if _G['self_command_include'] then
-		_G['self_command_include'](command)
-	end
+	return false
 end

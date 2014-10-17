@@ -5,17 +5,18 @@ box = {}
 box.pos = {}
 box.pos.x = 0
 box.pos.y = 0
+gear_mode = T{'Normal', 'Acc', 'Att'}
+gear_mode_count = 1
 Conquest = {}
 Conquest.neck = {}
 Conquest.ring = {}
 partynames = {}
-equip_status_change = {}
-equip_pre_cast = {}
-equip_mid_cast = {}
-equip_after_cast = {}
-equip_petmidcast = {}
-equip_petaftercast = {}
-
+sets.precast = {}
+sets.midcast = {}
+sets.aftercast = {}
+sets.pet_midcast = {}
+sets.pet_aftercast = {}
+auto_use_shards = true
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
 if gearswap.pathsearch({'Saves/job_'..player.main_job..'var.lua'}) then
 	include('Saves/job_'..player.main_job..'var.lua')
@@ -27,6 +28,103 @@ else
 	return
 end
 ----------------------------------------------------------------------------------------------------------------------------------
+function run_event(spell, event_type)
+	local status = {end_event=false, end_spell=false}
+	local set_gear = {}
+	set_gear = set_combine(set_gear, sets[player.status])
+	if _G['mf_'..event_type] then
+		 _G['mf_'..event_type](spell,status,set_gear)
+	end
+	if status.end_spell then cancel_spell() end
+	if status.end_event then return end
+	if _G['debug_'..event_type] then
+		 _G['debug_'..event_type](spell,status,set_gear)
+	end
+	if status.end_spell then cancel_spell() end
+	if status.end_event then return end
+	if _G['main_job_'..event_type] then
+		 _G['main_job_'..event_type](spell,status,set_gear)
+	end
+	if status.end_spell then cancel_spell() end
+	if status.end_event then return end
+	if _G['sub_job_'..event_type] then
+		 _G['sub_job_'..event_type](spell,status,set_gear)
+	end
+	if status.end_spell then cancel_spell() end
+	if status.end_event then return end
+	if windower.wc_match(event_type, '*cast|pretarget') then
+		if extra_events then
+			extra_events(spell,status,set_gear)
+		end
+		equip(set_gear)
+	end
+end
+function equip_set(set_gear, set)
+	for i,v in pairs(set) do
+		set_gear[i] = v
+	end
+end
+function filtered_action(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	run_event(spell, 'filtered_action')
+end
+function pretarget(spell)
+	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+	run_event(spell, 'pretarget')
+end
+function precast(spell)
+	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+	run_event(spell, 'precast')
+end
+function midcast(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	run_event(spell, 'midcast')
+end
+function aftercast(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	run_event(spell, 'aftercast')
+	if player.in_combat and auto_use_shards then
+		if player.inventory['C. Ygg. Shard I'] then
+			send_command('wait 3.0;input /item "C. Ygg. Shard I" <me>')
+		elseif player.inventory['C. Ygg. Shard II'] then
+			send_command('wait 3.0;input /item "C. Ygg. Shard II" <me>')
+		elseif player.inventory['C. Ygg. Shard III'] then
+			send_command('wait 3.0;input /item "C. Ygg. Shard III" <me>')
+		elseif player.inventory['C. Ygg. Shard IV'] then
+			send_command('wait 3.0;input /item "C. Ygg. Shard IV" <me>')
+		elseif player.inventory['C. Ygg. Shard V'] then
+			send_command('wait 3.0;input /item "C. Ygg. Shard V" <me>')
+		elseif player.inventory['Z. Ygg. Shard I'] then
+			send_command('wait 3.0;input /item "Z. Ygg. Shard I" <me>')
+		elseif player.inventory['Z. Ygg. Shard II'] then
+			send_command('wait 3.0;input /item "Z. Ygg. Shard II" <me>')
+		elseif player.inventory['Z. Ygg. Shard III'] then
+			send_command('wait 3.0;input /item "Z. Ygg. Shard III" <me>')
+		elseif player.inventory['Z. Ygg. Shard IV'] then
+			send_command('wait 3.0;input /item "Z. Ygg. Shard IV" <me>')
+		elseif player.inventory['Z. Ygg. Shard V'] then
+			send_command('wait 3.0;input /item "Z. Ygg. Shard V" <me>')
+		elseif player.inventory['A. Ygg. Shard I'] then
+			send_command('wait 3.0;input /item A. Ygg. Shard I" <me>')
+		elseif player.inventory['A. Ygg. Shard II'] then
+			send_command('wait 3.0;input /item "A. Ygg. Shard II" <me>')
+		elseif player.inventory['A. Ygg. Shard III'] then
+			send_command('wait 3.0;input /item "A. Ygg. Shard III" <me>')
+		elseif player.inventory['A. Ygg. Shard IV'] then
+			send_command('wait 3.0;input /item "A. Ygg. Shard IV" <me>')
+		elseif player.inventory['A. Ygg. Shard V'] then
+			send_command('wait 3.0;input /item "A. Ygg. Shard V" <me>')
+		end
+	end
+end
+function pet_midcast(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	run_event(spell, 'pet_midcast')
+end
+function pet_aftercast(spell)
+	if gearchang_stopper(spell) and not Disable_All then return end
+	run_event(spell, 'pet_aftercast')
+end
 function file_unload()
 	mf_file_unload()
 	if main_job_file_unload then
@@ -38,139 +136,58 @@ function file_unload()
 	if file_write then
 		file_write()
 	end
-	if window and Display then
-		window:destroy()
-	end
 end
 function status_change(new,old)
-	equip_status_change = sets[player.status]
-	mf_status_change(new,old)
+	local set_gear = {}
+	set_gear = set_combine(set_gear, sets.Idle)
+	if mf_status_change then
+		mf_status_change(new,old, status, set_gear)
+	end
 	if debug_status_change then
-		debug_status_change(new,old)
+		debug_status_change(new,old,status,set_gear)
 	end
 	if main_job_status_change then
-		main_job_status_change(new,old)
+		main_job_status_change(new,old,status,set_gear)
 	end
 	if sub_job_status_change then
-		sub_job_status_change(new,old)
+		sub_job_status_change(new,old,status,set_gear)
 	end
-	if conquest_Gear then
-		conquest_Gear()
+	if conquest_Gear then	
+		conquest_Gear(status,set_gear)
 	end
-	equip(equip_status_change)
-end
-function filtered_action(spell)
-	if gearchang_stopper(spell) and not Disable_All then return end
-	if mf_filtered_action(spell) then return end
-	if debug_filtered_action then
-		debug_filtered_action(spell)
-	end
-	if main_job_filtered_action then
-		main_job_filtered_action(spell)
-	end
-	if sub_job_filtered_action then
-		sub_job_filtered_action(spell)
-	end
-end
-function pretarget(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
-	if mf_pretarget(spell) then return end
-	if debug_pretarget then
-		debug_pretarget(spell)
-	end
-	if main_job_pretarget then
-		main_job_pretarget(spell)
-	end
-	if sub_job_pretarget then
-		sub_job_pretarget(spell)
-	end
-	if ammo_rule then
-		ammo_rule(spell)
-	end
-end
-function precast(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
-	equip_pre_cast = sets[player.status]
-	if mf_precast(spell) then return end
-	if debug_precast then
-		debug_precast(spell)
-	end
-	if main_job_precast then
-		main_job_precast(spell)
-	end
-	if sub_job_precast then
-		sub_job_precast(spell)
-	end
-	if equip_elemental_ws_Gear then
-		equip_elemental_ws_Gear(spell, false)
-	end
-	if conquest_Gear then
-		conquest_Gear()
-	end
-	equip(equip_pre_cast)
+	equip(set_gear)
 end
 function buff_change(name,gain)
+	local status = {end_event=false, end_spell=false}
+	local set_gear = {}
+	set_gear = set_combine(set_gear, sets[player.status])
 	if sleepset then
-		sleepset(name,gain)
+		sleepset(name,gain,status,set_gear)
 	end
-	mf_buff_change(name,gain)
+	if mf_buff_change then
+		mf_buff_change(name,gain,status,set_gear)
+	end
 	if debug_buff_change then
-		debug_buff_change(name,gain)
+		debug_buff_change(name,gain,status,set_gear)
 	end
+	if status.end_spell then cancel_spell() end
+	if status.end_event then return end
 	if main_job_buff_change then
-		main_job_buff_change(name,gain)
+		main_job_buff_change(name,gain,status,set_gear)
 	end
+	if status.end_spell then cancel_spell() end
+	if status.end_event then return end
 	if sub_job_buff_change then
-		sub_job_buff_change(name,gain)
+		sub_job_buff_change(name,gain,status,set_gear)
 	end
-end
-function midcast(spell)
-	if gearchang_stopper(spell) and not Disable_All then return end
-	equip_mid_cast = sets[player.status]
-	if mf_midcast(spell) then return end
-	if debug_midcast then
-		debug_midcast(spell)
-	end
-	if main_job_midcast then
-		main_job_midcast(spell)
-	end
-	if sub_job_midcast then
-		sub_job_midcast(spell)
-	end
-	if equip_elemental_ws_Gear then
-		equip_elemental_ws_Gear(spell, true)
-	end
-	if conquest_Gear then
-		conquest_Gear()
-	end
-	if equip_elemental_magic_staves then
-		equip_elemental_magic_staves(spell)
-	end
-	if equip_elemental_magic_obi and sets.obi then
-		equip_elemental_magic_obi(spell)
-	end
-	equip(equip_mid_cast)
-end
-function aftercast(spell)
-	if gearchang_stopper(spell) and not Disable_All then return end
-	equip_after_cast = sets[player.status]
-	if mf_aftercast(spell) then return end
-	if debug_aftercast then
-		debug_aftercast(spell)
-	end
-	if main_job_aftercast then
-		main_job_aftercast(spell)
-	end
-	if sub_job_aftercast then
-		sub_job_aftercast(spell)
-	end
-	if conquest_Gear then
-		conquest_Gear()
-	end
-	equip(equip_after_cast)
+	if status.end_spell then cancel_spell() end
+	if status.end_event then return end
+	equip(set_gear)
 end
 function self_command(command)
-	mf_self_command(command)
+	if mf_self_command then
+		mf_self_command(command)
+	end
 	if debug_self_command then
 		debug_self_command(command)
 	end
@@ -196,54 +213,35 @@ function self_command(command)
 		updatedisplay()
 	end
 end
-function pet_change(spell)
-	if gearchang_stopper(spell) and not Disable_All then return end
-	if mf_pet_change(spell) then return end
+function pet_change(pet,gain)
+	local status = {end_event=false, end_spell=false}
+	local set_gear = {}
+	set_gear = set_combine(set_gear, sets[player.status])
+	if mf_pet_change then
+		mf_pet_change(pet,gain,status,set_gear)
+	end
+	if status.end_spell then cancel_spell() end
+	if status.end_event then return end
 	if debug_pet_change then
-		debug_pet_change(spell)
+		debug_pet_change(pet,gain,status,set_gear)
 	end
 	if main_job_pet_change then
-		main_job_pet_change(spell)
+		main_job_pet_change(pet,gain,status,set_gear)
 	end
+	if status.end_spell then cancel_spell() end
+	if status.end_event then return end
 	if sub_job_pet_change then
-		sub_job_pet_change(spell)
+		sub_job_pet_change(pet,gain,status,set_gear)
 	end
+	if status.end_spell then cancel_spell() end
+	if status.end_event then return end
+	equip(set_gear)
 end
-function pet_midcast(spell)
-	if gearchang_stopper(spell) and not Disable_All then return end
-	equip_petmidcast = sets[player.status]
-	if mf_pet_midcast(spell) then return end
-	if debug_pet_midcast then
-		debug_pet_midcast(spell)
+function sub_job_change(new,old)
+	send_command("gs r")
+	if mf_sub_job_change then
+		mf_sub_job_change(new,old)
 	end
-	if main_job_pet_midcast then
-		main_job_pet_midcast(spell)
-	end
-	if sub_job_pet_midcast then
-		sub_job_pet_midcast(spell)
-	end
-	if conquest_Gear then
-		conquest_Gear()
-	end
-	equip(equip_petmidcast)
-end
-function pet_aftercast(spell)
-	if gearchang_stopper(spell) and not Disable_All then return end
-	equip_petaftercast = sets[player.status]
-	if mf_pet_aftercast(spell) then return end
-	if debug_pet_aftercast then
-		debug_pet_aftercast(spell)
-	end
-	if main_job_pet_aftercast then
-		main_job_pet_aftercast(spell)
-	end
-	if sub_job_pet_aftercast then
-		sub_job_pet_aftercast(spell)
-	end
-	if conquest_Gear then
-		conquest_Gear()
-	end
-	equip(equip_petaftercast)
 end
 -----------------------------------------------------------------------------------------------------------------------------------
 if MJi and not Disable_All and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'}) then
@@ -285,6 +283,23 @@ if Disable_All then
 	return
 end
 --extra functions-----------------------------------------------------------------------------------------------------------------
+function extra_events(spell,status,set_gear)
+	if ammo_rule then
+		ammo_rule(spell,status,set_gear)
+	end
+	if conquest_Gear then
+		conquest_Gear(set_gear)
+	end
+	if equip_elemental_ws_Gear then
+		equip_elemental_ws_Gear(spell,status,set_gear)
+	end
+	if equip_elemental_magic_staves then
+		equip_elemental_magic_staves(spell,status,set_gear)
+	end
+	if equip_elemental_magic_obi and sets.obi then
+		equip_elemental_magic_obi(spell,status,set_gear)
+	end
+end
 function extracommands(command)
 	if command == "reload_gearswap" then
 		if file_write then
@@ -304,74 +319,34 @@ function extracommands(command)
 			window_hidden = false
 		end
 	end
-	if command == "test" and Display then
-		table.foreach(windower.ffxi.get_info() , PrintSomething)
-	end
 end
-function PrintSomething(_index)
-	print( _index, windower.ffxi.get_info()[_index] ) 
-end
-function spell_range_check(spell)
-	local range_mult = {
-		[0] = 0,
-		[2] = 1.70,
-		[3] = 1.490909,
-		[4] = 1.44,
-		[5] = 1.377778,
-		[6] = 1.30,
-		[7] = 1.20,
-		[8] = 1.30,
-		[9] = 1.377778,
-		[10] = 1.45,
-		[11] = 1.490909,
-		[12] = 1.70,
-		}
-	if (spell.target.model_size + spell.range * range_mult[spell.range]) < spell.target.distance then
-		if player.target.type == "MONSTER" then
-			add_to_chat(7,"Monster out of range of spell")
-		elseif player.target.type == "NPC" then
-			add_to_chat(7,"NPC out of range of spell")
-		else
-			add_to_chat(7,"Player out of range of spell")		
-		end
-		cancel_spell()
-		return
-	end
-end
-function equip_elemental_magic_obi(spell)
+function equip_elemental_magic_obi(spell,set_gear)
 	if not Typ.abilitys:contains(spell.prefix) then
 		if spell.element == world.weather_element or spell.element == world.day_element then
-			equip_mid_cast = set_combine(equip_mid_cast, sets.obi[spell.element])
+			set_gear = set_combine(set_gear, sets.obi[spell.element])
 		end
 	end
-end
-function sub_job_change(new,old)
-	send_command("gs r")
 end
 function spell_stopper(spell)
 	if spell.english ~= 'Ranged' and spell.type ~= 'WeaponSkill' then
-		if spell.action_type == 'Ability' then
-			if spell and (windower.ffxi.get_ability_recasts()[spell.recast_id] > 0) then
+		if spell and spell.action_type == 'Ability' then
+			if tonumber(windower.ffxi.get_ability_recasts()[spell.recast_id]) > 0 then
+				add_to_chat(7, tostring(spell.name).."cancled with recast of "..windower.ffxi.get_ability_recasts()[spell.recast_id])
 				return true
-			elseif spell then
-				if spell.tp_cost > player.tp then
-					return true
-				end
-				if spell.mp_cost > player.mp and not (buffactive['Manawell'] or buffactive['Manafont']) then
-					return true
-				end
 			end
-		elseif spell.action_type == 'Magic' then
-			if spell and (windower.ffxi.get_spell_recasts()[spell.recast_id] > 0)then
+		elseif spell and spell.action_type == 'Magic' then
+			if tonumber(windower.ffxi.get_spell_recasts()[spell.recast_id]) > 0 then
+				add_to_chat(7, tostring(spell.name).."cancled with recast of "..windower.ffxi.get_ability_recasts()[spell.recast_id])
 				return true
-			elseif spell then
-				if spell.tp_cost > player.tp then
-					return true
-				end
-				if spell.mp_cost > player.mp and not (buffactive['Manawell'] or buffactive['Manafont']) then
-					return true
-				end
 			end
+		end
+	end
+	if spell then
+		if spell.tp_cost > player.tp then
+			return true
+		end
+		if spell.mp_cost > player.mp and not (buffactive['Manawell'] or buffactive['Manafont']) then
+			return true
 		end
 	end
 	if buffactive['sleep'] then
@@ -390,6 +365,19 @@ function spell_stopper(spell)
 			end
 		end
 	end
+	-- if min_fm_for_flourishes[spell.name] then
+		-- local fm_count = 0
+		-- for i, v in pairs(buffactive) do
+			-- if string.startswith(i, 'finishing move') then
+				-- for w in string.gmatch (i, '%d') do
+					-- fm_count = tonumber(w)
+					-- if min_fm_for_flourishes[spell.name] < fm_count then
+						-- return true
+					-- end
+				-- end
+			-- end
+		-- end
+	-- end
 	if not windower.wc_match(spell.english, 'Warp*|Teleport*|Recall*|Retrace|Escape') and cities:contains(world.area) then
 		return true
 	end
@@ -400,7 +388,38 @@ function spell_stopper(spell)
 		return true
 	end
 	if player.main_job == "NIN" or player.sub_job == "NIN" then	if nin_tool_check(spell) then return true end end
+	if spell.english ~= 'Ranged' and spell.type ~= 'Item' and spell_range_check(spell) then	return true	end
 	return false
+end
+function spell_range_check(spell)
+	local range_mult = {
+        [0] = 0,
+		[1] = 1.642276421172564,
+        [2] = 1.642276421172564,
+        [3] = 1.642276421172564,
+        [4] = 1.642276421172564,
+        [5] = 1.642276421172564,
+        [6] = 1.642276421172564,
+        [7] = 1.642276421172564,
+        [8] = 1.642276421172564,
+        [9] = 1.642276421172564,
+        [10] = 1.642276421172564,
+        [11] = 1.642276421172564,
+        [12] = 1.642276421172564,
+        }
+	local spell_max_distance = spell.target.model_size + spell.range * range_mult[spell.range]
+	if spell_max_distance < spell.target.distance then
+		if player.target.type == "MONSTER" then
+			add_to_chat(7,"Monster out of "..spell.name.."'s max range of "..spell_max_distance)
+		elseif player.target.type == "NPC" then
+			add_to_chat(7,"NPC out of "..spell.name.."'s max range of "..spell_max_distance)
+		else
+			add_to_chat(7,"Player out of "..spell.name.."'s max range of "..spell_max_distance)		
+		end
+		return true
+	else
+		return false
+	end
 end
 function gearchang_stopper(spell)
 	if buffactive['sleep'] then
@@ -412,26 +431,18 @@ function sleepset(name,gain)
 	if name == "sleep" then
 		if gain then
 			enable("neck","back")
-			equip({neck="Opo-opo Necklace",back="Aries Mantle"})
+			equip_set(set_gear, {neck="Opo-opo Necklace",back="Aries Mantle"})
 			disable("neck","back","main","sub","range","ammo")
 		else
 			enable("neck","back","main","sub","range","ammo")
-			equip(sets[player.status])
+			equip_set(set_gear, sets[player.status])
 		end
-	end
-end
-function main_job_change()
-	if file_write then
-		file_write()
 	end
 end
 if file_write then
 	file_write()
 end
 --has buff functions--------------------------------------------------------------------------------------------------------------
-function equipsets(set)
-	equip(set)
-end
 function has_any_buff_of(buff_set)
     return buff_set:any(has_buff())
 end

@@ -160,16 +160,13 @@ sets.weaponskill = {
 		}
 	}
 
-function equip_elemental_ws_Gear(spell, mid)
+function equip_elemental_ws_Gear(spell,set_gear)
 	local dwelement = world.day_element
 	if world.weather_element ~= "None" and world.weather_element ~= nil then
 		dwelement = world.weather_element
 	end
-	if spell.type == "WeaponSkill" and not spell.skillchain_a == nil and not mid then
-		equip_pre_cast = set_combine(equip_pre_cast, sets.weaponskill.types[spell.skill])
-		equip_pre_cast = set_combine(equip_pre_cast, sets.weaponskill.element[spell.skillchain_a][dwelement])
-	elseif spell.type == "WeaponSkill" and not spell.skillchain_a == nil and mid then
-		equip_mid_cast = set_combine(equip_pre_cast, sets.weaponskill.types[spell.skill])
-		equip_mid_cast = set_combine(equip_pre_cast, sets.weaponskill.element[spell.skillchain_a][dwelement])
+	if spell.type == "WeaponSkill" and spell.skillchain_a then
+		equip_set(set_gear, sets.weaponskill.types[spell.skill])
+		equip_set(set_gear, sets.weaponskill.element[spell.skillchain_a][dwelement])
 	end
 end

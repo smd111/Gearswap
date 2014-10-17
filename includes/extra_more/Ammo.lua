@@ -28,12 +28,12 @@ function ammo_reequip()
 		return combined_ammo[sets[player.status].ammo]
 	end
 end
-function ammo_rule(spell)
-	if spell.english == "Ranged" and ammo_reequip_check() then
+function ammo_rule(spell,status,set_gear)
+	if spell.english == "Ranged" and ammo_check() then
 		cancel_spell()
 		send_command('input /item "'..ammo_reequip()..'" <me>')
 		equip({ammo="empty"})
 	elseif spell.english == "Ranged" and player.inventory[sets[player.status].ammo] and player.equipment.ammo ~= sets[player.status].ammo then
-		equip(sets[player.status])
+		equip_set(set_gear, sets[player.status])
 	end
 end

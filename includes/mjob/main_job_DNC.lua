@@ -4,50 +4,43 @@ end
 if not Stopsteps then
 	Stopsteps = false
 end
-function main_job_precast(spell)
-	if spell.type == 'Samba' and spell.english:startswith('Drain Samba') then
-		if player.tp >= 250 and player.main_job_level >= 65 then
-			if spell.english ~= 'Drain Samba II' then
-				cancel_spell()
-				send_command('@input /ja "Drain Samba III" <me>')
-				return
-			end
-		elseif player.tp >= 250 and player.main_job_level >= 35 then
-			if spell.english ~= 'Drain Samba II' then
-				cancel_spell()
-				send_command('@input /ja "Drain Samba II" <me>')
-				return
-			end
-		elseif player.tp >= 100 and player.main_job_level >= 5 then
-			if spell.english ~= 'Drain Samba' then
-				cancel_spell()
-				send_command('@input /ja "Drain Samba" <me>')
-				return
-			end
-		else
-			cancel_spell()
-		end
-	end
+	Hwauto = false
+--any functions you do not need should be removed or will cause errors
+function main_job_precast(spell,status,set_gear)
+	---------------------------------------
+	--put your precast rules here
+	---------------------------------------
+	--equip example: equip_pre_cast = set_combine(equip_pre_cast, sets.Engaged)
+	---------------------------------------
 	if spell.type == 'Step' then
 		if spell.tp_cost > player.tp then
-			cancel_spell()
+			status.end_spell=true
+			status.end_event=true
 			return
 		end
 		if Stopsteps then
 			if buffactive['Finishing Move '..Stepmax] then
-				cancel_spell()
+				status.end_spell=true
+				status.end_event=true
 				return
 			end
 		end
 	end
+	if spell.english == 'Spectral Jig' then
+		send_command('cancel 71')
+	end
 	if spell.english == 'Reverse Flourish' then
 		if player.tp >= 2750 then
-			cancel_spell()
+			status.end_spell=true
+			status.end_event=true
 			return
 		end
 	end
 end
 function main_jobs_command(command)
+	---------------------------------------
+	--put your self_command rules here
+	---------------------------------------
 	if command == 'tstopsteps' then
 		Stopsteps = not Stopsteps
 		-- add_to_chat(7, '----- Steps Will ' .. (Stopsteps and '' or 'Not ') .. 'Stop -----')
@@ -55,5 +48,9 @@ function main_jobs_command(command)
 	if command == 'stepcount' then
 		Stepmax = (Stepmax % 5) + 1
 		-- add_to_chat(7,'Max step = ' ..Stepmax)
+	end
+	if command == 'autohw' then
+		Hwauto = not Hwauto
+		add_to_chat(7, '----- Auto Healing Waltz Is ' .. (Hwauto and 'Enabled' or 'Disabled'))
 	end
 end
