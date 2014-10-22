@@ -331,12 +331,12 @@ function spell_stopper(spell)
 	if spell.english ~= 'Ranged' and spell.type ~= 'WeaponSkill' then
 		if spell and spell.action_type == 'Ability' then
 			if tonumber(windower.ffxi.get_ability_recasts()[spell.recast_id]) > 0 then
-				add_to_chat(7, tostring(spell.name).."cancled with recast of "..windower.ffxi.get_ability_recasts()[spell.recast_id])
+				add_to_chat(7, tostring(spell.name).." cancelled with recast of "..windower.ffxi.get_ability_recasts()[spell.recast_id])
 				return true
 			end
 		elseif spell and spell.action_type == 'Magic' then
-			if tonumber(windower.ffxi.get_spell_recasts()[spell.recast_id]) > 0 then
-				add_to_chat(7, tostring(spell.name).."cancled with recast of "..windower.ffxi.get_ability_recasts()[spell.recast_id])
+			if tonumber(windower.ffxi.get_spell_recasts()[spell.id]) > 0 then
+				add_to_chat(7, tostring(spell.name).." cancelled with recast of "..windower.ffxi.get_spell_recasts()[spell.id])
 				return true
 			end
 		end
@@ -388,7 +388,7 @@ function spell_stopper(spell)
 		return true
 	end
 	if player.main_job == "NIN" or player.sub_job == "NIN" then	if nin_tool_check(spell) then return true end end
-	if spell.english ~= 'Ranged' and spell.type ~= 'Item' and spell_range_check(spell) then	return true	end
+	--if spell.english ~= 'Ranged' and spell.type ~= 'Item' and spell_range_check(spell) then	return true	end
 	return false
 end
 function spell_range_check(spell)

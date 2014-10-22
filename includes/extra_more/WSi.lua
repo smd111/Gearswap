@@ -165,7 +165,7 @@ function equip_elemental_ws_Gear(spell,set_gear)
 	if world.weather_element ~= "None" and world.weather_element ~= nil then
 		dwelement = world.weather_element
 	end
-	if spell.type == "WeaponSkill" and spell.skillchain_a then
+	if spell.type == "WeaponSkill" and not spell.skillchain_a == nil then
 		equip_set(set_gear, sets.weaponskill.types[spell.skill])
 		equip_set(set_gear, sets.weaponskill.element[spell.skillchain_a][dwelement])
 	end
