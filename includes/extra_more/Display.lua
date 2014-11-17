@@ -49,6 +49,10 @@ function initialize(text, settings, a)
 				properties:append('\\cs(0,255,0)${mjob}\\cr')
 				properties:append('   lvl = \\cs(255,255,0)${mjob_lvl}\\cr')
 			end
+			if skillwatch and Registered_Events then
+				properties:append('\\cs(0,255,0)${skill}\\cr')
+				properties:append('   lvl = \\cs(255,255,0)${skill_lvl}\\cr')
+			end
 		elseif menu_set == 2 then -- armor menu
 			properties:append('Armor Settings')
 			if windower.wc_match(windower.ffxi.get_player().main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and WSi then
@@ -126,6 +130,10 @@ function initialize(text, settings, a)
 		if lvlwatch then
 			properties_button:append('\\cs(0,255,0)${mjob}\\cr\n   lvl = \\cs(255,255,0)${mjob_lvl}\\cr')
 		end
+		if skillwatch and Registered_Events then
+			properties_button:append('\\cs(0,255,0)${skill}\\cr')
+			properties_button:append('   lvl = \\cs(255,255,0)${skill_lvl}\\cr')
+		end
 		text:clear()
 		text:append(properties_button:concat('\n'))
 	end
@@ -185,6 +193,8 @@ function updatedisplay()
 	info.trei = Registered_Events and '\\cs(0,255,0)Enabled\\cr' or '\\cs(255,255,0)Disabled\\cr'
 	info.tdebug = Debug and '\\cs(0,255,0)Enabled\\cr' or '\\cs(255,255,0)Disabled\\cr'
 	info.tmjl = lvlwatch and '\\cs(0,255,0)Enabled\\cr' or '\\cs(255,255,0)Disabled\\cr'
+	info.skill = skill_type[skill_count]
+	info.skill_lvl = (skill[skill_type[skill_count]..' Capped'] and "Capped" or skill[skill_type[skill_count]..' Level'])
 	window:update(info)
 	button:update(info)
 	if not window_hidden then
@@ -339,6 +349,8 @@ function menu_commands(a)
 			menu_set = (menu_set % 4) + 1
 			initialize(window, box, 'window')
 		end
+	elseif a == "{skill}" then
+		skill_count = (skill_count % #skill_type) + 1
 	end
 	if custom_menu_commands then
 		custom_menu_commands(a)

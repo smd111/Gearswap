@@ -1,4 +1,56 @@
-sets.weaponskill = {
+function get_sets()
+	sets.Engaged = {
+    main="Eminent Dagger",
+    sub="Eminent Axe",
+    range="Long Boomerang",
+    head="Wayfarer Circlet",
+    body="Wayfarer Robe",
+    hands="Wayfarer Cuffs",
+    legs="Wayfarer Slops",
+    feet="Wayfarer Clogs",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Marid Belt",
+    left_ear="Suppanomimi",
+    right_ear="Terminus Earring",
+    left_ring="Vehemence Ring",
+    right_ring="Enlivened Ring",
+    back="Cerberus Mantle",
+	}
+	sets.Idle = {
+    main="Eminent Dagger",
+    sub="Eminent Axe",
+    range="Long Boomerang",
+    head="Wayfarer Circlet",
+    body="Wayfarer Robe",
+    hands="Wayfarer Cuffs",
+    legs="Wayfarer Slops",
+    feet="Wayfarer Clogs",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Marid Belt",
+    left_ear="Suppanomimi",
+    right_ear="Terminus Earring",
+    left_ring="Vehemence Ring",
+    right_ring="Enlivened Ring",
+    back="Cerberus Mantle",
+	}
+	sets.Resting = {
+    main="Eminent Dagger",
+    sub="Eminent Axe",
+    range="Long Boomerang",
+    head="Wayfarer Circlet",
+    body="Wayfarer Robe",
+    hands="Wayfarer Cuffs",
+    legs="Wayfarer Slops",
+    feet="Wayfarer Clogs",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Marid Belt",
+    left_ear="Sanative Earring",
+    right_ear="Terminus Earring",
+    left_ring="Vehemence Ring",
+    right_ring="Enlivened Ring",
+    back="Cerberus Mantle",
+	}
+	sets.weaponskill = {
 	element = {
 		Transfixion={
 			Fire = {neck="Light Gorget",waist="Light Belt"},
@@ -159,15 +211,33 @@ sets.weaponskill = {
 		['Throwing'] = {},
 		}
 	}
-
-function equip_elemental_ws_Gear(spell, set_gear)
+end
+function precast(spell)
+	run_event(spell, 'precast')
+end
+function run_event(spell, event_type)
+	local status = {end_event=false, end_spell=false}
+	local set_gear = {}
+	set_gear = set_combine(set_gear, sets[player.status])
+	if windower.wc_match(event_type, '*cast|pretarget') then
+		if extra_events then
+			extra_events(spell,status,set_gear)
+		end
+		equip(set_gear)
+	end
+end
+function extra_events(spell,status,set_gear)
+	if equip_elemental_ws_Gear then
+		equip_elemental_ws_Gear(spell,status,set_gear)
+	end
+end
+function equip_elemental_ws_Gear(spell,set_gear)
 	local dwelement = world.day_element
 	if world.weather_element ~= "None" and world.weather_element ~= nil then
 		dwelement = world.weather_element
 	end
 	if spell.type == "WeaponSkill" and spell.skillchain_a ~= nil then
-		set_gear = set_combine(set_gear, sets.weaponskill.types[spell.skill])
-		set_gear = set_combine(set_gear, sets.weaponskill.element[spell.skillchain_a][dwelement])
+		equip_set(set_gear, sets.weaponskill.types[spell.skill])
+		equip_set(set_gear, sets.weaponskill.element[spell.skillchain_a][dwelement])
 	end
-	return set_gear
 end

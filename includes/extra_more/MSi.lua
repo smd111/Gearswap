@@ -35,16 +35,17 @@ end
 		left_ear="Roundel Earring",
 	}
 
-function equip_elemental_magic_staves(spell,set_gear)
+function equip_elemental_magic_staves(spell)
 	if Changestaff then
 		if Typ.spells:contains(spell.type) then
 			if Cure.spells:contains(spell.english) then
-				equip_set(set_gear, sets.precast.Cur)
+				set_gear = set_combine(set_gear, sets.precast.Cur)
 			else
-				equip_set(set_gear, sets.precast[Usestaff][spell.element])
+				set_gear = set_combine(set_gear, sets.precast[Usestaff][spell.element])
 			end
 		end
 	end
+	return set_gear
 end
 
 function equip_elemental_magic_Gear_command(command)

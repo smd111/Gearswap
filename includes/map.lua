@@ -58,6 +58,6 @@ Typ = {
 	spells = S{'White Magic','Black Magic','Ninjutsu','Geomancy','Blue Magic','Bard Song'},
 	abilitys = S{'/jobability','/pet','/weaponskill','/monsterskill'},
 	}
-		--Finishing moves needed for Flourishes (use spell.name to get the amount)
+		--Finishing moves needed for Flourishes (use spell.en to get the amount)
 min_fm_for_flourishes = {['Animated Flourish']=1, ['Desperate Flourish']=1, ['Violent Flourish']=1, ['Reverse Flourish']=1, ['Building Flourish']=1,
 						['Wild Flourish']=2, ['Climactic Flourish']=1, ['Striking Flourish']=2, ['Ternary Flourish']=3,}

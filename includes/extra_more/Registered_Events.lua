@@ -1,6 +1,13 @@
 require 'actions'
+packets = require('packets')
 partynames ={}
+skill = {}
 seqid = string.char(0,0)
+skill_type = {'Axe','Club','Dagger','Great Axe','Great Katana','Great Sword','Hand-to-Hand','Katana','Polearm','Scythe','Staff','Sword','Archery','Marksmanship',
+			'Throwing','Evasion','Guard','Parrying','Shield','Blue Magic','Dark Magic','Divine Magic','Elemental Magic','Enfeebling Magic','Enhancing Magic',
+			'Geomancy','Handbell','Healing Magic','Ninjutsu','Singing','Stringed Instrument','Summoning Magic','Wind Instrument','Automaton Archery','Automaton Magic',
+			'Automaton Melee'}
+skill_count = 1
 
 -- added events--
 -- Action event
@@ -13,7 +20,7 @@ function event_action(act)
 		end
     end
 end
-windower.raw_register_event('action', event_action)
+--windower.raw_register_event('action', event_action)
 -- LVL up event
 function level_up()
 	if updatedisplay then
@@ -45,6 +52,13 @@ function incoming_chunk(id, data, modified, injected, blocked)
 			end
 		end
 	end
+	if id == 0x062 then
+		local packet = packets.parse('incoming', data)
+		skill = packet
+		if Display then
+			updatedisplay()
+		end
+	end
 	if id == 0x0C8 then
 		triggered = true
 	end
@@ -71,4 +85,4 @@ function target_change(number)
         end
     end
 end
-windower.raw_register_event('target change', target_change)
+--windower.raw_register_event('target change', target_change)

@@ -17,23 +17,25 @@
 		["Damascus Bullet"] = "Dm. Bul. Pouch", ["Achiyal. Bullet"] = "Al. Bull. Pouch", ["Adlivun Bullet"] = "Ad. Bull. Pouch", ["Titanium Bullet"] = "Ti. Bull. Pouch", ["Bismuth Bullet"] = "Bi. Bull. Pouch",
 		["Eminent Bullet"] = "Em. Bul. Pouch", ["Ra'Kaznar Bullet"] = "Ra. Bul. Pouch",}
 
+	sets.ammo_empty = {ammo=empty,}
 --Ammo functions
 function ammo_check()
 	if player.inventory[combined_ammo[sets[player.status].ammo]] and player.inventory[sets[player.status].ammo] == nil then
 		return true
 	end
+	return false
 end
 function ammo_reequip()
 	if player.inventory[combined_ammo[sets[player.status].ammo]] ~= nil then
 		return combined_ammo[sets[player.status].ammo]
 	end
 end
-function ammo_rule(spell,status,set_gear)
+function ammo_rule(spell)
 	if spell.english == "Ranged" and ammo_check() then
 		cancel_spell()
+		equip(sets.ammo_empty)
 		send_command('input /item "'..ammo_reequip()..'" <me>')
-		equip({ammo="empty"})
-	elseif spell.english == "Ranged" and player.inventory[sets[player.status].ammo] and player.equipment.ammo ~= sets[player.status].ammo then
-		equip_set(set_gear, sets[player.status])
+	elseif spell.english == "Ranged" and not ammo_check() then
+		equip(sets[player.status])
 	end
 end

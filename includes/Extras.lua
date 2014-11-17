@@ -32,32 +32,35 @@ function run_event(spell, event_type)
 	local status = {end_event=false, end_spell=false}
 	local set_gear = {}
 	set_gear = set_combine(set_gear, sets[player.status])
-	if _G['mf_'..event_type] then
-		 _G['mf_'..event_type](spell,status,set_gear)
-	end
-	if status.end_spell then cancel_spell() end
-	if status.end_event then return end
 	if _G['debug_'..event_type] then
-		 _G['debug_'..event_type](spell,status,set_gear)
+		 set_gear = set_combine(set_gear, _G['debug_'..event_type](spell,status,set_gear))
 	end
-	if status.end_spell then cancel_spell() end
-	if status.end_event then return end
+	if _G['mf_'..event_type] then
+		 set_gear = set_combine(set_gear, _G['mf_'..event_type](spell,status,set_gear))
+	end
+	if end_spell and event_type == 'precast' then cancel_spell() end
+	if end_event and event_type == 'precast' then return end
 	if _G['main_job_'..event_type] then
-		 _G['main_job_'..event_type](spell,status,set_gear)
+		 set_gear = set_combine(set_gear, _G['main_job_'..event_type](spell,status,set_gear))
 	end
-	if status.end_spell then cancel_spell() end
-	if status.end_event then return end
+	if end_spell and event_type == 'precast' then cancel_spell() end
+	if end_event and event_type == 'precast' then return end
 	if _G['sub_job_'..event_type] then
-		 _G['sub_job_'..event_type](spell,status,set_gear)
+		 set_gear = set_combine(set_gear, _G['sub_job_'..event_type](spell,status,set_gear))
 	end
-	if status.end_spell then cancel_spell() end
-	if status.end_event then return end
-	if windower.wc_match(event_type, '*cast|pretarget') then
-		if extra_events then
-			extra_events(spell,status,set_gear)
-		end
-		equip(set_gear)
+	if end_spell and event_type == 'precast' then cancel_spell() end
+	if end_event and event_type == 'precast' then return end
+	if conquest_Gear then
+		set_gear = set_combine(set_gear, conquest_Gear(set_gear))
 	end
+	if end_spell and event_type == 'precast' then cancel_spell() end
+	if end_event and event_type == 'precast' then return end
+	if windower.wc_match(event_type, 'precast|pretarget|midcast|pet_midcast') then
+		set_gear = set_combine(set_gear, extra_events(spell,set_gear))
+	end
+	if end_spell and event_type == 'precast' then cancel_spell() end
+	if end_event and event_type == 'precast' then return end
+	equip(set_gear)
 end
 function equip_set(set_gear, set)
 	for i,v in pairs(set) do
@@ -69,7 +72,7 @@ function filtered_action(spell)
 	run_event(spell, 'filtered_action')
 end
 function pretarget(spell)
-	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+	--if spell_stopper(spell) and not Disable_All then cancel_spell() return end
 	run_event(spell, 'pretarget')
 end
 function precast(spell)
@@ -126,7 +129,9 @@ function pet_aftercast(spell)
 	run_event(spell, 'pet_aftercast')
 end
 function file_unload()
-	mf_file_unload()
+	if mf_file_unload then
+		mf_file_unload()
+	end
 	if main_job_file_unload then
 		main_job_file_unload()
 	end
@@ -138,51 +143,10 @@ function file_unload()
 	end
 end
 function status_change(new,old)
-	local set_gear = {}
-	set_gear = set_combine(set_gear, sets.Idle)
-	if mf_status_change then
-		mf_status_change(new,old, status, set_gear)
-	end
-	if debug_status_change then
-		debug_status_change(new,old,status,set_gear)
-	end
-	if main_job_status_change then
-		main_job_status_change(new,old,status,set_gear)
-	end
-	if sub_job_status_change then
-		sub_job_status_change(new,old,status,set_gear)
-	end
-	if conquest_Gear then	
-		conquest_Gear(status,set_gear)
-	end
-	equip(set_gear)
+	run_event(spell, 'status_change')
 end
 function buff_change(name,gain)
-	local status = {end_event=false, end_spell=false}
-	local set_gear = {}
-	set_gear = set_combine(set_gear, sets[player.status])
-	if sleepset then
-		sleepset(name,gain,status,set_gear)
-	end
-	if mf_buff_change then
-		mf_buff_change(name,gain,status,set_gear)
-	end
-	if debug_buff_change then
-		debug_buff_change(name,gain,status,set_gear)
-	end
-	if status.end_spell then cancel_spell() end
-	if status.end_event then return end
-	if main_job_buff_change then
-		main_job_buff_change(name,gain,status,set_gear)
-	end
-	if status.end_spell then cancel_spell() end
-	if status.end_event then return end
-	if sub_job_buff_change then
-		sub_job_buff_change(name,gain,status,set_gear)
-	end
-	if status.end_spell then cancel_spell() end
-	if status.end_event then return end
-	equip(set_gear)
+	run_event(spell, 'buff_change')
 end
 function self_command(command)
 	if mf_self_command then
@@ -214,28 +178,7 @@ function self_command(command)
 	end
 end
 function pet_change(pet,gain)
-	local status = {end_event=false, end_spell=false}
-	local set_gear = {}
-	set_gear = set_combine(set_gear, sets[player.status])
-	if mf_pet_change then
-		mf_pet_change(pet,gain,status,set_gear)
-	end
-	if status.end_spell then cancel_spell() end
-	if status.end_event then return end
-	if debug_pet_change then
-		debug_pet_change(pet,gain,status,set_gear)
-	end
-	if main_job_pet_change then
-		main_job_pet_change(pet,gain,status,set_gear)
-	end
-	if status.end_spell then cancel_spell() end
-	if status.end_event then return end
-	if sub_job_pet_change then
-		sub_job_pet_change(pet,gain,status,set_gear)
-	end
-	if status.end_spell then cancel_spell() end
-	if status.end_event then return end
-	equip(set_gear)
+	run_event(spell, 'pet_change')
 end
 function sub_job_change(new,old)
 	send_command("gs r")
@@ -283,22 +226,23 @@ if Disable_All then
 	return
 end
 --extra functions-----------------------------------------------------------------------------------------------------------------
-function extra_events(spell,status,set_gear)
+function extra_events(spell,set_gear)
 	if ammo_rule then
-		ammo_rule(spell,status,set_gear)
+		ammo_rule(spell)
 	end
 	if conquest_Gear then
-		conquest_Gear(set_gear)
+		set_gear = set_combine(set_gear, conquest_Gear(set_gear))
 	end
 	if equip_elemental_ws_Gear then
-		equip_elemental_ws_Gear(spell,status,set_gear)
+		set_gear = set_combine(set_gear, equip_elemental_ws_Gear(spell,status))
 	end
 	if equip_elemental_magic_staves then
-		equip_elemental_magic_staves(spell,status,set_gear)
+		set_gear = set_combine(set_gear, equip_elemental_magic_staves(spell,status))
 	end
 	if equip_elemental_magic_obi and sets.obi then
-		equip_elemental_magic_obi(spell,status,set_gear)
+		set_gear = set_combine(set_gear, equip_elemental_magic_obi(spell,status))
 	end
+	return set_gear
 end
 function extracommands(command)
 	if command == "reload_gearswap" then
@@ -320,12 +264,13 @@ function extracommands(command)
 		end
 	end
 end
-function equip_elemental_magic_obi(spell,set_gear)
+function equip_elemental_magic_obi(spell)
 	if not Typ.abilitys:contains(spell.prefix) then
 		if spell.element == world.weather_element or spell.element == world.day_element then
 			set_gear = set_combine(set_gear, sets.obi[spell.element])
 		end
 	end
+	return set_gear
 end
 function spell_stopper(spell)
 	if spell.english ~= 'Ranged' and spell.type ~= 'WeaponSkill' then
@@ -365,19 +310,19 @@ function spell_stopper(spell)
 			end
 		end
 	end
-	-- if min_fm_for_flourishes[spell.name] then
-		-- local fm_count = 0
-		-- for i, v in pairs(buffactive) do
-			-- if string.startswith(i, 'finishing move') then
-				-- for w in string.gmatch (i, '%d') do
-					-- fm_count = tonumber(w)
-					-- if min_fm_for_flourishes[spell.name] < fm_count then
-						-- return true
-					-- end
-				-- end
-			-- end
-		-- end
-	-- end
+	if min_fm_for_flourishes[spell.en] then
+		local fm_count = 0
+		for i, v in pairs(buffactive) do
+			if string.startswith(tostring(i), 'Finishing Move') then
+				for w in string.gmatch (i, '%d') do
+					fm_count = tonumber(w)
+					if min_fm_for_flourishes[spell.en] < fm_count then
+						return true
+					end
+				end
+			end
+		end
+	end
 	if not windower.wc_match(spell.english, 'Warp*|Teleport*|Recall*|Retrace|Escape') and cities:contains(world.area) then
 		return true
 	end
@@ -427,17 +372,18 @@ function gearchang_stopper(spell)
 	end
 	return false
 end
-function sleepset(name,gain)
+function sleepset(name,gain,status)
 	if name == "sleep" then
 		if gain then
 			enable("neck","back")
-			equip_set(set_gear, {neck="Opo-opo Necklace",back="Aries Mantle"})
+			set_gear = set_combine(set_gear, {neck="Opo-opo Necklace",back="Aries Mantle"})
 			disable("neck","back","main","sub","range","ammo")
 		else
 			enable("neck","back","main","sub","range","ammo")
-			equip_set(set_gear, sets[player.status])
+			set_gear = set_combine(set_gear, sets[player.status])
 		end
 	end
+	return set_gear
 end
 if file_write then
 	file_write()
