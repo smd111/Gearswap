@@ -72,6 +72,8 @@ function debug_precast(spell)
 			add_to_chat(7,"Weather Element= "..tostring(world.weather_element))
 			add_to_chat(7,"Moon Phase= "..tostring(world.moon))
 			add_to_chat(7,"Zone Name= "..tostring(world.zone))
+			add_to_chat(7,"spell.tp_cost= "..tostring(spell.tp_cost))
+			add_to_chat(7,"Zone Name= "..tostring(world.zone))
 		end
 	end
 end

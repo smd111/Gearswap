@@ -107,89 +107,91 @@ function mf_file_unload()
 	---------------------------------------
 	--put your file_unload rules here
 	---------------------------------------
-	return false
+	return
 end
 function mf_status_change(new,old, status, set_gear)
 	----------------------------------------
 	--put your status_change rules here
 	----------------------------------------
 	if new=='Engaged' then
-		equip_set(set_gear, sets.Engaged)
+		set_gear = set_combine(set_gear, sets.Engaged)
 	elseif new=='Idle' then
-		equip_set(set_gear, sets.Idle)
+		set_gear = set_combine(set_gear, sets.Idle)
 	elseif new=='Resting' then
-		equip_set(set_gear, sets.Resting)
+		set_gear = set_combine(set_gear, sets.Resting)
 	end
-	return false
+	return set_gear
 end
 function mf_pet_change(pet,gain,status,set_gear)
 	---------------------------------------
 	--put your pet_change rules here
 	--to stop processing of all precast rules use: return true
 	---------------------------------------
-	return false
+	return set_gear
 end
 function mf_filtered_action(spell,status,set_gear)
 	---------------------------------------
 	--put your filtered_action rules here
 	--to stop processing of all precast rules use: return true
 	---------------------------------------
+	return
 end
 function mf_pretarget(spell,status,set_gear)
 	---------------------------------------
 	--put your pretarget rules here
 	---------------------------------------
-	return false
+	return set_gear
 end
 function mf_precast(spell,status,set_gear)
-	if spell.name == 'Meditate' and (player.tp >= 2750 or buffactive['Invisible']) then
+	if spell.en == 'Meditate' and (player.tp >= 2750 or buffactive['Invisible']) then
 		cancel_spell()		
 		return true
 	end
 	---------------------------------------
 	--put your precast rules here
 	---------------------------------------
+	return set_gear
 end
 function mf_buff_change(name,gain,status,set_gear)
 	---------------------------------------
 	--put your buff_change rules here
 	---------------------------------------
-	return false
+	return set_gear
 end
 function mf_midcast(spell,status,set_gear)
 	---------------------------------------
 	--put your midcast rules here
 	--to stop processing of all midcast rules use: return true
 	---------------------------------------
-	return false
+	return set_gear
 end
 function mf_pet_midcast(spell,status,set_gear)
 	---------------------------------------
 	--put your pet_midcast rules here
 	--to stop processing of all pet_midcast rules use: return true
 	---------------------------------------
-	return false
+	return set_gear
 end
 function mf_aftercast(spell,status,set_gear)
 	---------------------------------------
 	--put your aftercast rules here
 	--to stop processing of all aftercast rules use: return true
 	---------------------------------------
-	equip_set(set_gear, sets[player.status])--you can change this
-	return false
+	set_gear = set_combine(set_gear, sets[player.status])--you can change this
+	return set_gear
 end
 function mf_pet_aftercast(spell,status,set_gear)
 	---------------------------------------
 	--put your pet_aftercast rules here
 	--to stop processing of all pet_aftercast rules use: return true
 	---------------------------------------
-	equip_set(set_gear, sets[player.status])--you can change this 
-	return false
+	set_gear = set_combine(set_gear, sets[player.status])--you can change this 
+	return set_gear
 end
 function mf_self_command(command)
 	---------------------------------------
 	--put your self_command rules here
 	--to stop processing of all self_command rules use: return true
 	---------------------------------------
-	return false
+	return
 end

@@ -35,31 +35,29 @@ function run_event(spell, event_type)
 	if _G['debug_'..event_type] then
 		 set_gear = set_combine(set_gear, _G['debug_'..event_type](spell,status,set_gear))
 	end
-	if _G['mf_'..event_type] then
-		 set_gear = set_combine(set_gear, _G['mf_'..event_type](spell,status,set_gear))
-	end
-	if end_spell and event_type == 'precast' then cancel_spell() end
-	if end_event and event_type == 'precast' then return end
 	if _G['main_job_'..event_type] then
 		 set_gear = set_combine(set_gear, _G['main_job_'..event_type](spell,status,set_gear))
 	end
-	if end_spell and event_type == 'precast' then cancel_spell() end
-	if end_event and event_type == 'precast' then return end
+	if status.end_spell and event_type == 'precast' then cancel_spell() end
+	if status.end_event then return end
 	if _G['sub_job_'..event_type] then
 		 set_gear = set_combine(set_gear, _G['sub_job_'..event_type](spell,status,set_gear))
 	end
-	if end_spell and event_type == 'precast' then cancel_spell() end
-	if end_event and event_type == 'precast' then return end
+	if status.end_spell and event_type == 'precast' then cancel_spell() end
+	if status.end_event then return end
+	if _G['mf_'..event_type] then
+		 set_gear = set_combine(set_gear, _G['mf_'..event_type](spell,status,set_gear))
+	end
+	if status.end_spell and event_type == 'precast' then cancel_spell() end
+	if status.end_event then return end
 	if conquest_Gear then
 		set_gear = set_combine(set_gear, conquest_Gear(set_gear))
 	end
-	if end_spell and event_type == 'precast' then cancel_spell() end
-	if end_event and event_type == 'precast' then return end
 	if windower.wc_match(event_type, 'precast|pretarget|midcast|pet_midcast') then
-		set_gear = set_combine(set_gear, extra_events(spell,set_gear))
+		set_gear = set_combine(set_gear, extra_events(spell,status,set_gear))
 	end
-	if end_spell and event_type == 'precast' then cancel_spell() end
-	if end_event and event_type == 'precast' then return end
+	if status.end_spell and event_type == 'precast' then cancel_spell() end
+	if status.end_event then return end
 	equip(set_gear)
 end
 function equip_set(set_gear, set)
@@ -69,7 +67,18 @@ function equip_set(set_gear, set)
 end
 function filtered_action(spell)
 	if gearchang_stopper(spell) and not Disable_All then return end
-	run_event(spell, 'filtered_action')
+	if debug_buff_change then
+		 debug_buff_change(name,gain)
+	end
+	if mf_buff_change then
+		mf_buff_change(name,gain)
+	end
+	if main_job_buff_change then
+		main_job_buff_change(name,gain)
+	end
+	if sub_job_buff_change then
+		sub_job_buff_change(name,gain)
+	end
 end
 function pretarget(spell)
 	--if spell_stopper(spell) and not Disable_All then cancel_spell() return end
@@ -143,10 +152,37 @@ function file_unload()
 	end
 end
 function status_change(new,old)
-	run_event(spell, 'status_change')
+	local set_gear = {}
+	if conquest_Gear then
+		set_gear = set_combine(set_gear, conquest_Gear(set_gear))
+	end
+	if debug_status_change then
+		debug_status_change(new,old)
+	end
+	if mf_status_change then
+		set_gear = set_combine(set_gear, mf_status_change(new,old))
+	end
+	if main_job_status_change then
+		set_gear = set_combine(set_gear, main_job_status_change(new,old))
+	end
+	if sub_job_status_change then
+		set_gear = set_combine(set_gear, sub_job_status_change(new,old))
+	end
+	equip(set_gear)
 end
 function buff_change(name,gain)
-	run_event(spell, 'buff_change')
+	if debug_buff_change then
+		 debug_buff_change(name,gain)
+	end
+	if mf_buff_change then
+		mf_buff_change(name,gain)
+	end
+	if main_job_buff_change then
+		main_job_status_change(name,gain)
+	end
+	if sub_job_buff_change then
+		sub_job_buff_change(name,gain)
+	end
 end
 function self_command(command)
 	if mf_self_command then
@@ -226,7 +262,7 @@ if Disable_All then
 	return
 end
 --extra functions-----------------------------------------------------------------------------------------------------------------
-function extra_events(spell,set_gear)
+function extra_events(spell,status,set_gear)
 	if ammo_rule then
 		ammo_rule(spell)
 	end

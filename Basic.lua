@@ -127,6 +127,12 @@ function mf_file_unload()
 	return
 end
 function mf_status_change(new,old, status, set_gear)
+	----------------------------------------
+	--put your status_change rules here
+	----------------------------------------
+	--add gear to change with
+	--set_gear = set_combine(set_gear, <setname>)
+	----------------------------------------
 	if new=='Engaged' then
 		set_gear = set_combine(set_gear, sets.Engaged)
 	elseif new=='Idle' then
@@ -134,22 +140,13 @@ function mf_status_change(new,old, status, set_gear)
 	elseif new=='Resting' then
 		set_gear = set_combine(set_gear, sets.Resting)
 	end
-	----------------------------------------
-	--put your status_change rules here
-	--to stop processing of all status_change including extra functions but not mf_<function> rules use: status.end_event=true
-	--to end mf_status_change but not stop extra functions in status_change use: return set_gear
-	----------------------------------------
-	--add gear to change with
-	--set_gear = set_combine(set_gear, <setname>)
-	----------------------------------------
 	return set_gear
 end
 function mf_pet_change(pet,gain,status,set_gear)
 	---------------------------------------
 	--put your pet_change rules here
-	--to stop processing of all pet_change including extra functions but not mf_<function> rules use: status.end_event=true
-	--to end mf_pet_change but not stop extra functions in pet_change use: return set_gear
-	----------------------------------------
+	--to stop processing of all precast rules use: return true
+	---------------------------------------
 	--add gear to change with
 	--set_gear = set_combine(set_gear, <setname>)
 	----------------------------------------
@@ -158,12 +155,7 @@ end
 function mf_filtered_action(spell,status,set_gear)
 	---------------------------------------
 	--put your filtered_action rules here
-	--to cancle spell use eather:
-	--	cancel_spell()
-	--	or
-	--	status.end_spell=true
-	--to stop processing of all filtered_action including extra functions but not mf_<function> rules use: status.end_event=true
-	--to end mf_filtered_action but not stop extra functions in filtered_action use: return
+	--to stop processing of all filtered_action rules use: return true
 	---------------------------------------
 	--does not change gear as any thing
 	--that comes in to this function
@@ -175,12 +167,6 @@ end
 function mf_pretarget(spell,status,set_gear)
 	---------------------------------------
 	--put your pretarget rules here
-	--to cancle spell use eather:
-	--	cancel_spell()
-	--	or
-	--	status.end_spell=true
-	--to stop processing of all pretarget including extra functions but not mf_<function> rules use: status.end_event=true
-	--to end mf_pretarget but not stop extra functions in pretarget use: return set_gear
 	---------------------------------------
 	--add gear to change with
 	--set_gear = set_combine(set_gear, <setname>)
@@ -190,12 +176,7 @@ end
 function mf_precast(spell,status,set_gear)
 	---------------------------------------
 	--put your precast rules here
-	--to cancle spell use eather:
-	--	cancel_spell()
-	--	or
-	--	status.end_spell=true
-	--to stop processing of all precast including extra functions but not mf_<function> rules use: status.end_event=true
-	--to end mf_precast but not stop extra functions in precast use: return set_gear
+	--to stop processing of all precast rules use: return true
 	---------------------------------------
 	--add gear to change with
 	--set_gear = set_combine(set_gear, <setname>)
@@ -214,8 +195,7 @@ end
 function mf_midcast(spell,status,set_gear)
 	---------------------------------------
 	--put your midcast rules here
-	--to stop processing of all midcast including extra functions but not mf_<function> rules use: status.end_event=true
-	--to end mf_midcast but not stop extra functions in midcast use: return set_gear
+	--to stop processing of all midcast rules use: return true
 	---------------------------------------
 	--add gear to change with
 	--set_gear = set_combine(set_gear, <setname>)
@@ -225,8 +205,7 @@ end
 function mf_pet_midcast(spell,status,set_gear)
 	---------------------------------------
 	--put your pet_midcast rules here
-	--to stop processing of all pet_midcast including extra functions but not mf_<function> rules use: status.end_event=true
-	--to end mf_pet_midcast but not stop extra functions in pet_midcast use: return set_gear
+	--to stop processing of all pet_midcast rules use: return true
 	---------------------------------------
 	--add gear to change with
 	--set_gear = set_combine(set_gear, <setname>)
@@ -236,24 +215,16 @@ end
 function mf_aftercast(spell,status,set_gear)
 	---------------------------------------
 	--put your aftercast rules here
-	--to stop processing of all aftercast including extra functions but not mf_<function> rules use: status.end_event=true
-	--to end mf_aftercast but not stop extra functions in aftercast use: return set_gear
+	--to stop processing of all aftercast rules use: return true
 	---------------------------------------
-	--add gear to change with
-	--set_gear = set_combine(set_gear, <setname>)
-	----------------------------------------
 	set_gear = set_combine(set_gear, sets[player.status])--you can change this
 	return set_gear
 end
 function mf_pet_aftercast(spell,status,set_gear)
 	---------------------------------------
 	--put your pet_aftercast rules here
-	--to stop processing of all pet_aftercast including extra functions but not mf_<function> rules use: status.end_event=true
-	--to end mf_pet_aftercast but not stop extra functions in pet_aftercast use: return set_gear
+	--to stop processing of all pet_aftercast rules use: return true
 	---------------------------------------
-	--add gear to change with
-	--set_gear = set_combine(set_gear, <setname>)
-	----------------------------------------
 	set_gear = set_combine(set_gear, sets[player.status])--you can change this 
 	return set_gear
 end
@@ -261,35 +232,17 @@ function mf_self_command(command)
 	---------------------------------------
 	--put your self_command rules here
 	---------------------------------------
-	--add gear to change with
-	--set_gear = set_combine(set_gear, <setname>)
-	----------------------------------------
 end
 function mf_sub_job_change(new,old)
 	---------------------------------------
 	--put your sub_job_change rules here
 	---------------------------------------
+	return
 end
 --custom menu setup (if you do not know what your doing leave this alone)
 -- function custom_rules()
-	-- local custom_rules_set = {}
-	-- if SJi then
-	-- 	custom_rules_set.stepm = Stepmax
-	-- 	custom_rules_set.ssteps = Stopsteps and '' or 'Not '
-	-- end
-	-- if WSi then
-	-- 	custom_rules_set.cstaff = Changestaff and '' or 'Not '
-	-- 	custom_rules_set.ustaff = Usestaff
-	-- end
-	-- if Conquest_Gear then
-	-- 	custom_rules_set.cneckc = Conquest.neck.change and '' or 'Not '
-	-- 	custom_rules_set.cringc = Conquest.ring.change and '' or 'Not '
-	-- 	custom_rules_set.cneck = Conquest.neck.case[Conquest.neck.case_id]
-	-- 	custom_rules_set.cring = Conquest.ring.case[Conquest.ring.case_id]
-	-- end
-	-- custom_rules_set.mjob = windower.ffxi.get_player().main_job_full
-	-- custom_rules_set.mjob_lvl = windower.ffxi.get_player().main_job_level
-	-- return custom_rules_set
+	-- local custom_rules = {}
+	-- return custom_rules
 -- end
 -- function custom_menu()
 	-- local properties = L{}
@@ -312,25 +265,20 @@ end
 			-- properties:append('  Neck Type = ${cneck}')
 			-- properties:append('  Ring Type = ${cring}')
 		-- end
+		-- if autolock and Registered_Events then
+			-- properties:append('Auto Lock')
+			-- properties:append('  Enabled')
+		-- end
+		-- if autotarget then
+			-- properties:append('Auto Self Target ')
+			-- properties:append('After Battle Enabled')
+		-- end
+		-- if lvlwatch then
+			-- properties:append('${mjob}')
+			-- properties:append('   lvl = ${mjob_lvl}')
+		-- end
 	-- return properties
 -- end
 -- function custom_menu_commands(a)
 	-- print('a='..a)
-	-- if a == "{stepm}" then
-	--	Stepmax = (Stepmax % 5) + 1
-	-- elseif a == "{ssteps}" then
-	--	Stopsteps = not Stopsteps
-	-- elseif a == "{cstaff}" then
-	--	Changestaff = not Changestaff
-	-- elseif a == "{ustaff}" then
-	--	Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
-	-- elseif a == "{cneckc}" then
-	--	Conquest.neck.change = not Conquest.neck.change
-	-- elseif a == "{cringc}" then
-	--	Conquest.ring.change = not Conquest.ring.change
-	-- elseif a == "{cneck}" then
-	--	Conquest.neck.case_id = (Conquest.neck.case_id % #Conquest.neck.case) + 1
-	-- elseif a == "{cring}" then
-	--	Conquest.ring.case_id = (Conquest.ring.case_id % #Conquest.ring.case) + 1
-	-- end
 -- end
