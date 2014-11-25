@@ -337,7 +337,7 @@ function equip_elemental_magic_obi(spell)
 	return set_gear
 end
 function spell_stopper(spell)
-	if spell.english ~= 'Ranged' and spell.type ~= 'WeaponSkill' then
+	if spell.en ~= 'Ranged' and spell.type ~= 'WeaponSkill' then
 		if spell and spell.action_type == 'Ability' then
 			if tonumber(windower.ffxi.get_ability_recasts()[spell.recast_id]) > 0 then
 				add_to_chat(7, tostring(spell.name).." cancelled with recast of "..windower.ffxi.get_ability_recasts()[spell.recast_id])
@@ -369,7 +369,7 @@ function spell_stopper(spell)
 			if player.in_combat then
 				return true
 			end
-			if partynames.party1:contains(string.gsub(spell.english, "%s+", "")) then
+			if partynames.party1:contains(string.gsub(spell.en, "%s+", "")) then
 				return true
 			end
 		end
@@ -387,7 +387,7 @@ function spell_stopper(spell)
 			end
 		end
 	end
-	if not windower.wc_match(spell.english, 'Warp*|Teleport*|Recall*|Retrace|Escape') and cities:contains(world.area) then
+	if not windower.wc_match(spell.en, 'Warp*|Teleport*|Recall*|Retrace|Escape') and cities:contains(world.area) then
 		return true
 	end
 	-- if midaction() or pet_midaction() then
@@ -397,7 +397,7 @@ function spell_stopper(spell)
 		return true
 	end
 	if player.main_job == "NIN" or player.sub_job == "NIN" then	if nin_tool_check(spell) then return true end end
-	--if spell.english ~= 'Ranged' and spell.type ~= 'Item' and spell_range_check(spell) then	return true	end
+	--if spell.en ~= 'Ranged' and spell.type ~= 'Item' and spell_range_check(spell) then	return true	end
 	return false
 end
 function spell_range_check(spell)
