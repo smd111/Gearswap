@@ -25,14 +25,14 @@ start_nin_lvl = 1
 if spell.type == 'Ninjutsu' and nin_wheel then
 	if wheel_count < 7 then
 		wheel_count = wheel_count + 1
-		send_command('input /ma "'..nin_wheel_next[spell.name]..'" <t>')
+		send_command('input /ma "'..nin_wheel_next[spell.en]..'" <t>')
 	else
 		nin_wheel = false
 	end
 else spell.type == 'Ninjutsu' and nin_super_wheel then
 	if wheel_count < 19 then
 		wheel_count = wheel_count + 1
-		send_command('input /ma "'..nin_super_wheel_next[spell.name]..'" <t>')
+		send_command('input /ma "'..nin_super_wheel_next[spell.en]..'" <t>')
 	else
 		nin_wheel = false
 	end
