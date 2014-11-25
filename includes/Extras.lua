@@ -11,11 +11,8 @@ Conquest = {}
 Conquest.neck = {}
 Conquest.ring = {}
 partynames = {}
-sets.precast = {}
-sets.midcast = {}
-sets.aftercast = {}
-sets.pet_midcast = {}
-sets.pet_aftercast = {}
+lock_gear={main=false,sub=false,range=false,ammo=false,head=false,body=false,hands=false,legs=false,feet=false,
+			neck=false,waist=false,left_ear=false,right_ear=false,left_ring=false,right_ring=false,back=false,}
 auto_use_shards = true
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
 if gearswap.pathsearch({'Saves/job_'..player.main_job..'var.lua'}) then
@@ -28,60 +25,74 @@ else
 	return
 end
 ----------------------------------------------------------------------------------------------------------------------------------
-function run_event(spell, event_type)
-	local status = {end_event=false, end_spell=false}
+function run_event(spell,event_type)
+	local check_function = {[1]={"pretarget","precast","midcast","aftercast","pet_midcast","pet_aftercast"},[2]={"pretarget","precast","midcast","pet_midcast","pet_aftercast"},}
+	local status = {end_event=false,end_spell=false,}
 	local set_gear = {}
 	set_gear = set_combine(set_gear, sets[player.status])
 	if _G['debug_'..event_type] then
-		 set_gear = set_combine(set_gear, _G['debug_'..event_type](spell,status,set_gear))
+		_G['debug_'..event_type](spell,status)
 	end
 	if _G['main_job_'..event_type] then
-		 set_gear = set_combine(set_gear, _G['main_job_'..event_type](spell,status,set_gear))
+		 set_gear = set_combine(set_gear, _G['main_job_'..event_type](spell,status))
 	end
 	if status.end_spell and event_type == 'precast' then cancel_spell() end
 	if status.end_event then return end
 	if _G['sub_job_'..event_type] then
-		 set_gear = set_combine(set_gear, _G['sub_job_'..event_type](spell,status,set_gear))
+		 set_gear = set_combine(set_gear, _G['sub_job_'..event_type](spell,status))
 	end
 	if status.end_spell and event_type == 'precast' then cancel_spell() end
 	if status.end_event then return end
 	if _G['mf_'..event_type] then
-		 set_gear = set_combine(set_gear, _G['mf_'..event_type](spell,status,set_gear))
+		 set_gear = set_combine(set_gear, _G['mf_'..event_type](spell,status))
 	end
-	if status.end_spell and event_type == 'precast' then cancel_spell() end
-	if status.end_event then return end
-	if conquest_Gear then
-		set_gear = set_combine(set_gear, conquest_Gear(set_gear))
+	if table.contains(check_function[1], event_type) then
+		if conquest_Gear then
+			set_gear = set_combine(set_gear, conquest_Gear())
+		end
 	end
-	if windower.wc_match(event_type, 'precast|pretarget|midcast|pet_midcast') then
-		set_gear = set_combine(set_gear, extra_events(spell,status,set_gear))
+	if event_type == "precast" then
+		if ammo_rule then
+			ammo_rule(spell)
+		end
+		if special_weapon then
+			special_weapon(spell,status)
+		end
+	end
+	if table.contains(check_function[2], event_type)  then
+		if equip_elemental_ws_Gear then
+			set_gear = set_combine(set_gear, equip_elemental_ws_Gear(spell,status))
+		end
+		if equip_elemental_magic_staves then
+			set_gear = set_combine(set_gear, equip_elemental_magic_staves(spell,status))
+		end
+		if equip_elemental_magic_obi and sets.obi then
+			set_gear = set_combine(set_gear, equip_elemental_magic_obi(spell,status))
+		end
 	end
 	if status.end_spell and event_type == 'precast' then cancel_spell() end
 	if status.end_event then return end
 	equip(set_gear)
+	--for i, v in pairs(lock_gear) do
+		--if v then
+			--disable(tostring(i))
+		--elseif not v then
+			--enable(tostring(i))
+		--end
+	--end
 end
-function equip_set(set_gear, set)
-	for i,v in pairs(set) do
-		set_gear[i] = v
+function get_sets()
+	gear_setup()
+	if update_display then
+		coroutine.schedule(update_display, 3)
 	end
 end
 function filtered_action(spell)
 	if gearchang_stopper(spell) and not Disable_All then return end
-	if debug_buff_change then
-		 debug_buff_change(name,gain)
-	end
-	if mf_buff_change then
-		mf_buff_change(name,gain)
-	end
-	if main_job_buff_change then
-		main_job_buff_change(name,gain)
-	end
-	if sub_job_buff_change then
-		sub_job_buff_change(name,gain)
-	end
+	run_event(spell, 'pretarget')
 end
 function pretarget(spell)
-	--if spell_stopper(spell) and not Disable_All then cancel_spell() return end
+	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
 	run_event(spell, 'pretarget')
 end
 function precast(spell)
@@ -153,9 +164,7 @@ function file_unload()
 end
 function status_change(new,old)
 	local set_gear = {}
-	if conquest_Gear then
-		set_gear = set_combine(set_gear, conquest_Gear(set_gear))
-	end
+	set_gear = set_combine(set_gear, sets[player.status])
 	if debug_status_change then
 		debug_status_change(new,old)
 	end
@@ -168,9 +177,16 @@ function status_change(new,old)
 	if sub_job_status_change then
 		set_gear = set_combine(set_gear, sub_job_status_change(new,old))
 	end
+	if conquest_Gear then
+		set_gear = set_combine(set_gear, conquest_Gear(set_gear))
+	end
 	equip(set_gear)
 end
 function buff_change(name,gain)
+	local status = {end_event=false,end_spell=false,
+	lock={main=false,sub=false,range=false,ammo=false,head=false,body=false,hands=false,legs=false,feet=false,
+	neck=false,waist=false,left_ear=false,right_ear=false,left_ring=false,right_ring=false,back=false,},
+	}
 	if debug_buff_change then
 		 debug_buff_change(name,gain)
 	end
@@ -185,26 +201,30 @@ function buff_change(name,gain)
 	end
 end
 function self_command(command)
-	if mf_self_command then
-		mf_self_command(command)
-	end
+    local commandArgs = command
+    if type(commandArgs) == 'string' then
+        commandArgs = T(commandArgs:split(' '))
+    end
 	if debug_self_command then
-		debug_self_command(command)
+		debug_self_command(commandArgs)
+	end
+	if mf_self_command then
+		mf_self_command(commandArgs)
 	end
 	if extracommands then
-		extracommands(command)
+		extracommands(commandArgs)
 	end
 	if main_jobs_command then
-		main_jobs_command(command)
+		main_jobs_command(commandArgs)
 	end
 	if sub_jobs_command then
-		sub_jobs_command(command)
+		sub_jobs_command(commandArgs)
 	end
 	if equip_elemental_magic_Gear_command then
-		equip_elemental_magic_Gear_command(command)
+		equip_elemental_magic_Gear_command(commandArgs)
 	end
 	if conquest_Gear_command then
-		conquest_Gear_command(command)
+		conquest_Gear_command(commandArgs)
 	end
 	if file_write then
 		file_write()
@@ -214,7 +234,15 @@ function self_command(command)
 	end
 end
 function pet_change(pet,gain)
-	run_event(spell, 'pet_change')
+	if main_job_pet_change then
+		main_job_pet_change(pet,gain)
+	end
+	if sub_job_pet_change then
+		sub_job_pet_change(pet,gain)
+	end
+	if mf_pet_change then
+		mf_pet_change(pet,gain)
+	end
 end
 function sub_job_change(new,old)
 	send_command("gs r")

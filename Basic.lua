@@ -126,7 +126,7 @@ function mf_file_unload()
 	---------------------------------------
 	return
 end
-function mf_status_change(new,old, status, set_gear)
+function mf_status_change(new,old,status,set_gear)
 	----------------------------------------
 	--put your status_change rules here
 	----------------------------------------

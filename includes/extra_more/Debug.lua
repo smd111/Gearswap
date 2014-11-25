@@ -142,19 +142,38 @@ function debug_pet_aftercast(spell)
 	end
 end
 function debug_self_command(command)
-	if command == 'Debug' then
-		full_debug = not full_debug
-		send_command('clear log')
-		send_command('gs debug_mode;wait 0.3;gs show_swaps')
-		add_to_chat(7,'Debug Mode = ' .. (full_debug and 'ON' or 'OFF'))
-	end
-	if command == 'Debugtype' then
-		fulldebug.count = (fulldebug.count % #fulldebug.type) + 1
-		add_to_chat(7,'Debug Mode Type = ' .. tostring(fulldebug.type[fulldebug.count]))
-	end
-	if full_debug then
-		if fulldebug.count == 11 then
+	if string.lower(command[1]) == "t" or string.lower(command[1]) == "toggle" then
+		if command[2] == 'Debug' then
+			full_debug = not full_debug
+			send_command('clear log')
+			send_command('gs debug_mode;wait 0.3;gs show_swaps')
+			add_to_chat(7,'Debug Mode = ' .. (full_debug and 'ON' or 'OFF'))
+		end
+	elseif string.lower(command[1]) == "c" or string.lower(command[1]) == "cycle" then
+		if command == 'Debugtype' then
+			fulldebug.count = (fulldebug.count % #fulldebug.type) + 1
+			add_to_chat(7,'Debug Mode Type = ' .. tostring(fulldebug.type[fulldebug.count]))
+		end
+	elseif string.lower(command[1]) == "s" or string.lower(command[1]) == "set" then
+		if command[2] == 'Debugtype' then
+			fulldebug.count = tonumber(command[3])
+			add_to_chat(7,'Debug Mode Type = ' .. tostring(fulldebug.type[fulldebug.count]))
+		end
+	else
+		if command == 'tDebug' then
+			full_debug = not full_debug
+			send_command('clear log')
+			send_command('gs debug_mode;wait 0.3;gs show_swaps')
+			add_to_chat(7,'Debug Mode = ' .. (full_debug and 'ON' or 'OFF'))
+		end
+		if command == 'cDebugtype' then
+			fulldebug.count = (fulldebug.count % #fulldebug.type) + 1
+			add_to_chat(7,'Debug Mode Type = ' .. tostring(fulldebug.type[fulldebug.count]))
+		end
+		if full_debug then
+			if fulldebug.count == 11 then
 			add_to_chat(7,"Command= "..tostring(command))
+			end
 		end
 	end
 end

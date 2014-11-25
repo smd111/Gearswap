@@ -5,9 +5,10 @@
 
 function sub_job_precast(spell,status,set_gear)
 	if spell.english == 'Reward' then
-		equip_set(set_gear, sets.bst.reward)
+		set_gear = set_combine(set_gear, sets.bst.reward)
 	end
 	if spell.english == 'Charm' then
-		equip_set(set_gear, sets.bst.charm)
+		set_gear = set_combine(set_gear, sets.bst.charm)
 	end
+	return set_gear
 end
