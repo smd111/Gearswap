@@ -30,8 +30,6 @@ Registered_Events = true
 Debug = false
 --Use Display Include (Default: true)
 Display = true
---Display Main Job and LVL (Default: false)
-lvlwatch = false
 --Start with minimized window (Default: false)
 window_hidden = true
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -41,7 +39,7 @@ jobring = {left_ring="Vehemence Ring",} --if using the conquest include put the 
 -- jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},}
 -- jobring = {left_ring="Prouesse Ring",}
 include('includes/Extras.lua')
-function get_sets()
+function gear_setup()
 	sets.Engaged = {
     main="Eminent Sickle",
     sub="Uther's Grip",
@@ -96,11 +94,6 @@ function get_sets()
 	---------------------------------------
 	--put your sets here
 	---------------------------------------
-	--gear_mode:append('test')
-	--gear_mode:append('test2')
-	if update_display then
-		coroutine.schedule(update_display, 3)
-	end
 end
 function mf_file_unload()
 	---------------------------------------

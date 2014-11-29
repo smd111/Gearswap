@@ -32,8 +32,6 @@ Debug = false
 Display = true
 --Display Main Job and LVL (Default: false)
 lvlwatch = false
---Start with minimized window (Default: false)
-window_hidden = true
 --Shown skill watch (Default: false)
 skillwatch = false
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -43,10 +41,12 @@ jobring = {left_ring="Rajas Ring",} --if using the conquest include put the left
 -- jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},}
 -- jobring = {left_ring="Prouesse Ring",}
 include('includes/Extras.lua')
-function get_sets()
+function gear_setup()
 	sets.Engaged = {
     main="Eminent Dagger",
     sub="Eminent Axe",
+    range="Eminent Bow",
+    ammo="Iron Arrow",
     head="Wayfarer Circlet",
     body="Wayfarer Robe",
     hands="Wayfarer Cuffs",
@@ -63,6 +63,8 @@ function get_sets()
 	sets.Idle = {
     main="Eminent Dagger",
     sub="Eminent Axe",
+    range="Eminent Bow",
+    ammo="Iron Arrow",
     head="Wayfarer Circlet",
     body="Wayfarer Robe",
     hands="Wayfarer Cuffs",
@@ -79,6 +81,8 @@ function get_sets()
 	sets.Resting = {
     main="Eminent Dagger",
     sub="Eminent Axe",
+    range="Eminent Bow",
+    ammo="Iron Arrow",
     head="Wayfarer Circlet",
     body="Wayfarer Robe",
     hands="Wayfarer Cuffs",
@@ -95,9 +99,6 @@ function get_sets()
 	---------------------------------------
 	--put your sets here
 	---------------------------------------
-	if update_display then
-		coroutine.schedule(update_display, 3)
-	end
 	--send_command('lua load AutoRA')
 end
 function mf_file_unload()
@@ -107,7 +108,7 @@ function mf_file_unload()
 	---------------------------------------
 	return
 end
-function mf_status_change(new,old, status, set_gear)
+function mf_status_change(new,old,status,set_gear)
 	----------------------------------------
 	--put your status_change rules here
 	----------------------------------------

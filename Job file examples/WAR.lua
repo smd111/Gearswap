@@ -30,8 +30,6 @@ Registered_Events = true
 Debug = false
 --Use Display Include (Default: true)
 Display = true
---Display Main Job and LVL (Default: false)
-lvlwatch = true
 --Start with minimized window (Default: false)
 window_hidden = true
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -41,63 +39,58 @@ jobring = {left_ring="Bastokan Ring",} --if using the conquest include put the l
 -- jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},}
 -- jobring = {left_ring="Prouesse Ring",}
 include('includes/Extras.lua')
-function get_sets()
+function gear_setup()
 	sets.Engaged = {
-		head="Tema. Headband",
-		body="Temachtiani Shirt",
-		hands="Temachtiani Gloves",
-		legs="Temachtiani Pants",
-		feet="Temachtiani Boots",
-		neck="Wivre Gorget",
-		waist="Marid Belt",
-		left_ear="Sanative Earring",
-		right_ear="Terminus Earring",
-		left_ring="Bastokan Ring",
-		right_ring="Prouesse Ring",
-		back="Cerberus Mantle",
+    main="Eminent Voulge",
+    sub="Uther's Grip",
+    head="Outrider Mask",
+    body="Outrider Mail",
+    hands="Outrider Mittens",
+    legs="Outrider Hose",
+    feet="Outrider Greaves",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Marid Belt",
+    left_ear="Sanative Earring",
+    right_ear="Terminus Earring",
+    left_ring="Enlivened Ring",
+    right_ring="Vehemence Ring",
+    back="Cerberus Mantle",
 	}
 	sets.Idle = {
-		head="Tema. Headband",
-		body="Temachtiani Shirt",
-		hands="Temachtiani Gloves",
-		legs="Temachtiani Pants",
-		feet="Temachtiani Boots",
-		neck="Wivre Gorget",
-		waist="Marid Belt",
-		left_ear="Sanative Earring",
-		right_ear="Terminus Earring",
-		left_ring="Bastokan Ring",
-		right_ring="Prouesse Ring",
-		back="Cerberus Mantle",
+    main="Eminent Voulge",
+    sub="Uther's Grip",
+    head="Outrider Mask",
+    body="Outrider Mail",
+    hands="Outrider Mittens",
+    legs="Outrider Hose",
+    feet="Outrider Greaves",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Marid Belt",
+    left_ear="Sanative Earring",
+    right_ear="Terminus Earring",
+    left_ring="Enlivened Ring",
+    right_ring="Vehemence Ring",
+    back="Cerberus Mantle",
 	}
 	sets.Resting = {
-		head="Tema. Headband",
-		body="Temachtiani Shirt",
-		hands="Temachtiani Gloves",
-		legs="Temachtiani Pants",
-		feet="Temachtiani Boots",
-		neck="Wivre Gorget",
-		waist="Marid Belt",
-		left_ear="Sanative Earring",
-		right_ear="Terminus Earring",
-		left_ring="Bastokan Ring",
-		right_ring="Prouesse Ring",
-		back="Cerberus Mantle",
-	}
-	sets.Scythe = {
-		main="Eminent Sickle",
-		sub="Uther's Grip",
-	}
-	sets.Gsward = {
-		main="Eminent Sword",
-		sub="Danger Grip",
+    main="Eminent Voulge",
+    sub="Uther's Grip",
+    head="Outrider Mask",
+    body="Outrider Mail",
+    hands="Outrider Mittens",
+    legs="Outrider Hose",
+    feet="Outrider Greaves",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Marid Belt",
+    left_ear="Sanative Earring",
+    right_ear="Terminus Earring",
+    left_ring="Enlivened Ring",
+    right_ring="Vehemence Ring",
+    back="Cerberus Mantle",
 	}
 	---------------------------------------
 	--put your sets here
 	---------------------------------------
-	if update_display then
-		coroutine.schedule(update_display, 3)
-	end
 end
 function mf_file_unload()
 	---------------------------------------

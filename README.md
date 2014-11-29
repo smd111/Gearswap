@@ -6,6 +6,9 @@ Setup--------------------------------------------------------------
 you need to use my basic.lua which has all the required info in the file
 at the top are some toggles you can change on your own thay are self explanatory
 
+to use display include requires Segoe UI Symbol font
+this font is native to vista/win7/win8
+
 -------------------------------------------------------------------
 Commands-----------------------------------------------------------
 

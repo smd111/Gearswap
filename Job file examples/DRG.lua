@@ -30,86 +30,69 @@ Registered_Events = true
 Debug = false
 --Use Display Include (Default: true)
 Display = true
---Display Main Job and LVL (Default: false)
-lvlwatch = true
 --Start with minimized window (Default: false)
 window_hidden = true
 -----------------------------------------------------------------------------------------------------------------------------------
 jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
-jobring = {left_ring="Rajas Ring",} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
--- example:
--- jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},}
--- jobring = {left_ring="Prouesse Ring",}
+jobring = {left_ring="Vehemence Ring",} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
 include('includes/Extras.lua')
-function get_sets()
+function gear_setup()
 	sets.Engaged = {
-    main="Ice Lance",
+    main="Eminent Lance",
     sub="Danger Grip",
     ammo="Fullmetal Bullet",
-    head="Perle Salade",
-    body="Perle Hauberk",
-    hands="Perle Moufles",
-    legs="Perle Brayettes",
-    feet="Perle Solerets",
+    head="Tema. Headband",
+    body="Temachtiani Shirt",
+    hands="Temachtiani Gloves",
+    legs="Temachtiani Pants",
+    feet="Temachtiani Boots",
     neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
     waist="Marid Belt",
-    left_ear="Zircon Earring",
-    right_ear="Kemas Earring",
-    left_ring="Rajas Ring",
+    left_ear="Dragonkin Earring",
+    right_ear="Terminus Earring",
+    left_ring="Vehemence Ring",
     right_ring="Prouesse Ring",
     back="Cerberus Mantle",
 	}
 	sets.Idle = {
-    main="Ice Lance",
+    main="Eminent Lance",
     sub="Danger Grip",
     ammo="Fullmetal Bullet",
-    head="Perle Salade",
-    body="Perle Hauberk",
-    hands="Perle Moufles",
-    legs="Perle Brayettes",
-    feet="Perle Solerets",
+    head="Tema. Headband",
+    body="Temachtiani Shirt",
+    hands="Temachtiani Gloves",
+    legs="Temachtiani Pants",
+    feet="Temachtiani Boots",
     neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
     waist="Marid Belt",
-    left_ear="Zircon Earring",
-    right_ear="Kemas Earring",
-    left_ring="Rajas Ring",
+    left_ear="Dragonkin Earring",
+    right_ear="Terminus Earring",
+    left_ring="Vehemence Ring",
     right_ring="Prouesse Ring",
     back="Cerberus Mantle",
 	}
 	sets.Resting = {
-    main="Ice Lance",
+    main="Eminent Lance",
     sub="Danger Grip",
     ammo="Fullmetal Bullet",
-    head="Perle Salade",
-    body="Perle Hauberk",
-    hands="Perle Moufles",
-    legs="Perle Brayettes",
-    feet="Perle Solerets",
+    head="Tema. Headband",
+    body="Temachtiani Shirt",
+    hands="Temachtiani Gloves",
+    legs="Temachtiani Pants",
+    feet="Temachtiani Boots",
     neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
     waist="Marid Belt",
     left_ear="Sanative Earring",
-    right_ear="Kemas Earring",
-    left_ring="Rajas Ring",
+    right_ear="Terminus Earring",
+    left_ring="Vehemence Ring",
     right_ring="Prouesse Ring",
     back="Cerberus Mantle",
 	}
-	---------------------------------------
-	--put your sets here
-	---------------------------------------
-	if update_display then
-		coroutine.schedule(update_display, 3)
-	end
 end
 function mf_file_unload()
-	---------------------------------------
-	--put your file_unload rules here
-	---------------------------------------
 	return
 end
-function mf_status_change(new,old, status, set_gear)
-	----------------------------------------
-	--put your status_change rules here
-	----------------------------------------
+function mf_status_change(new,old,status,set_gear)
 	if new=='Engaged' then
 		set_gear = set_combine(set_gear, sets.Engaged)
 	elseif new=='Idle' then
@@ -120,77 +103,38 @@ function mf_status_change(new,old, status, set_gear)
 	return set_gear
 end
 function mf_pet_change(pet,gain,status,set_gear)
-	---------------------------------------
-	--put your pet_change rules here
-	--to stop processing of all precast rules use: return true
-	---------------------------------------
-	return set_gear
+	return
 end
 function mf_filtered_action(spell,status,set_gear)
-	---------------------------------------
-	--put your filtered_action rules here
-	--to stop processing of all precast rules use: return true
-	---------------------------------------
 	return
 end
 function mf_pretarget(spell,status,set_gear)
-	---------------------------------------
-	--put your pretarget rules here
-	---------------------------------------
 	return set_gear
 end
 function mf_precast(spell,status,set_gear)
 	if pet.isvalid and spell.english == "Call Wyvern" then
 		status.end_spell=true
 		status.end_event=true
-		return
 	end
-	---------------------------------------
-	--put your precast rules here
-	--to stop processing of all precast rules use: return true
-	---------------------------------------
 	return set_gear
 end
 function mf_buff_change(name,gain,status,set_gear)
-	---------------------------------------
-	--put your buff_change rules here
-	---------------------------------------
-	return set_gear
+	return
 end
 function mf_midcast(spell,status,set_gear)
-	---------------------------------------
-	--put your midcast rules here
-	--to stop processing of all midcast rules use: return true
-	---------------------------------------
 	return set_gear
 end
 function mf_pet_midcast(spell,status,set_gear)
-	---------------------------------------
-	--put your pet_midcast rules here
-	--to stop processing of all pet_midcast rules use: return true
-	---------------------------------------
 	return set_gear
 end
 function mf_aftercast(spell,status,set_gear)
-	---------------------------------------
-	--put your aftercast rules here
-	--to stop processing of all aftercast rules use: return true
-	---------------------------------------
 	set_gear = set_combine(set_gear, sets[player.status])--you can change this
 	return set_gear
 end
 function mf_pet_aftercast(spell,status,set_gear)
-	---------------------------------------
-	--put your pet_aftercast rules here
-	--to stop processing of all pet_aftercast rules use: return true
-	---------------------------------------
-	set_gear = set_combine(set_gear, sets[player.status])--you can change this 
+	set_gear = set_combine(set_gear, sets[player.status])
 	return set_gear
 end
 function mf_self_command(command)
-	---------------------------------------
-	--put your self_command rules here
-	--to stop processing of all self_command rules use: return true
-	---------------------------------------
 	return
 end

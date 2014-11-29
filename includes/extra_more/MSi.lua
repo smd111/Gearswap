@@ -26,7 +26,7 @@ function equip_elemental_magic_staves(spell,set_gear)
 	end
 	return set_gear
 end
-function equip_elemental_magic_Gear_command(command)
+function equip_elemental_magic_Gear_self_command(command)
 	if string.lower(command[1]) == "t" or string.lower(command[1]) == "toggle" then
 		if command[2] == 'stavetouse' then
 			Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')

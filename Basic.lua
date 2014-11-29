@@ -42,8 +42,6 @@ Debug = false
 --Use Display Include (Default: true)
 --this include creats a display on your screen so you can see your settings
 Display = true
---Display Main Job and LVL (Default: false)
-lvlwatch = false
 --Start with minimized window (Default: false)
 window_hidden = true
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -53,7 +51,7 @@ jobring = {left_ring=""} --if using the conquest include put the left_ring that 
 -- jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},}
 -- jobring = {left_ring="Prouesse Ring",}
 include('includes/Extras.lua')
-function get_sets()
+function gear_setup()
 	---------------------------------------
 	--these are your base sets put in your
 	--default sets for status idle/resting
@@ -116,9 +114,6 @@ function get_sets()
 	---------------------------------------
 	--put your other sets here
 	---------------------------------------
-	if update_display then
-		coroutine.schedule(update_display, 3)
-	end
 end
 function mf_file_unload()
 	---------------------------------------
@@ -126,7 +121,7 @@ function mf_file_unload()
 	---------------------------------------
 	return
 end
-function mf_status_change(new,old,status,set_gear)
+function mf_status_change(new,old, status, set_gear)
 	----------------------------------------
 	--put your status_change rules here
 	----------------------------------------

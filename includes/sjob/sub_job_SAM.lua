@@ -1,5 +1,5 @@
 
-	sets.sam = {left_ear='Haten Earring'}
+	sets.sam_job = {left_ear='Haten Earring'}
 
 function sub_job_precast(spell,status,set_gear)
 	if spell.english == 'Meditate' then

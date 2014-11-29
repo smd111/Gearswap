@@ -61,3 +61,6 @@ Typ = {
 		--Finishing moves needed for Flourishes (use spell.en to get the amount)
 min_fm_for_flourishes = {['Animated Flourish']=1, ['Desperate Flourish']=1, ['Violent Flourish']=1, ['Reverse Flourish']=1, ['Building Flourish']=1,
 						['Wild Flourish']=2, ['Climactic Flourish']=1, ['Striking Flourish']=2, ['Ternary Flourish']=3,}
+
+		--Job type table 
+jobs = {ammo = {"WAR","RDM","THF","PLD","DRK","BST","RNG","SAM","NIN","COR"},magic = {"WHM","BLM","RDM","BRD","SMN","SCH","GEO"},}

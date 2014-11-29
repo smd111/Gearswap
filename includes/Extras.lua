@@ -1,19 +1,20 @@
 --Variable Set-up -----------------------------------------------------------------------------------------------------------------
 tool_bag_id = 0
 autolock = false
-box = {}
-box.pos = {}
-box.pos.x = 0
-box.pos.y = 0
+menu = {}
+menu.pos = {}
+menu.pos.x = 0
+menu.pos.y = 0
 gear_mode = T{'Normal', 'Acc', 'Att'}
 gear_mode_count = 1
 Conquest = {}
 Conquest.neck = {}
 Conquest.ring = {}
 partynames = {}
-lock_gear={main=false,sub=false,range=false,ammo=false,head=false,body=false,hands=false,legs=false,feet=false,
-			neck=false,waist=false,left_ear=false,right_ear=false,left_ring=false,right_ring=false,back=false,}
+lock_gear={main=false,sub=false,range=false,ammo=false,head=false,body=false,hands=false,legs=false,feet=false,neck=false,waist=false,left_ear=false,
+			right_ear=false,left_ring=false,right_ring=false,back=false,}
 auto_use_shards = true
+events = {"debug_","extra_","main_job_","sub_job_","equip_elemental_magic_Gear_","conquest_Gear_","mf_"}
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
 if gearswap.pathsearch({'Saves/job_'..player.main_job..'var.lua'}) then
 	include('Saves/job_'..player.main_job..'var.lua')
@@ -25,61 +26,64 @@ else
 	return
 end
 ----------------------------------------------------------------------------------------------------------------------------------
-function run_event(spell,event_type)
-	local check_function = {[1]={"pretarget","precast","midcast","aftercast","pet_midcast","pet_aftercast"},[2]={"pretarget","precast","midcast","pet_midcast","pet_aftercast"},}
-	local status = {end_event=false,end_spell=false,}
+function run_event(event_type,...)
+	local a,b = unpack{...}
+	local check_function = {[1]={"pretarget","precast","midcast","aftercast","pet_midcast","pet_aftercast"},
+							[2]={"pretarget","precast","midcast","pet_midcast","pet_aftercast"},
+							[3]={"filtered_action","file_unload","buff_change","self_command","pet_change","sub_job_change"},}
+	local status = {end_event=false,end_spell=false,stop_swapping_gear=false}
 	local set_gear = {}
 	set_gear = set_combine(set_gear, sets[player.status])
-	if _G['debug_'..event_type] then
-		_G['debug_'..event_type](spell,status)
-	end
-	if _G['main_job_'..event_type] then
-		 set_gear = set_combine(set_gear, _G['main_job_'..event_type](spell,status))
-	end
-	if status.end_spell and event_type == 'precast' then cancel_spell() end
-	if status.end_event then return end
-	if _G['sub_job_'..event_type] then
-		 set_gear = set_combine(set_gear, _G['sub_job_'..event_type](spell,status))
-	end
-	if status.end_spell and event_type == 'precast' then cancel_spell() end
-	if status.end_event then return end
-	if _G['mf_'..event_type] then
-		 set_gear = set_combine(set_gear, _G['mf_'..event_type](spell,status))
-	end
 	if table.contains(check_function[1], event_type) then
 		if conquest_Gear then
-			set_gear = set_combine(set_gear, conquest_Gear())
+			set_gear = set_combine(set_gear, conquest_Gear(status,lock_gear))
 		end
 	end
 	if event_type == "precast" then
 		if ammo_rule then
-			ammo_rule(spell)
+			ammo_rule(a,status,lock_gear)
 		end
 		if special_weapon then
-			special_weapon(spell,status)
-		end
-	end
-	if table.contains(check_function[2], event_type)  then
-		if equip_elemental_ws_Gear then
-			set_gear = set_combine(set_gear, equip_elemental_ws_Gear(spell,status))
-		end
-		if equip_elemental_magic_staves then
-			set_gear = set_combine(set_gear, equip_elemental_magic_staves(spell,status))
-		end
-		if equip_elemental_magic_obi and sets.obi then
-			set_gear = set_combine(set_gear, equip_elemental_magic_obi(spell,status))
+			special_weapon(a,status,lock_gear)
 		end
 	end
 	if status.end_spell and event_type == 'precast' then cancel_spell() end
 	if status.end_event then return end
-	equip(set_gear)
-	--for i, v in pairs(lock_gear) do
-		--if v then
-			--disable(tostring(i))
-		--elseif not v then
-			--enable(tostring(i))
+	if table.contains(check_function[2], event_type)  then
+		if equip_elemental_ws_Gear then
+			set_gear = set_combine(set_gear, equip_elemental_ws_Gear(a,status,lock_gear))
+		end
+		if equip_elemental_magic_staves then
+			set_gear = set_combine(set_gear, equip_elemental_magic_staves(a,status,lock_gear))
+		end
+		if equip_elemental_magic_obi and sets.obi then
+			set_gear = set_combine(set_gear, equip_elemental_magic_obi(a,status,lock_gear))
+		end
+	end
+	for i, v in ipairs(events) do
+		if b and _G[v..''..event_type] then
+			set_gear = set_combine(set_gear, _G[v..''..event_type](a,b,status,lock_gear))
+			if status.end_spell and event_type == 'precast' then cancel_spell() end
+			if status.end_event then return end
+		elseif _G[v..''..event_type] then
+			set_gear = set_combine(set_gear, _G[v..''..event_type](a,status,lock_gear))
+			if status.end_spell and event_type == 'precast' then cancel_spell() end
+			if status.end_event then return end
+		end
+	end
+	if table.contains(check_function[3], event_type)  then
+		status.stop_swapping_gear = true
+	end
+	if not status.stop_swapping_gear then
+		equip(set_gear)
+		--for i, v in pairs(lock_gear) do
+			--if v then
+				--disable(tostring(i))
+			--elseif not v then
+				--enable(tostring(i))
+			--end
 		--end
-	--end
+	end
 end
 function get_sets()
 	gear_setup()
@@ -89,143 +93,64 @@ function get_sets()
 end
 function filtered_action(spell)
 	if gearchang_stopper(spell) and not Disable_All then return end
-	run_event(spell, 'pretarget')
+	run_event('filtered_action',spell)
 end
 function pretarget(spell)
 	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
-	run_event(spell, 'pretarget')
+	run_event('pretarget',spell)
 end
 function precast(spell)
 	if spell_stopper(spell) and not Disable_All then cancel_spell() return end
-	run_event(spell, 'precast')
+	run_event('precast',spell)
 end
 function midcast(spell)
 	if gearchang_stopper(spell) and not Disable_All then return end
-	run_event(spell, 'midcast')
+	run_event('midcast',spell)
 end
 function aftercast(spell)
 	if gearchang_stopper(spell) and not Disable_All then return end
-	run_event(spell, 'aftercast')
+	run_event('aftercast',spell)
 	if player.in_combat and auto_use_shards then
-		if player.inventory['C. Ygg. Shard I'] then
-			send_command('wait 3.0;input /item "C. Ygg. Shard I" <me>')
-		elseif player.inventory['C. Ygg. Shard II'] then
-			send_command('wait 3.0;input /item "C. Ygg. Shard II" <me>')
-		elseif player.inventory['C. Ygg. Shard III'] then
-			send_command('wait 3.0;input /item "C. Ygg. Shard III" <me>')
-		elseif player.inventory['C. Ygg. Shard IV'] then
-			send_command('wait 3.0;input /item "C. Ygg. Shard IV" <me>')
-		elseif player.inventory['C. Ygg. Shard V'] then
-			send_command('wait 3.0;input /item "C. Ygg. Shard V" <me>')
-		elseif player.inventory['Z. Ygg. Shard I'] then
-			send_command('wait 3.0;input /item "Z. Ygg. Shard I" <me>')
-		elseif player.inventory['Z. Ygg. Shard II'] then
-			send_command('wait 3.0;input /item "Z. Ygg. Shard II" <me>')
-		elseif player.inventory['Z. Ygg. Shard III'] then
-			send_command('wait 3.0;input /item "Z. Ygg. Shard III" <me>')
-		elseif player.inventory['Z. Ygg. Shard IV'] then
-			send_command('wait 3.0;input /item "Z. Ygg. Shard IV" <me>')
-		elseif player.inventory['Z. Ygg. Shard V'] then
-			send_command('wait 3.0;input /item "Z. Ygg. Shard V" <me>')
-		elseif player.inventory['A. Ygg. Shard I'] then
-			send_command('wait 3.0;input /item A. Ygg. Shard I" <me>')
-		elseif player.inventory['A. Ygg. Shard II'] then
-			send_command('wait 3.0;input /item "A. Ygg. Shard II" <me>')
-		elseif player.inventory['A. Ygg. Shard III'] then
-			send_command('wait 3.0;input /item "A. Ygg. Shard III" <me>')
-		elseif player.inventory['A. Ygg. Shard IV'] then
-			send_command('wait 3.0;input /item "A. Ygg. Shard IV" <me>')
-		elseif player.inventory['A. Ygg. Shard V'] then
-			send_command('wait 3.0;input /item "A. Ygg. Shard V" <me>')
+		local shard_name = {'C. Ygg. Shard ','Z. Ygg. Shard ','A. Ygg. Shard I'}
+		for sni, snv in ipairs(shard_name) do
+			local shard_count = {'I','II','III','IV','V'}
+			for sci, scv in ipairs(shard_count) do
+				if player.inventory[snv..''..scv] then
+					send_command('wait 3.0;input /item "'..snv..''..scv..'" <me>')
+				end
+			end
 		end
 	end
 end
 function pet_midcast(spell)
 	if gearchang_stopper(spell) and not Disable_All then return end
-	run_event(spell, 'pet_midcast')
+	run_event('pet_midcast',spell)
 end
 function pet_aftercast(spell)
 	if gearchang_stopper(spell) and not Disable_All then return end
-	run_event(spell, 'pet_aftercast')
+	run_event('pet_aftercast',spell)
 end
 function file_unload()
-	if mf_file_unload then
-		mf_file_unload()
-	end
-	if main_job_file_unload then
-		main_job_file_unload()
-	end
-	if sub_job_file_unload then
-		sub_job_file_unload()
-	end
+	run_event('file_unload',nil)
 	if file_write then
 		file_write()
 	end
 end
 function status_change(new,old)
-	local set_gear = {}
-	set_gear = set_combine(set_gear, sets[player.status])
-	if debug_status_change then
-		debug_status_change(new,old)
-	end
-	if mf_status_change then
-		set_gear = set_combine(set_gear, mf_status_change(new,old))
-	end
-	if main_job_status_change then
-		set_gear = set_combine(set_gear, main_job_status_change(new,old))
-	end
-	if sub_job_status_change then
-		set_gear = set_combine(set_gear, sub_job_status_change(new,old))
-	end
-	if conquest_Gear then
-		set_gear = set_combine(set_gear, conquest_Gear(set_gear))
-	end
-	equip(set_gear)
+	run_event('status_change',new,old)
 end
 function buff_change(name,gain)
-	local status = {end_event=false,end_spell=false,
-	lock={main=false,sub=false,range=false,ammo=false,head=false,body=false,hands=false,legs=false,feet=false,
-	neck=false,waist=false,left_ear=false,right_ear=false,left_ring=false,right_ring=false,back=false,},
-	}
-	if debug_buff_change then
-		 debug_buff_change(name,gain)
-	end
-	if mf_buff_change then
-		mf_buff_change(name,gain)
-	end
-	if main_job_buff_change then
-		main_job_status_change(name,gain)
-	end
-	if sub_job_buff_change then
-		sub_job_buff_change(name,gain)
+	run_event('buff_change',name,gain)
+	if name == "sleep" then
+		if gain then
+			equip({neck="Opo-opo Necklace",back="Aries Mantle"})
+		else
+			equip(sets[player.status])
+		end
 	end
 end
 function self_command(command)
-    local commandArgs = command
-    if type(commandArgs) == 'string' then
-        commandArgs = T(commandArgs:split(' '))
-    end
-	if debug_self_command then
-		debug_self_command(commandArgs)
-	end
-	if mf_self_command then
-		mf_self_command(commandArgs)
-	end
-	if extracommands then
-		extracommands(commandArgs)
-	end
-	if main_jobs_command then
-		main_jobs_command(commandArgs)
-	end
-	if sub_jobs_command then
-		sub_jobs_command(commandArgs)
-	end
-	if equip_elemental_magic_Gear_command then
-		equip_elemental_magic_Gear_command(commandArgs)
-	end
-	if conquest_Gear_command then
-		conquest_Gear_command(commandArgs)
-	end
+	run_event('self_command',command)
 	if file_write then
 		file_write()
 	end
@@ -234,21 +159,11 @@ function self_command(command)
 	end
 end
 function pet_change(pet,gain)
-	if main_job_pet_change then
-		main_job_pet_change(pet,gain)
-	end
-	if sub_job_pet_change then
-		sub_job_pet_change(pet,gain)
-	end
-	if mf_pet_change then
-		mf_pet_change(pet,gain)
-	end
+	run_event('pet_change',pet,gain)
 end
 function sub_job_change(new,old)
 	send_command("gs r")
-	if mf_sub_job_change then
-		mf_sub_job_change(new,old)
-	end
+	run_event('sub_job_change',new,old)
 end
 -----------------------------------------------------------------------------------------------------------------------------------
 if MJi and not Disable_All and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'}) then
@@ -257,14 +172,14 @@ end
 if SJi and not Disable_All and gearswap.pathsearch({'includes/sjob/sub_job_'..player.sub_job..'.lua'}) then
 	include('includes/sjob/sub_job_'..player.sub_job..'.lua')
 end
-if MSi and not Disable_All and windower.wc_match(player.main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and 
+if MSi and not Disable_All and table.contains(jobs.magic, player.main_job) and 
 														gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
 	include('includes/extra_more/MSi.lua')
 end
 if WSi and not Disable_All and gearswap.pathsearch({'includes/extra_more/WSi.lua'}) then
 	include('includes/extra_more/WSi.lua')
 end
-if Ammo and not Disable_All and windower.wc_match(player.main_job, "WAR|RDM|THF|PLD|DRK|BST|RNG|SAM|NIN|COR") and 
+if Ammo and not Disable_All and table.contains(jobs.ammo, player.main_job) and 
 															gearswap.pathsearch({'includes/extra_more/Ammo.lua'}) then
 	include('includes/extra_more/Ammo.lua')
 end
@@ -290,25 +205,7 @@ if Disable_All then
 	return
 end
 --extra functions-----------------------------------------------------------------------------------------------------------------
-function extra_events(spell,status,set_gear)
-	if ammo_rule then
-		ammo_rule(spell)
-	end
-	if conquest_Gear then
-		set_gear = set_combine(set_gear, conquest_Gear(set_gear))
-	end
-	if equip_elemental_ws_Gear then
-		set_gear = set_combine(set_gear, equip_elemental_ws_Gear(spell,status))
-	end
-	if equip_elemental_magic_staves then
-		set_gear = set_combine(set_gear, equip_elemental_magic_staves(spell,status))
-	end
-	if equip_elemental_magic_obi and sets.obi then
-		set_gear = set_combine(set_gear, equip_elemental_magic_obi(spell,status))
-	end
-	return set_gear
-end
-function extracommands(command)
+function extra_self_commands(command)
 	if command == "reload_gearswap" then
 		if file_write then
 			file_write()
@@ -328,7 +225,7 @@ function extracommands(command)
 		end
 	end
 end
-function equip_elemental_magic_obi(spell)
+function equip_elemental_magic_obi(spell,status)
 	if not Typ.abilitys:contains(spell.prefix) then
 		if spell.element == world.weather_element or spell.element == world.day_element then
 			set_gear = set_combine(set_gear, sets.obi[spell.element])
@@ -387,7 +284,9 @@ function spell_stopper(spell)
 			end
 		end
 	end
-	if not windower.wc_match(spell.en, 'Warp*|Teleport*|Recall*|Retrace|Escape') and cities:contains(world.area) then
+	local transportation_spells = {'Escape','Recall-Jugner','Recall-Meriph','Recall-Pashh','Retrace','Teleport-Altep','Teleport-Dem','Teleport-Holla','Teleport-Mea',
+									'Teleport-Vahzl','Teleport-Yhoat','Warp','Warp II'}
+	if not table.contains(transportation_spells, spell.en) and table.contains(cities, world.area) then
 		return true
 	end
 	-- if midaction() or pet_midaction() then
@@ -397,7 +296,7 @@ function spell_stopper(spell)
 		return true
 	end
 	if player.main_job == "NIN" or player.sub_job == "NIN" then	if nin_tool_check(spell) then return true end end
-	--if spell.en ~= 'Ranged' and spell.type ~= 'Item' and spell_range_check(spell) then	return true	end
+	--if spell.en ~= 'Ranged' and spell.type ~= 'Item' and spell_range_check(spell) then return true end
 	return false
 end
 function spell_range_check(spell)

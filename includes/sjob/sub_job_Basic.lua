@@ -44,7 +44,7 @@ function sub_job_aftercast(spell,status,set_gear)
 	--equip example: equip_set(set_gear, sets.Engaged)
 	---------------------------------------
 end
-function sub_jobs_command(command)
+function sub_jobs_self_command(command)
 	---------------------------------------
 	--put your self_command rules here
 	---------------------------------------

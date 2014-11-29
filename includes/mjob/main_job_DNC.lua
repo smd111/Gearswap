@@ -37,7 +37,7 @@ function main_job_precast(spell,status,set_gear)
 		end
 	end
 end
-function main_jobs_command(command)
+function main_jobs_self_command(command)
 	---------------------------------------
 	--put your self_command rules here
 	---------------------------------------

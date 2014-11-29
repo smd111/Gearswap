@@ -30,8 +30,6 @@ Registered_Events = true
 Debug = false
 --Use Display Include (Default: true)
 Display = true
---Display Main Job and LVL (Default: false)
-lvlwatch = true
 --Start with minimized window (Default: false)
 window_hidden = true
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -42,7 +40,7 @@ jobring = {left_ring="Leather Ring",} --if using the conquest include put the le
 -- jobring = {left_ring="Prouesse Ring",}
 include('includes/Extras.lua')
 Changesumstaff = false --Togle with //gs c tchangeSMNstaff (true for change staves, false for do not change staves)
-function get_sets()
+function gear_setup()
 	Pettype = {}
 	Pettype.Summon = {}
 	Pettype.Summon.weapon = {
@@ -106,9 +104,6 @@ function get_sets()
 	---------------------------------------
 	--put your sets here
 	---------------------------------------
-	if update_display then
-		coroutine.schedule(update_display, 3)
-	end
 end
 function mf_file_unload()
 	---------------------------------------

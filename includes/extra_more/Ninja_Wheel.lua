@@ -38,7 +38,7 @@ else spell.type == 'Ninjutsu' and nin_super_wheel then
 	end
 end
 --self_command
-function self_command(command)
+function ninja_wheel_self_command(command)
 	if 
     local commandArgs = command
     if type(commandArgs) == 'string' then

@@ -15,7 +15,7 @@ Conquest = {
 		"Chocobo Circuit","The Colosseum","Alzadaal Undersea Ruins","Zhayolm Remnants","Arrapago Remnants","Bhaflau Remnants","Silver Sea Remnants",
 		"Nyzul Isle","Hazhalm Testing Grounds","Caedarva Mire","Ghoyu's Reverie"},
 	no_ring = {"Hall of Transference","Memory Flux","Promyvion - Dem","Promyvion - Holla","Promyvion - Mea","Promyvion - Vahzl","Spire of Dem","Spire of Holla",
-		"Spire of Mea","Spire of Vahzl"}
+		"Spire of Mea","Spire of Vahzl"},
 	neck = {
 		case = {"Mage","Tank","Normal"},
 		Mage = {[1] = {neck="Rep.Gold Medal"}, [2] = jobneck},
@@ -26,6 +26,7 @@ Conquest = {
 		Mage = {[1] = {left_ring="Gnd.Kgt. Ring"}, [2] = jobring},
 		Tank = {[1] = {left_ring="Ptr.Prt. Ring"},[2] = jobring},
 		Normal = {[1] = {left_ring="Gld.Msk. Ring"},[2] = jobring},},}
+		
 if not Conquest.neck.change then
 	Conquest.neck.change = false
 end
@@ -67,7 +68,7 @@ function conquest_Gear(status,set_gear)
 	end
 	return set_gear
 end
-function conquest_Gear_command(command)
+function conquest_Gear_self_command(command)
 	if command == "conquestneck" then
 		Conquest.neck.case_id = (Conquest.neck.case_id % #Conquest.neck.case) + 1
 	end
