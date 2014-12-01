@@ -20,15 +20,15 @@ function event_action(act)
 		end
     end
 end
---windower.raw_register_event('action', event_action)
+--action_id = windower.raw_register_event('action', event_action)
 -- LVL up event
 function level_up()
 	if updatedisplay then
 		coroutine.schedule(updatedisplay, 3)
 	end
 end
-windower.raw_register_event('level up', level_up)
-windower.raw_register_event('level down', level_up)
+level_up_id = windower.raw_register_event('level up', level_up)
+level_down_id = windower.raw_register_event('level down', level_up)
 --Incoming Chunk Event(Packets Received)
 function incoming_chunk(id, data, modified, injected, blocked)
 	if triggered and data:sub(3,4) ~= seqid then
@@ -64,7 +64,7 @@ function incoming_chunk(id, data, modified, injected, blocked)
 	end
 	seqid = data:sub(3,4)
 end
-windower.raw_register_event('incoming chunk', incoming_chunk)
+incoming_chunk_id = windower.raw_register_event('incoming chunk', incoming_chunk)
 --Target Change Event
 function target_change(number)
     local target = windower.ffxi.get_mob_by_target("t")
@@ -85,4 +85,4 @@ function target_change(number)
         end
     end
 end
---windower.raw_register_event('target change', target_change)
+--target_change_id = windower.raw_register_event('target change', target_change)

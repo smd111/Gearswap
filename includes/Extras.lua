@@ -11,8 +11,7 @@ Conquest = {}
 Conquest.neck = {}
 Conquest.ring = {}
 partynames = {}
-lock_gear={main=false,sub=false,range=false,ammo=false,head=false,body=false,hands=false,legs=false,feet=false,neck=false,waist=false,left_ear=false,
-			right_ear=false,left_ring=false,right_ring=false,back=false,}
+lock_gear={main=false,sub=false,range=false,ammo=false,head=false,body=false,hands=false,legs=false,feet=false,neck=false,waist=false,left_ear=false,right_ear=false,left_ring=false,right_ring=false,back=false,}
 auto_use_shards = true
 events = {"debug_","extra_","main_job_","sub_job_","equip_elemental_magic_Gear_","conquest_Gear_","mf_"}
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
@@ -36,37 +35,37 @@ function run_event(event_type,...)
 	set_gear = set_combine(set_gear, sets[player.status])
 	if table.contains(check_function[1], event_type) then
 		if conquest_Gear then
-			set_gear = set_combine(set_gear, conquest_Gear(status,lock_gear))
+			set_gear = set_combine(set_gear, conquest_Gear(status,set_gear))
 		end
 	end
 	if event_type == "precast" then
 		if ammo_rule then
-			ammo_rule(a,status,lock_gear)
+			ammo_rule(a,status,set_gear)
 		end
 		if special_weapon then
-			special_weapon(a,status,lock_gear)
+			special_weapon(a,status,set_gear)
 		end
 	end
 	if status.end_spell and event_type == 'precast' then cancel_spell() end
 	if status.end_event then return end
 	if table.contains(check_function[2], event_type)  then
 		if equip_elemental_ws_Gear then
-			set_gear = set_combine(set_gear, equip_elemental_ws_Gear(a,status,lock_gear))
+			set_gear = set_combine(set_gear, equip_elemental_ws_Gear(a,status,set_gear))
 		end
 		if equip_elemental_magic_staves then
-			set_gear = set_combine(set_gear, equip_elemental_magic_staves(a,status,lock_gear))
+			set_gear = set_combine(set_gear, equip_elemental_magic_staves(a,status,set_gear))
 		end
 		if equip_elemental_magic_obi and sets.obi then
-			set_gear = set_combine(set_gear, equip_elemental_magic_obi(a,status,lock_gear))
+			set_gear = set_combine(set_gear, equip_elemental_magic_obi(a,status,set_gear))
 		end
 	end
 	for i, v in ipairs(events) do
 		if b and _G[v..''..event_type] then
-			set_gear = set_combine(set_gear, _G[v..''..event_type](a,b,status,lock_gear))
+			set_gear = set_combine(set_gear, _G[v..''..event_type](a,b,status,set_gear))
 			if status.end_spell and event_type == 'precast' then cancel_spell() end
 			if status.end_event then return end
 		elseif _G[v..''..event_type] then
-			set_gear = set_combine(set_gear, _G[v..''..event_type](a,status,lock_gear))
+			set_gear = set_combine(set_gear, _G[v..''..event_type](a,status,set_gear))
 			if status.end_spell and event_type == 'precast' then cancel_spell() end
 			if status.end_event then return end
 		end
@@ -108,6 +107,7 @@ function midcast(spell)
 	run_event('midcast',spell)
 end
 function aftercast(spell)
+	--sleep(3)
 	if gearchang_stopper(spell) and not Disable_All then return end
 	run_event('aftercast',spell)
 	if player.in_combat and auto_use_shards then
@@ -166,43 +166,26 @@ function sub_job_change(new,old)
 	run_event('sub_job_change',new,old)
 end
 -----------------------------------------------------------------------------------------------------------------------------------
-if MJi and not Disable_All and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'}) then
-	include('includes/mjob/main_job_'..player.main_job..'.lua')
-end
-if SJi and not Disable_All and gearswap.pathsearch({'includes/sjob/sub_job_'..player.sub_job..'.lua'}) then
-	include('includes/sjob/sub_job_'..player.sub_job..'.lua')
-end
-if MSi and not Disable_All and table.contains(jobs.magic, player.main_job) and 
-														gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
-	include('includes/extra_more/MSi.lua')
-end
-if WSi and not Disable_All and gearswap.pathsearch({'includes/extra_more/WSi.lua'}) then
-	include('includes/extra_more/WSi.lua')
-end
-if Ammo and not Disable_All and table.contains(jobs.ammo, player.main_job) and 
-															gearswap.pathsearch({'includes/extra_more/Ammo.lua'}) then
-	include('includes/extra_more/Ammo.lua')
-end
-if Special_Weapons and not Disable_All and gearswap.pathsearch({'includes/extra_more/Special_Weapons.lua'}) then
-	include('includes/extra_more/Special_Weapons.lua')
-end
-if Conquest_Gear and not Disable_All and gearswap.pathsearch({'includes/extra_more/Conquest_Gear.lua'}) then
-	include('includes/extra_more/Conquest_Gear.lua')
-end
-if Registered_Events and not Disable_All and gearswap.pathsearch({'includes/extra_more/Registered_Events.lua'}) then
-	include('includes/extra_more/Registered_Events.lua')
-end
-if Debug and not Disable_All and gearswap.pathsearch({'includes/extra_more/Debug.lua'}) then
-	include('includes/extra_more/Debug.lua')
-end
-if Display and not Disable_All and gearswap.pathsearch({'includes/extra_more/Display.lua'}) then
-	include('includes/extra_more/Display.lua')
-end
-if File_Write and not Disable_All and gearswap.pathsearch({'includes/extra_more/File_Write.lua'}) then
-	include('includes/extra_more/File_Write.lua')
+function load_includes()
+	local includes = {'MJi','SJi','MSi','WSi','Ammo','Special_Weapons','Conquest_Gear','Registered_Events','Debug','Display','File_Write'}
+	for i, v in pairs(includes) do
+		if v == 'MJi' and MJi and gearswap.pathsearch({'includes/sjob/sub_job_'..player.main_job..'.lua'}) then
+			include('includes/mjob/main_job_'..player.main_job..'.lua')
+		elseif v == 'SJi' and SJi and gearswap.pathsearch({'includes/sjob/sub_job_'..player.main_job..'.lua'}) then
+			include('includes/sjob/sub_job_'..player.sub_job..'.lua')
+		elseif v =='MSi' and MSi and table.contains(jobs.magic, player.main_job) and gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
+			include('includes/extra_more/MSi.lua')
+		elseif v == 'Ammo' and Ammo and table.contains(jobs.ammo, player.main_job) and gearswap.pathsearch({'includes/extra_more/Ammo.lua'}) then
+			include('includes/extra_more/Ammo.lua')
+		elseif _G[v] and gearswap.pathsearch({'includes/extra_more/'..v..'.lua'}) then
+			include('includes/extra_more/'..v..'.lua')
+		end
+	end
 end
 if Disable_All then
 	return
+else
+	load_includes()
 end
 --extra functions-----------------------------------------------------------------------------------------------------------------
 function extra_self_commands(command)
@@ -334,19 +317,6 @@ function gearchang_stopper(spell)
 		return true
 	end
 	return false
-end
-function sleepset(name,gain,status)
-	if name == "sleep" then
-		if gain then
-			enable("neck","back")
-			set_gear = set_combine(set_gear, {neck="Opo-opo Necklace",back="Aries Mantle"})
-			disable("neck","back","main","sub","range","ammo")
-		else
-			enable("neck","back","main","sub","range","ammo")
-			set_gear = set_combine(set_gear, sets[player.status])
-		end
-	end
-	return set_gear
 end
 if file_write then
 	file_write()
