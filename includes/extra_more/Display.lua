@@ -125,56 +125,6 @@ function initialize(text, settings, window_name)
         if not skillwatch and not lvlwatch then
             properties:append('\n > \n ')
         end
-    elseif window_name == 'skill_select_window' then
-        properties:append('Select Skill')
-        properties:append('${ax|Axe}')
-        properties:append('${cl|Club}')
-        properties:append('${dg|Dagger}')
-        properties:append('${ga|Great Axe}')
-        properties:append('${gk|Great Katana}')
-        properties:append('${gs|Great Sword}')
-        properties:append('${hh|Hand-to-Hand}')
-        properties:append('${kt|Katana}')
-        properties:append('${pl|Polearm}')
-        properties:append('${sc|Scythe}')
-        properties:append('${st|Staff}')
-        properties:append('${sw|Sword}')
-        properties:append('${ar|Archery}')
-        properties:append('${mk|Marksmanship}')
-        properties:append('${th|Throwing}')
-        properties:append('${ev|Evasion}')
-        properties:append('${gr|Guard}')
-        properties:append('${pa|Parrying}')
-        properties:append('${sh|Shield}')
-        properties:append('${bm|Blue Magic}')
-        properties:append('${dm|Dark Magic}')
-        properties:append('${dvm|Divine Magic}')
-        properties:append('${em|Elemental Magic}')
-        properties:append('${efm|Enfeebling Magic}')
-        properties:append('${ehm|Enhancing Magic}')
-        properties:append('${go|Geomancy}')
-        properties:append('${hb|Handbell}')
-        properties:append('${hm|Healing Magic}')
-        properties:append('${nin|Ninjutsu}')
-        properties:append('${so|Singing}')
-        properties:append('${sti|Stringed Instrument}')
-        properties:append('${smm|Summoning Magic}')
-        properties:append('${wi|Wind Instrument}')
-        properties:append('${aa|Automaton Archery}')
-        properties:append('${amg|Automaton Magic}')
-        properties:append('${am|Automaton Melee}')
-    elseif window_name == 'debug_select_window' then
-        properties:append('Select Debug')
-        properties:append('${s_c|Status Change}')
-        properties:append('${p_c|Pet Change}')
-        properties:append('${f_a|Filtered Action}')
-        properties:append('${ptarg|Pretarget}')
-        properties:append('${pcast|Precast}')
-        properties:append('${b_c|Buff Change}')
-        properties:append('${p_m|Pet Midcast}')
-        properties:append('${acast|Aftercast}')
-        properties:append('${p_a|Pet Aftercast}')
-        properties:append('${all|All}')
     elseif window_name == 'tab_select_window' then
         properties:append('Select Menu Tab')
         properties:append('${jset|Job Settings}')
@@ -192,6 +142,19 @@ function initialize(text, settings, window_name)
             if sets.weapon[v] then
                 properties:append('${wep'..change_number[i]..'|'..string.gsub(v, "_", " ")..'}')
             end
+        end
+    else
+        local menu_info = {}
+            menu_info['skill_select_window'] ={'Select Skill','${ax|Axe}','${cl|Club}','${dg|Dagger}','${ga|Great Axe}','${gk|Great Katana}','${gs|Great Sword}',
+                '${hh|Hand-to-Hand}','${kt|Katana}','${pl|Polearm}','${sc|Scythe}','${st|Staff}','${sw|Sword}','${ar|Archery}','${mk|Marksmanship}',
+                '${th|Throwing}','${ev|Evasion}','${gr|Guard}','${pa|Parrying}','${sh|Shield}','${bm|Blue Magic}','${dm|Dark Magic}','${dvm|Divine Magic}',
+                '${em|Elemental Magic}','${efm|Enfeebling Magic}','${ehm|Enhancing Magic}','${go|Geomancy}','${hb|Handbell}','${hm|Healing Magic}','${nin|Ninjutsu}',
+                '${so|Singing}','${sti|Stringed Instrument}','${smm|Summoning Magic}','${wi|Wind Instrument}','${aa|Automaton Archery}','${amg|Automaton Magic}',
+                '${am|Automaton Melee}'}
+            menu_info['debug_select_window'] = {'Select Debug','${s_c|Status Change}','${p_c|Pet Change}','${f_a|Filtered Action}','${ptarg|Pretarget}',
+                '${pcast|Precast}','${b_c|Buff Change}','${p_m|Pet Midcast}','${acast|Aftercast}','${p_a|Pet Aftercast}','${all|All}'}
+        for i, v in ipairs(menu_info[window_name]) do
+            properties:append(v)
         end
     end
     text:clear()
@@ -332,19 +295,11 @@ function mouse(mtype, x, y, delta, blocked)
     location[1].ya = 1
     location[1].yb = location.offset
     local count = 2
-    while count  <= button_lines do
+    while count <= button_lines do
          location[count] = {}
          location[count].ya = location[count - 1].yb
          location[count].yb = location[count - 1].yb + location.offset
          count = count + 1
-    end
-    if (window:hover(x, y) and window:visible()) or (button:hover(x, y) and button:visible()) or
-        (skillwatch and skill_select_window:hover(x, y) and skill_select_window:visible()) or
-        (Debug and debug_select_window:hover(x, y) and debug_select_window:visible()) or
-        (tab_select_window:hover(x, y) and tab_select_window:visible()) or (weapon_select_window:hover(x, y) and weapon_select_window:visible()) then
-        windower.prim.set_visibility('window_button', true)
-    else
-        windower.prim.set_visibility('window_button', false)
     end
     if mtype == 0 then
         if window:hover(x, y) and window:visible() then
@@ -367,18 +322,16 @@ function mouse(mtype, x, y, delta, blocked)
                             if not table.contains(hide_button, switches_table['window'][i][1]) then
                                 windower.prim.set_position('window_button', menu.pos.x, (menu.pos.y + location[i].ya))
                                 windower.prim.set_size('window_button', mx, (location[i].yb - location[i].ya))
-                            else
-                                windower.prim.set_visibility('window_button', false)
                             end
-                        else
-                            windower.prim.set_visibility('window_button', false)
                         end
                     end
                 end
             end
+            windower.prim.set_visibility('window_button', true)
         elseif button:hover(x, y) and button:visible() then
             windower.prim.set_position('window_button', min_window.pos.x, min_window.pos.y)
             windower.prim.set_size('window_button', mx, my)
+            windower.prim.set_visibility('window_button', true)
         elseif skillwatch and skill_select_window:hover(x, y) and skill_select_window:visible() then
             for i, v in ipairs(location) do
                 if (hy > location[i].ya and hy < location[i].yb) then
@@ -386,14 +339,11 @@ function mouse(mtype, x, y, delta, blocked)
                         if not table.contains(hide_button, switches_table['skill_select_window'][i][1]) then
                             windower.prim.set_position('window_button', skill_select.pos.x, (skill_select.pos.y + location[i].ya))
                             windower.prim.set_size('window_button', mx, (location[i].yb - location[i].ya))
-                        else
-                            windower.prim.set_visibility('window_button', false)
                         end
-                    else
-                        windower.prim.set_visibility('window_button', false)
                     end
                 end
             end
+            windower.prim.set_visibility('window_button', true)
         elseif Debug and debug_select_window:hover(x, y) and debug_select_window:visible() then
             for i, v in ipairs(location) do
                 if (hy > location[i].ya and hy < location[i].yb) then
@@ -401,14 +351,11 @@ function mouse(mtype, x, y, delta, blocked)
                         if not table.contains(hide_button, switches_table['debug_select_window'][i][1]) then
                             windower.prim.set_position('window_button', debug_select.pos.x, (debug_select.pos.y + location[i].ya))
                             windower.prim.set_size('window_button', mx, (location[i].yb - location[i].ya))
-                        else
-                            windower.prim.set_visibility('window_button', false)
                         end
-                    else
-                        windower.prim.set_visibility('window_button', false)
                     end
                 end
             end
+            windower.prim.set_visibility('window_button', true)
         elseif tab_select_window:hover(x, y) and tab_select_window:visible() then
             for i, v in ipairs(location) do
                 if (hy > location[i].ya and hy < location[i].yb) then
@@ -416,14 +363,11 @@ function mouse(mtype, x, y, delta, blocked)
                         if not table.contains(hide_button, switches_table['tab_select_window'][i][1]) then
                             windower.prim.set_position('window_button', tab_select.pos.x, (tab_select.pos.y + location[i].ya))
                             windower.prim.set_size('window_button', mx, (location[i].yb - location[i].ya))
-                        else
-                            windower.prim.set_visibility('window_button', false)
                         end
-                    else
-                        windower.prim.set_visibility('window_button', false)
                     end
                 end
             end
+            windower.prim.set_visibility('window_button', true)
         elseif weapon_select_window:hover(x, y) and weapon_select_window:visible() then
             for i, v in ipairs(location) do
                 if (hy > location[i].ya and hy < location[i].yb) then
@@ -431,14 +375,11 @@ function mouse(mtype, x, y, delta, blocked)
                         if not table.contains(hide_button, switches_table['weapon_select_window'][i][1]) then
                             windower.prim.set_position('window_button', wep_select.pos.x, (wep_select.pos.y + location[i].ya))
                             windower.prim.set_size('window_button', mx, (location[i].yb - location[i].ya))
-                        else
-                            windower.prim.set_visibility('window_button', false)
                         end
-                    else
-                        windower.prim.set_visibility('window_button', false)
                     end
                 end
             end
+            windower.prim.set_visibility('window_button', true)
         else
             windower.prim.set_visibility('window_button', false)
         end
@@ -469,7 +410,7 @@ function mouse(mtype, x, y, delta, blocked)
         elseif button:hover(x, y) and button:visible() then
             button:hide()
             window_hidden = false
-            updatedisplay()
+            window:show()
         elseif skillwatch and skill_select_window:hover(x, y) and skill_select_window:visible() then
             local skill_code = {['{ax|Axe}']=1,['{cl|Club}']=2,['{dg|Dagger}']=3,['{ga|Great Axe}']=4,['{gk|Great Katana}']=5,['{gs|Great Sword}']=6,
                 ['{hh|Hand-to-Hand}']=7,['{kt|Katana}']=8,['{pl|Polearm}']=9,['{sc|Scythe}']=10,['{st|Staff}']=11,['{sw|Sword}']=12,

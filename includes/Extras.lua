@@ -16,6 +16,7 @@ lock_gear={main=false,sub=false,range=false,ammo=false,head=false,body=false,han
 auto_use_shards = true
 events = {"debug_","extra_","main_job_","sub_job_","equip_elemental_magic_Gear_","conquest_Gear_","mf_"}
 weapon_types_count = 1
+range_count = 1
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
 if gearswap.pathsearch({'Saves/job_'..player.main_job..'var.lua'}) then
     include('Saves/job_'..player.main_job..'var.lua')
@@ -150,7 +151,9 @@ function buff_change(name,gain)
     if name == "sleep" then
         if gain then
             equip({neck="Opo-opo Necklace",back="Aries Mantle"})
+            disable("neck","back")
         else
+            enable("neck","back")
             equip(sets[player.status], sets.weapon[weapon_types[player.main_job][weapon_types_count]])
         end
     end

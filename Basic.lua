@@ -99,7 +99,7 @@ function gear_setup()
     ---------------------------------------
     --put your weapons here
     --if the job can not equip a normal weapon
-    --any that you do not want to use comment out or remove 
+    --any that you do not want to use just comment out or remove 
     ---------------------------------------
     sets.weapon = {}
     sets.weapon['Axe'] = {main="",sub="",}

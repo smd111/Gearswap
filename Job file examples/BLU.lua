@@ -45,51 +45,50 @@ include('includes/Extras.lua')
 function gear_setup()
     sets.Engaged = {
     range="Chakram",
-    head="Tct.Mgc. Hat",
-    body="Tct.Mgc. Coat",
-    hands="Tct.Mgc. Cuffs",
-    legs="Tct.Mgc. Slops",
-    feet="Tct.Mgc. Pigaches",
+    head="Aurore Beret",
+    body="Aurore Doublet",
+    hands="Aurore Gloves",
+    legs="Aurore Brais",
+    feet="Aurore Gaiters",
     neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-    waist="Koenigs Belt",
+    waist="Marid Belt",
     left_ear="Beetle Earring",
-    right_ear="Ardent Earring",
+    right_ear="Suppanomimi",
     left_ring="Dasra's Ring",
-    right_ring="Rajas Ring",
-    back="Behemoth Mantle",
+    right_ring="Prouesse Ring",
+    back="Cerberus Mantle",
     }
     sets.Idle = {
     range="Chakram",
-    head="Tct.Mgc. Hat",
-    body="Tct.Mgc. Coat",
-    hands="Tct.Mgc. Cuffs",
-    legs="Tct.Mgc. Slops",
-    feet="Tct.Mgc. Pigaches",
+    head="Aurore Beret",
+    body="Aurore Doublet",
+    hands="Aurore Gloves",
+    legs="Aurore Brais",
+    feet="Aurore Gaiters",
     neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-    waist="Koenigs Belt",
+    waist="Marid Belt",
     left_ear="Beetle Earring",
-    right_ear="Ardent Earring",
+    right_ear="Suppanomimi",
     left_ring="Dasra's Ring",
-    right_ring="Rajas Ring",
-    back="Behemoth Mantle",
+    right_ring="Prouesse Ring",
+    back="Cerberus Mantle",
     }
     sets.Resting = {
-    range="Chakram",
-    head="Tct.Mgc. Hat",
-    body="Tct.Mgc. Coat",
-    hands="Tct.Mgc. Cuffs",
-    legs="Tct.Mgc. Slops",
-    feet="Tct.Mgc. Pigaches",
+    head="Aurore Beret",
+    body="Aurore Doublet",
+    hands="Aurore Gloves",
+    legs="Aurore Brais",
+    feet="Aurore Gaiters",
     neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-    waist="Koenigs Belt",
+    waist="Marid Belt",
     left_ear="Sanative Earring",
     right_ear="Relaxing Earring",
     left_ring="Dasra's Ring",
-    right_ring="Rajas Ring",
-    back="Behemoth Mantle",
+    right_ring="Prouesse Ring",
+    back="Cerberus Mantle",
     }
     sets.weapon = {}
-    --sets.weapon['Axe'] = {main="",sub="",}
+    -- sets.weapon['Axe'] = {main="",sub="",}
     -- sets.weapon['Club'] = {main="",sub="",}
     -- sets.weapon['Dagger'] = {main="",sub="",}
     -- sets.weapon['Great_Axe'] = {main="",sub="",}
@@ -100,7 +99,7 @@ function gear_setup()
     -- sets.weapon['Polearm'] = {main="",sub="",}
     -- sets.weapon['Scythe'] = {main="",sub="",}
     -- sets.weapon['Staff'] = {main="",sub="",}
-    sets.weapon['Sword'] = {main="Jagdplaute",sub="Jagdplaute",}
+    sets.weapon['Sword'] = {main="Firmament",sub="Firmament",}
     ---------------------------------------
     --put your sets here
     ---------------------------------------
