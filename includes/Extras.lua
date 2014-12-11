@@ -16,7 +16,7 @@ lock_gear={main=false,sub=false,range=false,ammo=false,head=false,body=false,han
 auto_use_shards = true
 events = {"debug_","extra_","main_job_","sub_job_","equip_elemental_magic_Gear_","conquest_Gear_","mf_"}
 weapon_types_count = 1
-range_count = 1
+range_type_count = 1
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
 if gearswap.pathsearch({'Saves/job_'..player.main_job..'var.lua'}) then
     include('Saves/job_'..player.main_job..'var.lua')
@@ -39,6 +39,9 @@ function run_event(event_type,...)
     set_gear = set_combine(set_gear, sets[player.status])
     if sets.weapon[weapon_types[weapon_types_count]] then
         set_gear = set_combine(set_gear, sets.weapon[weapon_types[weapon_types_count]])
+    end
+    if sets.range[range_type[range_type_count]] then
+        set_gear = set_combine(set_gear, sets.range[range_type[range_type_count]])
     end
     if table.contains(check_function[1], event_type) then
         if conquest_Gear then
@@ -154,7 +157,7 @@ function buff_change(name,gain)
             disable("neck","back")
         else
             enable("neck","back")
-            equip(sets[player.status], sets.weapon[weapon_types[player.main_job][weapon_types_count]])
+            equip(sets[player.status], sets.weapon[weapon_types[weapon_types_count]])
         end
     end
     if mf_buff_change then
@@ -273,12 +276,10 @@ function spell_stopper(spell)
     if min_fm_for_flourishes[spell.en] then
         local fm_count = 0
         for i, v in pairs(buffactive) do
-            if string.startswith(tostring(i), 'Finishing Move') then
-                for w in string.gmatch (i, '%d') do
-                    fm_count = tonumber(w)
-                    if min_fm_for_flourishes[spell.en] < fm_count then
-                        return true
-                    end
+            if string.startswith(tostring(i), 'finishing move') then
+                fm_count = tonumber(string.sub(i, 16))
+                if min_fm_for_flourishes[spell.en] > fm_count then
+                    return true
                 end
             end
         end

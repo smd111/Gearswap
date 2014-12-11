@@ -36,9 +36,9 @@ function include_setup()
     -----------------------------------------------------------------------------------------------------------------------------------
     jobneck = {neck={ name="Magus Torque", augments={'MP+10','Mag. Acc.+1',}},} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
     jobring = {left_ring="Onyx Ring",} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
-    -- example:
-    -- jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},}
-    -- jobring = {left_ring="Prouesse Ring",}
+    --example:
+    --jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},}
+    --jobring = {left_ring="Prouesse Ring",}
 end
 include('includes/Extras.lua')
 --Job functions
@@ -98,6 +98,16 @@ function gear_setup()
     sets.weapon['Sword'] = {main="Eminent Scimitar",sub="Eminent Dagger",}
     --sets.weapon['Great_Katana'] = {main="",sub="",}
     --sets.weapon['Katana'] = {main="",sub="",}
+    sets.range = {}
+    --sets.range['Archery'] = {range="",ammo="",}
+    --sets.range['Marksmanship'] = {range="",ammo="",}
+    --sets.range['Throwing'] = {range="Chakram",ammo="",}
+    --sets.range['Fishing'] = {range="",ammo="",}
+    --sets.range['Soultrapper'] = {range="",ammo="",}
+    --sets.range['Wind Instruments'] = {range="",ammo="",}
+    --sets.range['String Instruments'] = {range="",ammo="",}
+    --sets.range['Handbells'] = {range="",ammo="",}
+    --sets.range['Other'] = {range="",ammo="",}
     ---------------------------------------
     --put your sets here
     ---------------------------------------

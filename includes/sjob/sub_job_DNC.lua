@@ -92,11 +92,22 @@ function sub_job_precast(spell,status,set_gear)
             return
         end
         if Stopsteps then
-            if buffactive['Finishing Move '..Stepmax] then
-                status.end_spell=true
-                status.end_event=true
-                return
+        local fm_count = 0
+            for i, v in pairs(buffactive) do
+                if string.startswith(tostring(i), 'finishing move') then
+                    fm_count = tonumber(string.sub(i, 16))
+                    if fm_count >= Stepmax then
+                        status.end_spell=true
+                        status.end_event=true
+                        return
+                    end
+                end
             end
+            -- if buffactive['Finishing Move '..Stepmax] then
+                -- status.end_spell=true
+                -- status.end_event=true
+                -- return
+            -- end
         end
     end
     if spell.en == 'Spectral Jig' then

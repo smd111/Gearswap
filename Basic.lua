@@ -61,8 +61,6 @@ function gear_setup()
         left_ring="",
         right_ring="",
         back="",
-        range="",
-        ammo=""
     }
     sets.Idle = {
         head="",
@@ -77,8 +75,6 @@ function gear_setup()
         left_ring="",
         right_ring="",
         back="",
-        range="",
-        ammo=""
     }
     sets.Resting = {
         head="",
@@ -93,13 +89,11 @@ function gear_setup()
         left_ring="",
         right_ring="",
         back="",
-        range="",
-        ammo=""
     }
     ---------------------------------------
     --put your weapons here
-    --if the job can not equip a normal weapon
     --any that you do not want to use just comment out or remove 
+    --/engaged (these must be here)
     ---------------------------------------
     sets.weapon = {}
     sets.weapon['Axe'] = {main="",sub="",}
@@ -114,6 +108,21 @@ function gear_setup()
     sets.weapon['Scythe'] = {main="",sub="",}
     sets.weapon['Staff'] = {main="",sub="",}
     sets.weapon['Sword'] = {main="",sub="",}
+    ---------------------------------------
+    --put your range weapons here
+    --any that you do not want to use just comment out or remove 
+    --/engaged (these must be here)
+    ---------------------------------------
+    sets.range = {}
+    -- sets.range['Archery'] = {range="",ammo="",}
+    -- sets.range['Marksmanship'] = {range="",ammo="",}
+    -- sets.range['Throwing'] = {range="Chakram",ammo="",}
+    -- sets.range['Fishing'] = {range="",ammo="",}
+    -- sets.range['Soultrapper'] = {range="",ammo="",}
+    -- sets.range['Wind Instruments'] = {range="",ammo="",}
+    -- sets.range['String Instruments'] = {range="",ammo="",}
+    -- sets.range['Handbells'] = {range="",ammo="",}
+    -- sets.range['Other'] = {range="",ammo="",}
     ---------------------------------------
     --put your other sets here
     ---------------------------------------

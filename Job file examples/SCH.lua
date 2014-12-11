@@ -98,6 +98,16 @@ function gear_setup()
     sets.weapon['Scythe'] = {main="",sub="",}
     sets.weapon['Staff'] = {main="",sub="",}
     sets.weapon['Sword'] = {main="",sub="",}
+    sets.range = {}
+    -- sets.range['Archery'] = {range="",ammo="",}
+    -- sets.range['Marksmanship'] = {range="",ammo="",}
+    -- sets.range['Throwing'] = {range="Chakram",ammo="",}
+    -- sets.range['Fishing'] = {range="",ammo="",}
+    -- sets.range['Soultrapper'] = {range="",ammo="",}
+    -- sets.range['Wind Instruments'] = {range="",ammo="",}
+    -- sets.range['String Instruments'] = {range="",ammo="",}
+    -- sets.range['Handbells'] = {range="",ammo="",}
+    -- sets.range['Other'] = {range="",ammo="",}
     ---------------------------------------
     --put your sets here
     ---------------------------------------

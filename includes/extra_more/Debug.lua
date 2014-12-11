@@ -13,13 +13,12 @@
     -- 12. use this command to cycle through debug types //gs c Debugtype
 
     full_debug = false
-    fulldebug = {}
-    fulldebug.type = {"status_change","pet_change","filtered_action","pretarget","precast","buff_change","midcast","pet_midcast","aftercast","pet_aftercast","All"}
-    fulldebug.count = 1
+    debug_count = 1
+    debug_type = {"Status_Change","Pet_Change","Filtered_Action","Pretarget","Precast","Buff_Change","Midcast","Pet_Midcast","Aftercast","Pet_Aftercast","All"}
 
 function debug_status_change(new,old)
     if full_debug then
-        if fulldebug.count == 1 or fulldebug.count == 11 then
+        if debug_count == 1 or debug_count == 11 then
             add_to_chat(7,"Status New = "..tostring(new))
             add_to_chat(7,"Status Old = "..tostring(old))
         end
@@ -27,7 +26,7 @@ function debug_status_change(new,old)
 end
 function debug_pet_change(pet,gain)
     if full_debug then
-        if fulldebug.count == 2 or fulldebug.count == 11 then
+        if debug_count == 2 or debug_count == 11 then
             add_to_chat(7,"Pet = "..tostring(pet)..", Gain = "..tostring(gain))
             add_to_chat(7,"Pet Element = "..tostring(pet.element))
         end
@@ -35,7 +34,7 @@ function debug_pet_change(pet,gain)
 end
 function debug_filtered_action(spell)
     if full_debug then
-        if fulldebug.count == 3 or fulldebug.count == 11 then
+        if debug_count == 3 or debug_count == 11 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -49,7 +48,7 @@ function debug_filtered_action(spell)
 end
 function debug_pretarget(spell)
     if full_debug then
-        if fulldebug.count == 4 or fulldebug.count == 11 then
+        if debug_count == 4 or debug_count == 11 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -63,7 +62,7 @@ function debug_pretarget(spell)
 end
 function debug_precast(spell)
     if full_debug then
-        if fulldebug.count == 5 or fulldebug.count == 11 then
+        if debug_count == 5 or debug_count == 11 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -79,14 +78,14 @@ function debug_precast(spell)
 end
 function debug_buff_change(name,gain)
     if full_debug then
-        if fulldebug.count == 6 or fulldebug.count == 11 then
+        if debug_count == 6 or debug_count == 11 then
             add_to_chat(7,"Buff = "..tostring(name)..', Gain = '..tostring(gain))
         end
     end
 end
 function debug_midcast(spell)
     if full_debug then
-        if fulldebug.count == 7 or fulldebug.count == 11 then
+        if debug_count == 7 or debug_count == 11 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -101,7 +100,7 @@ function debug_midcast(spell)
 end
 function debug_pet_midcast(spell)
     if full_debug then
-        if fulldebug.count == 8 or fulldebug.count == 11 then
+        if debug_count == 8 or debug_count == 11 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -115,7 +114,7 @@ function debug_pet_midcast(spell)
 end
 function debug_aftercast(spell)
     if full_debug then
-        if fulldebug.count == 9 or fulldebug.count == 11 then
+        if debug_count == 9 or debug_count == 11 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -129,7 +128,7 @@ function debug_aftercast(spell)
 end
 function debug_pet_aftercast(spell)
     if full_debug then
-        if fulldebug.count == 10 or fulldebug.count == 11 then
+        if debug_count == 10 or debug_count == 11 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -149,11 +148,11 @@ function debug_self_command(command)
         add_to_chat(7,'Debug Mode = ' .. (full_debug and 'ON' or 'OFF'))
     end
     if command == 'cDebugtype' then
-        fulldebug.count = (fulldebug.count % #fulldebug.type) + 1
-        add_to_chat(7,'Debug Mode Type = ' .. tostring(fulldebug.type[fulldebug.count]))
+        debug_count = (debug_count % #debug_type) + 1
+        add_to_chat(7,'Debug Mode Type = ' .. tostring(debug_type[debug_count]))
     end
     if full_debug then
-        if fulldebug.count == 11 then
+        if debug_count == 11 then
             add_to_chat(7,"Command = "..tostring(command))
         end
     end

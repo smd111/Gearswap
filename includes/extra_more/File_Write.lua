@@ -7,7 +7,8 @@ function file_write(a)
     file:write('Stepmax = '..tostring(Stepmax)..    '\nStopsteps = '..tostring(Stopsteps)..'\nConquest.neck.change = '..tostring(Conquest.neck.change)..
         '\nConquest.neck.case_id = '..tostring(Conquest.neck.case_id)..'\nConquest.ring.change = '..tostring(Conquest.ring.change)..
         '\nConquest.ring.case_id = '..tostring(Conquest.ring.case_id)..'\nspecialweaponwscount = '..tostring(specialweaponwscount)..
-        '\nweapon_types_count = '..tostring(weapon_types_count)..'\nif Display then'..'\n  menu.pos.x = '..tostring(menu.pos.x)..
+        '\nweapon_types_count = '..tostring(weapon_types_count)..'\nrange_type_count = '..tostring(range_type_count)..
+        '\nif Display then'..'\n  menu.pos.x = '..tostring(menu.pos.x)..
         '\n  menu.pos.y = '..tostring(menu.pos.y)..'\n  MJi = '..tostring(MJi)..'\n  SJi = '..tostring(SJi)..'\n  MSi = '..tostring(MSi)..
         '\n  WSi = '..tostring(WSi)..'\n  Ammo = '..tostring(Ammo)..'\n  Special_Weapons = '..tostring(Special_Weapons)..
         '\n  Conquest_Gear = '..tostring(Conquest_Gear)..'\n  File_Write = '..tostring(File_Write)..'\n  Registered_Events = '..tostring(Registered_Events)..
