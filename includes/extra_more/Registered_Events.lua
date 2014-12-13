@@ -11,7 +11,7 @@ skill_count = 1
 
 -- added events--
 -- Action event
-function event_action(act)
+function Registered_Events_event_action(act)
     local action = Action(act)
     if action:get_category_string() == 'item_finish' then
         if action.raw.param == tbid and player.id == action.raw.actor_id then
@@ -20,17 +20,17 @@ function event_action(act)
         end
     end
 end
---action_id = windower.raw_register_event('action', event_action)
+--Registered_Events_action_id = windower.raw_register_event('action', Registered_Events_event_action)
 -- LVL up event
-function level_up()
+function Registered_Events_level_up()
     if updatedisplay then
         coroutine.schedule(updatedisplay, 3)
     end
 end
-level_up_id = windower.raw_register_event('level up', level_up)
-level_down_id = windower.raw_register_event('level down', level_up)
+Registered_Events_level_up_id = windower.raw_register_event('level up', Registered_Events_level_up)
+Registered_Events_level_down_id = windower.raw_register_event('level down', Registered_Events_level_up)
 --Incoming Chunk Event(Packets Received)
-function incoming_chunk(id, data, modified, injected, blocked)
+function Registered_Events_incoming_chunk(id, data, modified, injected, blocked)
     if triggered and data:sub(3,4) ~= seqid then
             --gearswap.refresh_Globals()
             triggered = nil
@@ -64,25 +64,4 @@ function incoming_chunk(id, data, modified, injected, blocked)
     end
     seqid = data:sub(3,4)
 end
-incoming_chunk_id = windower.raw_register_event('incoming chunk', incoming_chunk)
---Target Change Event
-function target_change(number)
-    local target = windower.ffxi.get_mob_by_target("t")
-    if autolock and target then
-        if windower.ffxi.get_player().id == target.id then
-            target.type = 'SELF'
-        elseif target.is_npc then
-            if target.id%4096>2047 then
-                target.type = 'NPC'
-            else
-                target.type = 'MONSTER'
-            end
-        else
-            target.type = 'PLAYER'
-        end
-        if target.type == 'MONSTER' and not windower.ffxi.get_player().target_locked then
-            send_command('input /lockon')
-        end
-    end
-end
---target_change_id = windower.raw_register_event('target change', target_change)
+Registered_Events_incoming_chunk_id = windower.raw_register_event('incoming chunk', Registered_Events_incoming_chunk)

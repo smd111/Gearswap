@@ -14,7 +14,7 @@ end
         Light={main="Arka II",sub="Light Grip"},Dark={main="Xsaeta II",sub="Dark Grip"},}
     sets.staff.Cur = {main="Arka IV",sub="Dominie's Grip",body="Heka's Kalasiris",hands="Bokwus Gloves",neck="Phalaina Locket",left_ear="Roundel Earring",}
 
-function equip_elemental_magic_staves(spell,set_gear)
+function MSi_equip(spell,set_gear)
     if Changestaff then
         if Typ.spells:contains(spell.type) then
             if Cure.spells:contains(spell.english) then
@@ -26,7 +26,7 @@ function equip_elemental_magic_staves(spell,set_gear)
     end
     return set_gear
 end
-function equip_elemental_magic_Gear_self_command(command)
+function MSi_self_command(command)
     if string.lower(command[1]) == "t" or string.lower(command[1]) == "toggle" then
         if command[2] == 'stavetouse' then
             Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')

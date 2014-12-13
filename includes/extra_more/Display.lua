@@ -21,90 +21,37 @@ function initialize(text, settings, window_name)
     local properties = L{}
     if window_name == 'window' then
         properties:append('${listm}')
-        properties:append('Gearswap   \\cs(255,255,0)HIDE\\cr')
-        if menu_set == 1 then -- job menu
-            properties:append('--Job Settings--')
-            if (windower.ffxi.get_player().main_job == 'DNC' and MJi) or (windower.ffxi.get_player().sub_job == 'DNC' and SJi) then
-                properties:append('-Steps-')
-                properties:append('   Max Step = ${stepm}')
-                properties:append('   Stop Steps   ${ssteps}')
-            end
-            if lvlwatch then
-                properties:append('${mjob}')
-                properties:append('   lvl = ${mjob_lvl}')
-            end
-            if skillwatch and Registered_Events then
-                properties:append('${skill}')
-                properties:append('   lvl = ${skill_lvl|Updating}')
-            end
-        elseif menu_set == 2 then -- weapon menu
-            properties:append('--Weapon Settings--')
-            properties:append('Weapon Type = \\cs(255,255,0)${wept}\\cr')
-            properties:append('Range Type = \\cs(255,255,0)${rwept}\\cr')
-            if table.contains(jobs.magic, player.main_job) and WSi then
-                properties:append('-Mage Staves-')
-                properties:append('   Auto Change   ${cstaff}')
-                properties:append('   Type \\cs(255,255,0)${ustaff}\\cr')
-            end
-        elseif menu_set == 3 then -- armor menu
-            properties:append('--Armor Settings--')
-            properties:append('Mode = \\cs(255,255,0)${amode}\\cr')
-            if Conquest_Gear then
-                properties:append('-Conquest Gear-')
-                properties:append('  Change Neck   ${cneckc}')
-                properties:append('  Neck Type = \\cs(255,255,0)${cneck}\\cr')
-                properties:append('  Change Ring   ${cringc}')
-                properties:append('  Ring Type = \\cs(255,255,0)${cring}\\cr')
-            end
-        elseif menu_set == 4 then -- system menu
-            properties:append('--System Settings--')
-            if autolock and Registered_Events then
-                properties:append('Auto Lock')
-                properties:append('  \\cs(255,255,0)Enabled\\cr')
-            end
-            if autotarget then
-                properties:append('Auto Self Target')
-                properties:append('After Battle \\cs(255,255,0)Enabled\\cr')
-            end
-            if stoponskillcap and Registered_Events then
-                properties:append('Auto Stop On')
-                properties:append('  \\cs(255,255,0)'..string.gsub(stopskilltyp[stopskill_count], "_", " ")..'\\cr Cap')
-                if lvl then
-                    properties:append('Current Skill')
-                    properties:append('  Level = \\cs(255,255,0)'..lvl[stopskilltyp[stopskill_count]]..'\\cr')
+        properties:append('Gearswap   \\cs(255,255,0)${hid|HIDE}\\cr')
+        local menu_build_list = {[1]={[1]='--Job Settings--',
+            [2]={[1]=((windower.ffxi.get_player().main_job == 'DNC' and MJi) or (windower.ffxi.get_player().sub_job == 'DNC' and SJi)),[2]='-Steps-'},
+            [3]={[1]=((windower.ffxi.get_player().main_job == 'DNC' and MJi) or (windower.ffxi.get_player().sub_job == 'DNC' and SJi)),[2]='   Max Step = ${stepm}'},
+            [4]={[1]=((windower.ffxi.get_player().main_job == 'DNC' and MJi) or (windower.ffxi.get_player().sub_job == 'DNC' and SJi)),[2]='   Stop Steps   ${ssteps}'},
+            [5]={[1]=(lvlwatch),[2]='${mjob}'},[6]={[1]=(lvlwatch),[2]='   lvl = ${mjob_lvl}'},[7]={[1]=(skillwatch and Registered_Events),[2]='${skill}'},
+            [8]={[1]=(skillwatch and Registered_Events),[2]='   lvl = ${skill_lvl|Updating}'},},[2]={[1]='--Weapon Settings--',
+            [2]='Weapon Type = \\cs(255,255,0)${wept}\\cr',[3]='Range Type = \\cs(255,255,0)${rwept}\\cr',
+            [4]={[1]=(table.contains(jobs.magic, player.main_job) and WSi),[2]='-Mage Staves-'},
+            [5]={[1]=(table.contains(jobs.magic, player.main_job) and WSi),[2]='   Auto Change   ${cstaff}'},
+            [6]={[1]=(table.contains(jobs.magic, player.main_job) and WSi),[2]='   Type \\cs(255,255,0)${ustaff}\\cr'},},
+            [3]={[1]='--Armor Settings--',[2]='Mode = \\cs(255,255,0)${amode}\\cr',[3]={[1]=(Conquest_Gear),[2]='-Conquest Gear-'},
+            [4]={[1]=(Conquest_Gear),[2]='  Change Neck   ${cneckc}'},[5]={[1]=(Conquest_Gear),[2]='  Neck Type = \\cs(255,255,0)${cneck}\\cr'},
+            [6]={[1]=(Conquest_Gear),[2]='  Change Ring   ${cringc}'},[7]={[1]=(Conquest_Gear),[2]='  Ring Type = \\cs(255,255,0)${cring}\\cr'},},
+            [4]={[1]='--System Settings--',[2]='Display Main Job',[3]='and LVL   ${tmjl}',[4]={[1]=(Registered_Events),[2]='Show Current '},
+            [5]={[1]=(Registered_Events),[2]='Skill Level   ${tskill}'},[6]='Show Swaps   ${tswap}',[7]='Debug Mode   ${debugm}',
+            [8]={[1]=(Debug),[2]='Show Debug  ${dbenable}'},[9]={[1]=(Debug),[2]='  in = ${debugtype}'},[10]={[1]=(File_Write),[2]='${filew|Force File Write}'},
+            [11]='${gsex1|Gearswap Export}',[12]='${regs|Reload Gearswap}',},[5]={[1]='--Include Settings--',[2]='Ammo   ${tammo}',[3]='Conquest Gear   ${tcgi}',
+            [4]='Debug   ${tdebug}',[5]='File Write   ${tfwi}',[6]='Main Job   ${tmji}',
+            [7]={[1]=(table.contains(jobs.magic, player.main_job)),[2]='Mage Stave   ${tmsi}'},[8]='Registered Events   ${trei}',[9]='Special Weapons   ${tswi}',
+            [10]='Sub Job   ${tsji}',[11]='Weapon Skill   ${twsi}',},}
+        if menu_build_list[menu_set] then
+            for i, v in ipairs(menu_build_list[menu_set]) do
+                if type(menu_build_list[menu_set][i]) == 'table' then
+                    if menu_build_list[menu_set][i][1] then
+                        properties:append(menu_build_list[menu_set][i][2])
+                    end
+                else
+                    properties:append(menu_build_list[menu_set][i])
                 end
             end
-            properties:append('Display Main Job')
-            properties:append('and LVL   ${tmjl}')
-            if Registered_Events then
-                properties:append('Show Current ')
-                properties:append('Skill Level   ${tskill}')
-            end
-            properties:append('Show Swaps   ${tswap}')
-            properties:append('Debug Mode   ${debugm}')
-            if Debug then
-                properties:append('Show Debug  ${dbenable}')
-                properties:append('  in = ${debugtype}')
-            end
-            if File_Write then
-                properties:append('Force File Write')
-            end
-            properties:append('Gearswap Export')
-            properties:append('Reload Gearswap')
-        elseif menu_set == 5 then -- include menu
-            properties:append('--Include Settings--')
-            properties:append('Ammo   ${tammo}')
-            properties:append('Conquest Gear   ${tcgi}')
-            properties:append('Debug   ${tdebug}')
-            properties:append('File Write   ${tfwi}')
-            properties:append('Main Job   ${tmji}')
-            if table.contains(jobs.magic, player.main_job) then
-                properties:append('Mage Stave   ${tmsi}')
-            end
-            properties:append('Registered Events   ${trei}')
-            properties:append('Special Weapons   ${tswi}')
-            properties:append('Sub Job   ${tsji}')
-            properties:append('Weapon Skill   ${twsi}')
         elseif menu_set == 6 then --custom menu
             properties:append('Custom Menu')
             for i,v in pairs(custom_menu()) do
@@ -114,14 +61,12 @@ function initialize(text, settings, window_name)
             end
         end
     elseif window_name == 'button' then
-        if lvlwatch then
-            properties:append('${mjob}   lvl = ${mjob_lvl}')
-        end
-        if skillwatch and Registered_Events then
-            properties:append('${skill}   lvl = ${skill_lvl}')
-        end
-        if not skillwatch and not lvlwatch then
-            properties:append('\n > \n ')
+        local button_list = {[1]={[1]='${mjob}   lvl = ${mjob_lvl}',[2]=(lvlwatch),},
+            [2]={[1]='${skill}   lvl = ${skill_lvl|Updating}',[2]=(skillwatch and Registered_Events),},[3]={[1]='\n > \n ',[2]=(not skillwatch and not lvlwatch)},}
+        for i, v in ipairs(button_list) do
+            if button_list[i][2] then
+                properties:append(button_list[i][1])
+            end
         end
     else
         local menu_name_initialize = {
@@ -164,10 +109,6 @@ function start_display()
     initialize(window, menu, 'window')
     initialize(button, min_window, 'button')
 end
-if Debug then
-    debug_select_window = texts.new(debug_select)
-    initialize(debug_select_window, debug_select, 'debug_select_window')
-end
 --Display Updater
 function update_display()
     windower.prim.create('window_button')
@@ -197,9 +138,6 @@ function updatedisplay()
     info.mjob = windower.ffxi.get_player().main_job_full
     info.mjob_lvl = windower.ffxi.get_player().main_job_level
     info.amode = gear_mode[gear_mode_count]
-    if menu_set == 6 then
-        info = custom_rules()
-    end
     info.listm = menu_list[menu_set]
     info.tmji = MJi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     info.tsji = SJi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
@@ -225,7 +163,12 @@ function updatedisplay()
     info.rwept = string.gsub(range_type[range_type_count], "_", " ")
     info.dbenable = full_debug and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     if Debug then
-        info.debugtype = debug_type[debug_count]
+        info.debugtype = string.gsub(debug_type[debug_count], "_", " ")
+    end
+    if menu_set == 6 then
+        for i,v in pairs(custom_rules()) do
+            info[i] = v
+        end
     end
     window:update(info)
     button:update(info)
@@ -248,17 +191,20 @@ function get_window_pos(x,y,check_windows)
     return my, mx, button_lines, hx, hy
 end
 function set_prim_loc(location,win_name,win_tabl,mx,hy)
-    local hide_button = {'{mjob}','{mjob_lvl}','{skill_lvl}'}
+    local hide_button = {'{mjob}','{mjob_lvl}','{skill_lvl|Updating}'}
     for i, v in ipairs(location) do
         if (hy > location[i].ya and hy < location[i].yb) then
             if type(switches_table[win_name][i]) == 'table' and not table.contains(hide_button, switches_table[win_name][i][1]) then
                 if not table.contains(hide_button, switches_table[win_name][i][1]) then
                     windower.prim.set_position('window_button', _G[win_tabl].pos.x, (_G[win_tabl].pos.y + location[i].ya))
                     windower.prim.set_size('window_button', mx, (location[i].yb - location[i].ya))
+                    windower.prim.set_visibility('window_button', true)
                 else
                     windower.prim.set_position('window_button', 0, 0)
                     windower.prim.set_size('window_button', 1, 1)
                 end
+            else
+                windower.prim.set_visibility('window_button', false)
             end
         end
     end
@@ -297,8 +243,9 @@ function extra_display(x,y,location,hy,check_windows)
             _G[check_windows[i][2]]:destroy()
             _G[check_windows[i][2]] = nil
             switches_table[check_windows[i][2]] = nil
-            if file_write then
-                file_write()
+            windower.prim.set_visibility('window_button', false)
+            if File_Write_do then
+                File_Write_do()
             end
         end
     end
@@ -329,70 +276,31 @@ function mouse(mtype, x, y, delta, blocked)
          count = count + 1
     end
     if mtype == 0 then
-        if window:hover(x, y) and window:visible() then
-            if (hy > location[2].ya and hy < location[2].yb) then
-                windower.prim.set_position('window_button', menu.pos.x, (menu.pos.y + location[2].ya))
-                windower.prim.set_size('window_button', mx, (location[2].yb - location[2].ya))
-            elseif (hy > location[(button_lines - 2)].ya and hy < location[(button_lines - 2)].yb) and menu_set == 4 and File_Write then
-                windower.prim.set_position('window_button', menu.pos.x, (menu.pos.y + location[(button_lines - 2)].ya))
-                windower.prim.set_size('window_button', mx, (location[(button_lines - 2)].yb - location[(button_lines - 2)].ya))
-            elseif (hy > location[(button_lines - 1)].ya and hy < location[(button_lines - 1)].yb) and menu_set == 4 then
-                windower.prim.set_position('window_button', menu.pos.x, (menu.pos.y + location[(button_lines - 1)].ya))
-                windower.prim.set_size('window_button', mx, (location[(button_lines - 1)].yb - location[(button_lines - 1)].ya))
-            elseif (hy > location[(button_lines)].ya and hy < location[(button_lines)].yb) and menu_set == 4 then
-                windower.prim.set_position('window_button', menu.pos.x, (menu.pos.y + location[(button_lines)].ya))
-                windower.prim.set_size('window_button', mx, (location[(button_lines)].yb - location[(button_lines)].ya))
-            else
-                set_prim_loc(location,'window','menu',mx,hy)
-            end
-            windower.prim.set_visibility('window_button', true)
-        elseif button:hover(x, y) and button:visible() then
+        if button:hover(x, y) and button:visible() then
             windower.prim.set_position('window_button', min_window.pos.x, min_window.pos.y)
             windower.prim.set_size('window_button', mx, my)
             windower.prim.set_visibility('window_button', true)
-        elseif skillwatch and skill_select_window and skill_select_window:hover(x, y) and skill_select_window:visible() then
-            set_prim_loc(location,'skill_select_window','skill_select',mx,hy)
-            windower.prim.set_visibility('window_button', true)
-        elseif Debug and debug_select_window and debug_select_window:hover(x, y) and debug_select_window:visible() then
-            set_prim_loc(location,'debug_select_window','debug_select',mx,hy)
-            windower.prim.set_visibility('window_button', true)
-        elseif tab_select_window and tab_select_window:hover(x, y) and tab_select_window:visible() then
-            set_prim_loc(location,'tab_select_window','tab_select',mx,hy)
-            windower.prim.set_visibility('window_button', true)
-        elseif weapon_select_window and weapon_select_window:hover(x, y) and weapon_select_window:visible() then
-            set_prim_loc(location,'weapon_select_window','wep_select',mx,hy)
-            windower.prim.set_visibility('window_button', true)
-        elseif range_select_window and range_select_window:hover(x, y) and range_select_window:visible() then
-            set_prim_loc(location,'range_select_window','range_select',mx,hy)
-            windower.prim.set_visibility('window_button', true)
         else
-            windower.prim.set_visibility('window_button', false)
+            for i, v in pairs(check_windows) do
+                if check_windows[i][1] then
+                    set_prim_loc(location,check_windows[i][2],i,mx,hy)
+                end
+            end
         end
     elseif mtype == 2 then
         if window:hover(x, y) and window:visible() then
-            if (hy > location[2].ya and hy < location[2].yb) then
-                window:hide()
-                window_hidden = true
-                button:show()
-            elseif (hy > location[(button_lines - 2)].ya and hy < location[(button_lines - 2)].yb) and menu_set == 4  and File_Write then
-                file_write()
-            elseif (hy > location[(button_lines - 1)].ya and hy < location[(button_lines - 1)].yb) and menu_set == 4 then
-                send_command('gs export')
-            elseif (hy > location[(button_lines)].ya and hy < location[(button_lines)].yb) and menu_set == 4 then
-                send_command('gs r')
-            else
-                for i, v in ipairs(location) do
-                    if (hy > location[i].ya and hy < location[i].yb) then
-                        if type(switches_table['window'][i]) == 'table' then
-                            if switches_table['window'][i][1] then
-                                menu_commands(switches_table['window'][i][1])
-                                updatedisplay()
-                            end
+            for i, v in ipairs(location) do
+                if (hy > location[i].ya and hy < location[i].yb) then
+                    if type(switches_table['window'][i]) == 'table' then
+                        if switches_table['window'][i][1] then
+                            menu_commands(switches_table['window'][i][1])
+                            updatedisplay()
                         end
                     end
                 end
             end
         elseif button:hover(x, y) and button:visible() then
+            windower.prim.set_visibility('window_button', false)
             button:hide()
             window_hidden = false
             window:show()
@@ -456,8 +364,8 @@ function menu_commands(a)
         full_debug = not full_debug
     elseif a == '{tfwi}' then
         File_Write = not File_Write
-        if file_write then
-            file_write()
+        if File_Write_do then
+            File_Write_do()
         end
         if File_Write and not Disable_All and gearswap.pathsearch({'includes/extra_more/File_Write.lua'}) then
             include('includes/extra_more/File_Write.lua')
@@ -505,9 +413,6 @@ function menu_commands(a)
         if Debug and not Disable_All and gearswap.pathsearch({'includes/extra_more/Debug.lua'}) then
             include('includes/extra_more/Debug.lua')
         else
-            debug_select_window:destroy()
-            switches_table['debug_select_window'] = nil
-            debug_select = nil
             remove_functions('Debug')
         end
     elseif a == '{tmjl}' then
@@ -522,7 +427,7 @@ function menu_commands(a)
         skill_select_window = texts.new(skill_select)
         initialize(skill_select_window, skill_select, 'skill_select_window')
         skill_select_window:show()
-    elseif a == "{debug_type}" then
+    elseif a == "{debugtype}" then
         debug_select = {text = {font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=(menu.pos.x - 120),y=(menu.pos.y)}}
         debug_select_window = texts.new(debug_select)
         initialize(debug_select_window, debug_select, 'debug_select_window')
@@ -543,37 +448,33 @@ function menu_commands(a)
         else
             debug_mode(false)
         end
+    elseif a == "{regs|Reload Gearswap}" then
+        send_command('gs r')
+    elseif a == "{gsex1|Gearswap Export}" then
+        send_command('gs export')
+    elseif a == "{filew|Force File Write}" then
+        File_Write_do()
+    elseif a == "{hid|HIDE}" then
+        window:hide()
+        window_hidden = true
+        button:show()
+        windower.prim.set_visibility('window_button', false)
     end
     if custom_menu_commands then
         custom_menu_commands(a)
     end
-    if file_write then
-        file_write()
+    if File_Write_do then
+        File_Write_do()
     end
 end
 mouse_id = windower.raw_register_event('mouse', mouse)
-function remove_functions(a)
-    local removeable_functions = {
-    ['WSi'] = {"sets.weaponskill","equip_elemental_ws_Gear"},['Special_Weapons'] = {"special_weapon"},
-    ['Registered_Events'] = {'skill_type','event_action','level_up','incoming_chunk','target_change,',events = {'action_id','level_up_id','level_down_id','incoming_chunk_id','target_change_id'}},
-    ['MJi'] = {'cards','card_rule','card_getmore','card_check','nin_tools','nin_tool_rule','nin_tool_check','nin_tool_open','main_job_file_unload','main_job_status_change','main_job_pretarget','main_job_precast','main_job_buff_change','main_job_midcast','main_job_aftercast','main_jobs_self_command','main_job_pet_change','main_job_pet_midcast','main_job_pet_aftercast','main_job_filtered_action','main_job_file_unload'},
-    ['SJi'] = {'cards','card_rule','card_getmore','card_check','nin_tools','nin_tool_rule','nin_tool_check','nin_tool_open','sub_job_file_unload','sub_job_status_change','sub_job_pretarget','sub_job_precast','sub_job_buff_change','sub_job_midcast','sub_job_aftercast','main_jobs_self_command','sub_job_pet_change','sub_job_pet_midcast','sub_job_pet_aftercast','sub_job_filtered_action','sub_job_file_unload'},
-    ['MSi'] = {'equip_elemental_magic_staves','equip_elemental_magic_Gear_self_command','sets.staff'},['Ammo'] = {'combined_ammo','ammo_check','ammo_reequip','ammo_rule'},['Conquest_Gear'] = {'conquest_Gear','conquest_Gear_self_command'},
-    ['Debug'] = {'debug_status_change','debug_pet_change','debug_filtered_action','debug_pretarget','debug_precast','debug_buff_change','debug_midcast','debug_pet_midcast','debug_aftercast','debug_pet_aftercast','debug_self_command'},
-    ['Display'] = {'initialize','grab_switches','update_display','updatedisplay','auto_hide_window','mouse','menu_commands','remove_functions',events = {'mouse_id'}},
-    ['File_Write'] = {'file_write'},}
-    if removeable_functions[a].events then
-        for i, v in ipairs(removeable_functions[a].events) do
-            if _G[v] then
-                windower.unregister_event(_G[v])
-            end
-        end
-    end
-    if removeable_functions[a] then
-        for i, v in ipairs(removeable_functions[a]) do
-            if _G[v] then
-                _G[v] = nil
-            end
+function remove_functions(remove_function_name)
+    for i, v in pairs(_G) do
+        if i:startswith(remove_function_name) and i:endswith('id') then
+            windower.unregister_event(_G[i])
+            _G[i] = nil
+        elseif i:startswith(remove_function_name) then
+            _G[i] = nil
         end
     end
 end

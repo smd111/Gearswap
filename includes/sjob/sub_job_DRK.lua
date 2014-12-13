@@ -1,7 +1,7 @@
 
     sets.drk_job = {neck='Nyx Gorget',left_ear='Chaotic Earring'}
 
-function sub_job_buff_change(name,gain)
+function SJi_buff_change(name,gain)
     if name == "Arcane Circle" then
         if gain then
             equip(sets.drk_job)

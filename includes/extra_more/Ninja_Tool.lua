@@ -44,8 +44,7 @@
         ["Myoshu: Ichi"] = {tool='Kabenro',tool_bag="Toolbg. (Kaben)",tool_bag_id=5863,uni_tool="Shikanofuda",uni_tool_bag="Toolbag (Shika)",uni_tool_bag_id=5868},
         ["Yurin: Ichi"] = {tool='Jinko',tool_bag="Toolbag (Jinko)",tool_bag_id=5864,uni_tool="Chonofuda",uni_tool_bag="Toolbag (Cho)",uni_tool_bag_id=5869},
         ["Kakka: Ichi"] = {tool='Ryuno',tool_bag="Toolbag (Ryuno)",tool_bag_id=5865,uni_tool="Shikanofuda",uni_tool_bag="Toolbag (Shika)",uni_tool_bag_id=5868},
-        ["Migawari: Ichi"] = {tool='Mokujin',tool_bag="Toolbag (Moku)",tool_bag_id=5866,uni_tool="Shikanofuda",uni_tool_bag="Toolbag (Shika)",uni_tool_bag_id=5868},
-        }
+        ["Migawari: Ichi"] = {tool='Mokujin',tool_bag="Toolbag (Moku)",tool_bag_id=5866,uni_tool="Shikanofuda",uni_tool_bag="Toolbag (Shika)",uni_tool_bag_id=5868},}
 
 function nin_tool_rule(spell,status,set_gear)
     if spell.type == "Ninjutsu" and nin_tool_check(spell) then

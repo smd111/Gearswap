@@ -1,5 +1,5 @@
 --File Write
-function file_write(a)
+function File_Write_do(a)
     if not windower.dir_exists(lua_base_path..'data/'..player.name..'/Saves') then
         windower.create_dir(lua_base_path..'data/'..player.name..'/Saves')
     end

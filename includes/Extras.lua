@@ -1,12 +1,11 @@
 --Variable Set-up -----------------------------------------------------------------------------------------------------------------
 include_setup()
 tool_bag_id = 0
-autolock = false
 menu = {}
 menu.pos = {}
 menu.pos.x = 0
 menu.pos.y = 0
-gear_mode = T{'Normal', 'Acc', 'Att'}
+gear_mode = L{'Normal', 'Acc', 'Att'}
 gear_mode_count = 1
 Conquest = {}
 Conquest.neck = {}
@@ -14,7 +13,7 @@ Conquest.ring = {}
 partynames = {}
 lock_gear={main=false,sub=false,range=false,ammo=false,head=false,body=false,hands=false,legs=false,feet=false,neck=false,waist=false,left_ear=false,right_ear=false,left_ring=false,right_ring=false,back=false,}
 auto_use_shards = true
-events = {"debug_","extra_","main_job_","sub_job_","equip_elemental_magic_Gear_","conquest_Gear_","mf_"}
+events = {"Debug_","extra_","MJi_","SJi_","MSi_","mf_"}
 weapon_types_count = 1
 range_type_count = 1
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
@@ -28,6 +27,12 @@ else
     return
 end
 ----------------------------------------------------------------------------------------------------------------------------------
+function add_gear_modes(...)
+    local gear_table = ...
+    for i, v in ipairs(...) do
+        gear_mode:append(v)
+    end
+end
 function run_event(event_type,...)
     local a,b = unpack{...}
     local check_function = {[1]={"pretarget","precast","midcast","aftercast","pet_midcast","pet_aftercast"},
@@ -44,26 +49,26 @@ function run_event(event_type,...)
         set_gear = set_combine(set_gear, sets.range[range_type[range_type_count]])
     end
     if table.contains(check_function[1], event_type) then
-        if conquest_Gear then
-            set_gear = set_combine(set_gear, conquest_Gear(status,set_gear))
+        if Conquest_Gear_do then
+            set_gear = set_combine(set_gear, Conquest_Gear_do(status,set_gear))
         end
     end
     if event_type == "precast" then
-        if ammo_rule then
-            ammo_rule(a,status,set_gear)
+        if Ammo_rule then
+            Ammo_rule(a,status,set_gear)
         end
-        if special_weapon then
-            special_weapon(a,status,set_gear)
+        if Special_Weapon_do then
+            Special_Weapon_do(a,status,set_gear)
         end
     end
     if status.end_spell and event_type == 'precast' then cancel_spell() end
     if status.end_event then return end
     if table.contains(check_function[2], event_type) then
-        if equip_elemental_ws_Gear then
-            set_gear = set_combine(set_gear, equip_elemental_ws_Gear(a,status,set_gear))
+        if WSi_Gear then
+            set_gear = set_combine(set_gear, WSi_Gear(a,status,set_gear))
         end
-        if equip_elemental_magic_staves then
-            set_gear = set_combine(set_gear, equip_elemental_magic_staves(a,status,set_gear))
+        if MSi_equip then
+            set_gear = set_combine(set_gear, MSi_equip(a,status,set_gear))
         end
         if equip_elemental_magic_obi and sets.obi then
             set_gear = set_combine(set_gear, equip_elemental_magic_obi(a,status,set_gear))
@@ -118,11 +123,10 @@ function midcast(spell)
     run_event('midcast',spell)
 end
 function aftercast(spell)
-    --coroutine.sleep(3)
     if gearchang_stopper(spell) and not Disable_All then return end
     run_event('aftercast',spell)
     if player.in_combat and auto_use_shards then
-        local shard_name = {'C. Ygg. Shard ','Z. Ygg. Shard ','A. Ygg. Shard I'}
+        local shard_name = {'C. Ygg. Shard ','Z. Ygg. Shard ','A. Ygg. Shard '}
         for sni, snv in ipairs(shard_name) do
             local shard_count = {'I','II','III','IV','V'}
             for sci, scv in ipairs(shard_count) do
@@ -143,8 +147,8 @@ function pet_aftercast(spell)
 end
 function file_unload()
     run_event('file_unload',nil)
-    if file_write then
-        file_write()
+    if File_Write_do then
+        File_Write_do()
     end
 end
 function status_change(new,old)
@@ -172,8 +176,8 @@ function buff_change(name,gain)
 end
 function self_command(command)
     run_event('self_command',command)
-    if file_write then
-        file_write()
+    if File_Write_do then
+        File_Write_do()
     end
     if updatedisplay then
         updatedisplay()
@@ -183,25 +187,26 @@ function pet_change(pet,gain)
     run_event('pet_change',pet,gain)
 end
 function sub_job_change(new,old)
-    send_command("gs r")
+    send_command("gs r") run_event('sub_job_change',new,old)
+end
+function indi_change(indi_table,gain)
     run_event('sub_job_change',new,old)
 end
 -----------------------------------------------------------------------------------------------------------------------------------
 function load_includes()
-    local includes_have = {'MJi','SJi','MSi','WSi','Ammo','Special_Weapons','Conquest_Gear','Registered_Events','Debug','Display','File_Write'}
-    for i, v in pairs(includes_have) do
-        if v == 'MJi' and MJi and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'}) then
-            include('includes/mjob/main_job_'..player.main_job..'.lua')
-        elseif v == 'SJi' and SJi and gearswap.pathsearch({'includes/sjob/sub_job_'..player.sub_job..'.lua'}) then
-            include('includes/sjob/sub_job_'..player.sub_job..'.lua')
-        elseif v =='MSi' and MSi and table.contains(jobs.magic, player.main_job) and gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
-            include('includes/extra_more/MSi.lua')
-        elseif v == 'Ammo' and Ammo and table.contains(jobs.ammo, player.main_job) and gearswap.pathsearch({'includes/extra_more/Ammo.lua'}) then
-            include('includes/extra_more/Ammo.lua')
-        elseif _G[v] and gearswap.pathsearch({'includes/extra_more/'..v..'.lua'}) then
-            include('includes/extra_more/'..v..'.lua')
-        end
-    end
+    local includes_have = {
+    ['MJi']={[1]=(MJi and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'})),[2]='includes/mjob/main_job_'..player.main_job..'.lua'},
+    ['SJi']={[1]=(SJi and gearswap.pathsearch({'includes/sjob/sub_job_'..player.sub_job..'.lua'})),[2]='includes/sjob/sub_job_'..player.sub_job..'.lua'},
+    ['MSi']={[1]=(MSi and table.contains(jobs.magic, player.main_job) and gearswap.pathsearch({'includes/extra_more/MSi.lua'})),[2]='includes/extra_more/MSi.lua'},
+    ['WSi']={[1]=(_G[v] and gearswap.pathsearch({'includes/extra_more/WSi.lua'})),[2]='includes/extra_more/WSi.lua'},
+    ['Ammo']={[1]=(Ammo and table.contains(jobs.ammo, player.main_job) and gearswap.pathsearch({'includes/extra_more/Ammo.lua'})),[2]='includes/extra_more/Ammo.lua'},
+    ['Special_Weapons']={[1]=(Special_Weapons and gearswap.pathsearch({'includes/extra_more/Special_Weapons.lua'})),[2]='includes/extra_more/Special_Weapons.lua'},
+    ['Conquest_Gear']={[1]=(Conquest_Gear and gearswap.pathsearch({'includes/extra_more/Registered_Events.lua'})),[2]='includes/extra_more/Registered_Events.lua'},
+    ['Registered_Events']={[1]=(Registered_Events and gearswap.pathsearch({'includes/extra_more/Registered_Events.lua'})),[2]='includes/extra_more/Registered_Events.lua'},
+    ['Debug']={[1]=(Debug and gearswap.pathsearch({'includes/extra_more/Debug.lua'})),[2]='includes/extra_more/Debug.lua'},
+    ['Display']={[1]=(Display and gearswap.pathsearch({'includes/extra_more/Display.lua'})),[2]='includes/extra_more/Display.lua'},
+    ['File_Write']={[1]=(File_Write and gearswap.pathsearch({'includes/extra_more/File_Write.lua'})),[2]='includes/extra_more/File_Write.lua'},}
+    for i, v in pairs(includes_have) do if includes_have[i][1] then include(includes_have[i][2]) end end
 end
 if Disable_All then
     return
@@ -209,15 +214,12 @@ else
     load_includes()
 end
 --extra functions-----------------------------------------------------------------------------------------------------------------
-function extra_self_commands(command)
+function extra_self_command(command)
     if command == "reload_gearswap" then
-        if file_write then
-            file_write()
+        if File_Write_do then
+            File_Write_do()
         end
         send_command("gs r")
-    end
-    if command == "tautolock" and Display then
-        autolock = not autolock
     end
     if command == "toggledisplay" and Display then
         if window:visible() then
@@ -226,6 +228,65 @@ function extra_self_commands(command)
         else
             window:show()
             window_hidden = false
+        end
+    end
+    if command:lower():startswith('set ') or command:lower():startswith('s ') then
+        local commandArgs = command
+        if type(commandArgs) == 'string' then
+            commandArgs = T(commandArgs:split(' '))
+        end
+        if commandArgs[2]:lower() == 'steps' then
+            if tonumber(commandArgs[3]) <= 5 then
+                gear_mode_count = tonumber(commandArgs[3])
+            else
+                add_to_chat(7, "Cannot set max steps to weapon to "..weapon_types[commandArgs[3]].." because weapon set does not exist.")
+            end
+        end
+        if commandArgs[2]:lower() == 'armor' or commandArgs[2]:lower() == 'a' then
+            for i, v in ipairs(gear_mode) do
+                if v:lower() == string.lower(commandArgs[3]) then
+                    commandArgs[3] = i
+                end
+            end
+            gear_mode_count = tonumber(commandArgs[3])
+        end
+        if commandArgs[2]:lower() == 'range' or commandArgs[2]:lower() == 'r' then
+            local corrections_for_set_range = {['archery']='archery',['bow']='archery',['marksmanship']='marksmanship',['xbow']='marksmanship',['gun']='marksmanship',
+            ['throwing']='throwing',['throw']='throwing',['fishing']='fishing',['fish']='fishing',['soultrapper']='soultrapper',['camera']='soultrapper',
+            ['wind_instruments']='wind_instruments',['flute']='wind_instruments',['string_instruments']='string_instruments',['harp']='string_instruments',
+            ['handbells']='handbells',['bell']='handbells',['other']='other',}
+            for i, v in ipairs(range_type) do
+                if corrections_for_set_range[commandArgs[3]] and corrections_for_set_range[string.lower(commandArgs[3])] == v:lower() then
+                    commandArgs[3] = i
+                else
+                    add_to_chat(7, "Unknown range weapon type "..range_type[commandArgs[3]])
+                end
+            end
+            if sets.range[range_type[commandArgs[3]]] then
+                range_type_count = tonumber(commandArgs[3])
+            else
+                add_to_chat(7, "Cannot switch range weapon to "..range_type[commandArgs[3]].." because range set does not exist.")
+            end
+        end
+        if commandArgs[2]:lower() == 'weapon' or commandArgs[2]:lower() == 'w' then
+            local corrections_for_set_weapon = {['axe']='axe',['club']='club',['dagger']='dagger',['great_axe']='great_axe',['ga']='great_axe',
+            ['great_sword']='great_sword',['gs']='great_sword',['hand-to-hand']='hand-to-hand',['h2h']='hand-to-hand',['polearm']='polearm',['scythe']='scythe',
+            ['staff']='staff',['sword']='sword',['great_katana']='great_katana',['gk']='great_katana',['katana']='katana',}
+            for i, v in ipairs(weapon_types) do
+                if corrections_for_set_weapon[string.lower(commandArgs[3])] == v:lower() then
+                    commandArgs[3] = i
+                else
+                    add_to_chat(7, "Unknown weapon type "..range_type[commandArgs[3]])
+                end
+            end
+            if sets.weapon[weapon_types[commandArgs[3]]] then
+                weapon_types_count = tonumber(commandArgs[3])
+            else
+                add_to_chat(7, "Cannot switch weapon to "..weapon_types[commandArgs[3]].." because weapon set does not exist.")
+            end
+        end
+        if updatedisplay then
+            updatedisplay()
         end
     end
 end
@@ -295,7 +356,7 @@ function spell_stopper(spell)
     if  player.tp < 1000 and spell.type == 'WeaponSkill'  then
         return true
     end
-    if player.main_job == "NIN" or player.sub_job == "NIN" then    if nin_tool_check(spell) then return true end end
+    if player.main_job == "NIN" or player.sub_job == "NIN" then if nin_tool_check(spell) then return true end end
     --if spell.en ~= 'Ranged' and spell.type ~= 'Item' and spell_range_check(spell) then return true end
 end
 function spell_range_check(spell)
@@ -345,8 +406,8 @@ function gearchang_stopper(spell)
         end
     end
 end
-if file_write then
-    file_write()
+if File_Write_do then
+    File_Write_do()
 end
 --has buff functions--------------------------------------------------------------------------------------------------------------
 function has_any_buff_of(buff_set)

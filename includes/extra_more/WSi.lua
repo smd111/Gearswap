@@ -49,7 +49,7 @@ sets.weaponskill={
         ['Archery']={head="Shunten Hachimaki"},['Marksmanship']={head="Saika Hachimaki"},['Throwing']={},},
     }
 
-function equip_elemental_ws_Gear(spell,set_gear)
+function WSi_Gear(spell,set_gear)
     local dwelement = world.day_element
     if world.weather_element ~= "None" and world.weather_element ~= nil then
         dwelement = world.weather_element

@@ -1,5 +1,3 @@
-         --AMMO TABLE (use the ammo you want to equip to get quiver or pouch)
-        --these will convert any ammo you can store in a quiver(arrow or bolt) or pouch(bullet) to the correct quiver or pouch
     combined_ammo = {
         ["Crude Arrow"]="Old Quiver",["Old Arrow"]="Rotten Quiver",["Stone Arrow"]="Stone Quiver",["Bone Arrow"]="Bone Quiver",["Beetle Arrow"]="Beetle Quiver",
         ["Horn Arrow"]="Horn Quiver",["Scorpion Arrow"]="Scorpion Quiver",["Demon Arrow"]="Demon Quiver",["Iron Arrow"]="Iron Quiver",["Silver Arrow"]="Silver Quiver",
@@ -22,22 +20,22 @@
 
     sets.ammo_empty = {ammo=empty,}
 --Ammo functions
-function ammo_check()
+function Ammo_check()
     if player.inventory[combined_ammo[sets[player.status].ammo]] and player.inventory[sets[player.status].ammo] == nil then
         return true
     end
     return false
 end
-function ammo_reequip()
+function Ammo_reequip()
     if player.inventory[combined_ammo[sets[player.status].ammo]] ~= nil then
         return combined_ammo[sets[player.status].ammo]
     end
 end
-function ammo_rule(spell)
-    if spell.english == "Ranged" and ammo_check() then
+function Ammo_rule(spell)
+    if spell.english == "Ranged" and Ammo_check() then
         status.end_event = true
         status.end_spell = true
         equip(sets.ammo_empty)
-        send_command('input /item "'..ammo_reequip()..'" <me>')
+        send_command('input /item "'..Ammo_reequip()..'" <me>')
     end
 end

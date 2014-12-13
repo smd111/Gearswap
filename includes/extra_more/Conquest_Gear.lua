@@ -39,7 +39,7 @@ end
 if not Conquest.ring.case_id then
     Conquest.ring.case_id = 1
 end
-function conquest_Gear(status,set_gear)
+function Conquest_Gear_do(status,set_gear)
     local neckid = 2
     local ringid = 2
     if has_any_buff_of(S{"Signet","Sanction","Sigil"}) then
@@ -68,7 +68,7 @@ function conquest_Gear(status,set_gear)
     end
     return set_gear
 end
-function conquest_Gear_self_command(command)
+function Conquest_Gear_self_command(command)
     if command == "conquestneck" then
         Conquest.neck.case_id = (Conquest.neck.case_id % #Conquest.neck.case) + 1
     end

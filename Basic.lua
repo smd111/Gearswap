@@ -43,6 +43,7 @@ end
 include('includes/Extras.lua')
 --Job functions
 function gear_setup()
+    add_gear_modes({"test","tes2"})-- add more gear modes with this
     ---------------------------------------
     --these are your base sets put in your
     --default sets for status idle/resting
@@ -93,25 +94,25 @@ function gear_setup()
     ---------------------------------------
     --put your weapons here
     --any that you do not want to use just comment out or remove 
-    --/engaged (these must be here)
+    --(these must be here)
     ---------------------------------------
     sets.weapon = {}
-    sets.weapon['Axe'] = {main="",sub="",}
-    sets.weapon['Club'] = {main="",sub="",}
-    sets.weapon['Dagger'] = {main="",sub="",}
-    sets.weapon['Great_Axe'] = {main="",sub="",}
-    sets.weapon['Great_Sword'] = {main="",sub="",}
-    sets.weapon['Hand-to-Hand'] = {main="",sub="",}
-    sets.weapon['Great_Katana'] = {main="",sub="",}
-    sets.weapon['Katana'] = {main="",sub="",}
-    sets.weapon['Polearm'] = {main="",sub="",}
-    sets.weapon['Scythe'] = {main="",sub="",}
-    sets.weapon['Staff'] = {main="",sub="",}
-    sets.weapon['Sword'] = {main="",sub="",}
+    -- sets.weapon['Axe'] = {main="",sub="",}
+    -- sets.weapon['Club'] = {main="",sub="",}
+    -- sets.weapon['Dagger'] = {main="",sub="",}
+    -- sets.weapon['Great_Axe'] = {main="",sub="",}
+    -- sets.weapon['Great_Sword'] = {main="",sub="",}
+    -- sets.weapon['Hand-to-Hand'] = {main="",sub="",}
+    -- sets.weapon['Great_Katana'] = {main="",sub="",}
+    -- sets.weapon['Katana'] = {main="",sub="",}
+    -- sets.weapon['Polearm'] = {main="",sub="",}
+    -- sets.weapon['Scythe'] = {main="",sub="",}
+    -- sets.weapon['Staff'] = {main="",sub="",}
+    -- sets.weapon['Sword'] = {main="",sub="",}
     ---------------------------------------
     --put your range weapons here
     --any that you do not want to use just comment out or remove 
-    --/engaged (these must be here)
+    --(these must be here)
     ---------------------------------------
     sets.range = {}
     -- sets.range['Archery'] = {range="",ammo="",}
@@ -249,17 +250,32 @@ function mf_sub_job_change(new,old)
     ---------------------------------------
     return
 end
---custom menu setup (if you do not know what your doing leave this alone)
 -- function custom_rules()
-    -- local custom_rules = {}
-    -- return custom_rules
+    -- local custom_rules_table = {}
+    -- if SJi then
+        -- custom_rules_table.stepm = Stepmax
+        -- custom_rules_table.ssteps = Stopsteps and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    -- end
+    -- if WSi then
+        -- custom_rules_table.cstaff = Changestaff and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+        -- custom_rules_table.ustaff = Usestaff
+    -- end
+    -- if Conquest_Gear then
+        -- custom_rules_table.cneckc = Conquest.neck.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+        -- custom_rules_table.cringc = Conquest.ring.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+        -- custom_rules_table.cneck = Conquest.neck.case[Conquest.neck.case_id]
+        -- custom_rules_table.cring = Conquest.ring.case[Conquest.ring.case_id]
+    -- end
+    -- custom_rules_table.mjob = windower.ffxi.get_player().main_job_full
+    -- custom_rules_table.mjob_lvl = windower.ffxi.get_player().main_job_level
+    -- return custom_rules_table
 -- end
 -- function custom_menu()
     -- local properties = L{}
         -- if windower.ffxi.get_player().sub_job == 'DNC' and SJi then
-            -- properties:append('Max Step = ${stepm}')
-            -- properties:append('Steps')
-            -- properties:append('  Will ${ssteps}Stop')
+            -- properties:append('-Steps-')
+            -- properties:append('   Max Step = ${stepm}')
+            -- properties:append('   Stop Steps   ${ssteps}')
         -- end
         -- if windower.wc_match(windower.ffxi.get_player().main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and WSi then
             -- properties:append('Staves')
@@ -274,14 +290,6 @@ end
             -- properties:append('Conquest')
             -- properties:append('  Neck Type = ${cneck}')
             -- properties:append('  Ring Type = ${cring}')
-        -- end
-        -- if autolock and Registered_Events then
-            -- properties:append('Auto Lock')
-            -- properties:append('  Enabled')
-        -- end
-        -- if autotarget then
-            -- properties:append('Auto Self Target ')
-            -- properties:append('After Battle Enabled')
         -- end
         -- if lvlwatch then
             -- properties:append('${mjob}')

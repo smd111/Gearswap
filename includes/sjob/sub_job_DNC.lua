@@ -6,7 +6,7 @@ if not Stopsteps then
 end
     Hwauto = false
 
-function sub_job_precast(spell,status,set_gear)
+function SJi_precast(spell,status,set_gear)
     if spell.type == 'Waltz' and spell.target.type == 'SELF' then
         if player.hpp >= 75 and has_any_buff_of(Waltz.debuff) and player.sub_job_level > 34 then
             if spell.en ~= 'Healing Waltz' then
@@ -103,11 +103,6 @@ function sub_job_precast(spell,status,set_gear)
                     end
                 end
             end
-            -- if buffactive['Finishing Move '..Stepmax] then
-                -- status.end_spell=true
-                -- status.end_event=true
-                -- return
-            -- end
         end
     end
     if spell.en == 'Spectral Jig' then
@@ -121,14 +116,14 @@ function sub_job_precast(spell,status,set_gear)
         end
     end
 end 
-function sub_job_buff_change(name,gain)
+function SJi_buff_change(name,gain)
     if Hwauto and windower.wc_match(name, "Max * Down|Magic * Down|* Down|bane|Bio|blindness|curse|Dia|disease|Shock|Rasp|Choke|Frost|Burn|Drown|Flash|paralysis|plague|poison|silence|slow|weight") then
         if gain and player.tp >= 200 and player.sub_job_level > 34 then
             send_command('@input /ja "Healing Waltz" <me>')
         end
     end
 end
-function sub_jobs_command(command)
+function SJi_self_command(command)
     if command == 'tstopsteps' then
         Stopsteps = not Stopsteps
         -- add_to_chat(7, '----- Steps Will ' .. (Stopsteps and '' or 'Not ') .. 'Stop -----')
@@ -140,5 +135,21 @@ function sub_jobs_command(command)
     if command == 'autohw' then
         Hwauto = not Hwauto
         add_to_chat(7, '----- Auto Healing Waltz Is ' .. (Hwauto and 'Enabled' or 'Disabled'))
+    end
+    if command:lower():startswith('set ') or command:lower():startswith('s ') then
+        local commandArgs = command
+        if type(commandArgs) == 'string' then
+            commandArgs = T(commandArgs:split(' '))
+        end
+        if commandArgs[2]:lower() == 'stepmax' then
+            if tonumber(commandArgs[3]) <= 5 then
+                Stepmax = tonumber(commandArgs[3])
+            else
+                add_to_chat(7, "Cannot set max steps to "..commandArgs[3].." because max is 5.")
+            end
+        end
+        if updatedisplay then
+            updatedisplay()
+        end
     end
 end

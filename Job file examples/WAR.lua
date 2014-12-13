@@ -34,8 +34,8 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
     -----------------------------------------------------------------------------------------------------------------------------------
-    jobneck = {neck={ name="Magus Torque", augments={'MP+10','Mag. Acc.+1',}},} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
-    jobring = {left_ring="Onyx Ring",} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
+    jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
+    jobring = {left_ring="Enlivened Ring",} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
     --example:
     --jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},}
     --jobring = {left_ring="Prouesse Ring",}

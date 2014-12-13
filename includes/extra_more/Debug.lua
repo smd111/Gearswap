@@ -1,40 +1,28 @@
-    -- How To Use
-    -- 1. put include('Debug include.lua') in function get_sets()
-    -- 2. put debug_status_change(new,old) in function status_change(new,old)
-    -- 3. put debug_pet_change(pet,gain) in function pet_change(pet,gain)
-    -- 4. put debug_filtered_action(spell) in function filtered_action(spell)
-    -- 5. put debug_pretarget(spell) in function pretarget(spell)
-    -- 6. put debug_buff_change(name,gain) in function buff_change(name,gain)
-    -- 7. put debug_midcast(spell) in function midcast(spell)
-    -- 8. put debug_pet_midcast(spell) in function pet_midcast(spell)
-    -- 9. put debug_aftercast(spell) in function aftercast(spell)
-    -- 10. put debug_pet_aftercast(spell) in function pet_aftercast(spell)
-    -- 11. use this command to enable/disable verbose debug mode //gs c Debug
-    -- 12. use this command to cycle through debug types //gs c Debugtype
 
     full_debug = false
     debug_count = 1
-    debug_type = {"Status_Change","Pet_Change","Filtered_Action","Pretarget","Precast","Buff_Change","Midcast","Pet_Midcast","Aftercast","Pet_Aftercast","All"}
+    debug_type = {"Status_Change","Pet_Change","Filtered_Action","Pretarget","Precast","Buff_Change","Midcast","Pet_Midcast","Aftercast","Pet_Aftercast",
+    "Indi_Change","Self_Command","All"}
 
-function debug_status_change(new,old)
+function Debug_status_change(new,old)
     if full_debug then
-        if debug_count == 1 or debug_count == 11 then
+        if debug_count == 1 or debug_count == 13 then
             add_to_chat(7,"Status New = "..tostring(new))
             add_to_chat(7,"Status Old = "..tostring(old))
         end
     end
 end
-function debug_pet_change(pet,gain)
+function Debug_pet_change(pet,gain)
     if full_debug then
-        if debug_count == 2 or debug_count == 11 then
+        if debug_count == 2 or debug_count == 13 then
             add_to_chat(7,"Pet = "..tostring(pet)..", Gain = "..tostring(gain))
             add_to_chat(7,"Pet Element = "..tostring(pet.element))
         end
     end
 end
-function debug_filtered_action(spell)
+function Debug_filtered_action(spell)
     if full_debug then
-        if debug_count == 3 or debug_count == 11 then
+        if debug_count == 3 or debug_count == 13 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -46,9 +34,9 @@ function debug_filtered_action(spell)
         end
     end
 end
-function debug_pretarget(spell)
+function Debug_pretarget(spell)
     if full_debug then
-        if debug_count == 4 or debug_count == 11 then
+        if debug_count == 4 or debug_count == 13 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -60,9 +48,9 @@ function debug_pretarget(spell)
         end
     end
 end
-function debug_precast(spell)
+function Debug_precast(spell)
     if full_debug then
-        if debug_count == 5 or debug_count == 11 then
+        if debug_count == 5 or debug_count == 13 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -76,16 +64,16 @@ function debug_precast(spell)
         end
     end
 end
-function debug_buff_change(name,gain)
+function Debug_buff_change(name,gain)
     if full_debug then
-        if debug_count == 6 or debug_count == 11 then
+        if debug_count == 6 or debug_count == 13 then
             add_to_chat(7,"Buff = "..tostring(name)..', Gain = '..tostring(gain))
         end
     end
 end
-function debug_midcast(spell)
+function Debug_midcast(spell)
     if full_debug then
-        if debug_count == 7 or debug_count == 11 then
+        if debug_count == 7 or debug_count == 13 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -98,9 +86,9 @@ function debug_midcast(spell)
     end
     return
 end
-function debug_pet_midcast(spell)
+function Debug_pet_midcast(spell)
     if full_debug then
-        if debug_count == 8 or debug_count == 11 then
+        if debug_count == 8 or debug_count == 13 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -112,9 +100,9 @@ function debug_pet_midcast(spell)
         end
     end
 end
-function debug_aftercast(spell)
+function Debug_aftercast(spell)
     if full_debug then
-        if debug_count == 9 or debug_count == 11 then
+        if debug_count == 9 or debug_count == 13 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -126,9 +114,9 @@ function debug_aftercast(spell)
         end
     end
 end
-function debug_pet_aftercast(spell)
+function Debug_pet_aftercast(spell)
     if full_debug then
-        if debug_count == 10 or debug_count == 11 then
+        if debug_count == 10 or debug_count == 13 then
             add_to_chat(7,"Spell Name = "..tostring(spell.english))
             add_to_chat(7,"Spell Type = "..tostring(spell.type))
             add_to_chat(7,"Spell Element = "..tostring(spell.element))
@@ -140,7 +128,18 @@ function debug_pet_aftercast(spell)
         end
     end
 end
-function debug_self_command(command)
+function Debug_indi_change(indi_table,gain)
+    if full_debug then
+        if debug_count == 11 or debug_count == 13 then
+            add_to_chat(7,"Indi Element = "..tostring(indi_table.element))
+            add_to_chat(7,"Indi Element_id = "..tostring(indi_table.element_id))
+            add_to_chat(7,"Indi Target = "..tostring(indi_table.target))
+            add_to_chat(7,"Indi Size = "..tostring(indi_table.size))
+            add_to_chat(7,"Indi Gain = "..tostring(gain))
+        end
+    end
+end
+function Debug_self_command(command)
     if command == 'tDebug' then
         full_debug = not full_debug
         send_command('clear log')
@@ -152,8 +151,39 @@ function debug_self_command(command)
         add_to_chat(7,'Debug Mode Type = ' .. tostring(debug_type[debug_count]))
     end
     if full_debug then
-        if debug_count == 11 then
-            add_to_chat(7,"Command = "..tostring(command))
+        if debug_count == 12 or debug_count == 13 then
+            local commandArgs = command
+            if type(commandArgs) == 'string' then
+                commandArgs = T(commandArgs:split(' '))
+            end
+            if type(commandArgs) == 'table' then
+                for i, v in ipairs(commandArgs) do
+                    add_to_chat(7,"commandArgs["..i.."] = "..tostring(v))
+                end
+            end
+            add_to_chat(7,"Full Command Recived= "..tostring(command))
+        end
+    end
+    if command:lower():startswith('set ') or command:lower():startswith('s ') then
+        local commandArgs = command
+        if type(commandArgs) == 'string' then
+            commandArgs = T(commandArgs:split(' '))
+        end
+        if commandArgs[2]:lower() == 'debug' then
+            local corrections_for_set_debug = {['status_change']='status_change',['sc']='status_change',['pet_change']='pet_change',['pc']='pet_change',
+            ['filtered_action']='filtered_action',['fa']='filtered_action',['pretarget']='pretarget',['pret']='pretarget',['precast']='precast',['prec']='precast',
+            ['buff_change']='buff_change',['bc']='buff_change',['Midcast']='Midcast',['mc']='Midcast',['pet_Midcast']='pet_Midcast',['pmc']='pet_Midcast',
+            ['aftercast']='aftercast',['ac']='aftercast',['pet_aftercast']='pet_aftercast',['pac']='pet_aftercast',['indi_change']='indi_change',['ic']='indi_change',
+            ['self_command']='self_command',['command']='self_command',['scom']='self_command',['all']='all',}
+            for i, v in ipairs(debug_type) do
+                if corrections_for_set_debug[string.lower(commandArgs[3])] == v:lower() then
+                    commandArgs[3] = i
+                end
+            end
+            debug_count = tonumber(commandArgs[3])
+        end
+        if updatedisplay then
+            updatedisplay()
         end
     end
 end
