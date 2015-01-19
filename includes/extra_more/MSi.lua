@@ -16,8 +16,8 @@ end
 
 function MSi_equip(spell,set_gear)
     if Changestaff then
-        if Typ.spells:contains(spell.type) then
-            if Cure.spells:contains(spell.english) then
+        if table.contains(Typ.spells,spell.type) then
+            if table.contains(Cure.spells,spell.english) then
                 set_gear = set_combine(set_gear, sets.staff.Cur)
             else
                 set_gear = set_combine(set_gear, sets.staff[Usestaff][spell.element])
@@ -27,25 +27,23 @@ function MSi_equip(spell,set_gear)
     return set_gear
 end
 function MSi_self_command(command)
-    if string.lower(command[1]) == "t" or string.lower(command[1]) == "toggle" then
-        if command[2] == 'stavetouse' then
-            Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
-            --add_to_chat(7, '----- Staves Set To '..Usestaff..' -----')
-        elseif string.lower(command[2]) == 'changemagestaff' then
-            Changestaff = not Changestaff
-            --add_to_chat(7, '----- Staves Will ' .. (Changestaff and '' or 'NOT ') .. 'Change -----')
-        end
-    elseif string.lower(command[1]) == "s" or string.lower(command[1]) == "set" then
-        if string.lower(command[2]) == 'stavetouse' then
-            Usestaff = command[3]
-        end
-    else
-        if command == 'tstavetouse' then
-            Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
-            --add_to_chat(7, '----- Staves Set To '..Usestaff..' -----')
-        elseif command == 'tchangemagestaff' then
-            Changestaff = not Changestaff
-            --add_to_chat(7, '----- Staves Will ' .. (Changestaff and '' or 'NOT ') .. 'Change -----')
-        end
+    if command == 'tstavetouse' then
+        Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
+        add_to_chat(7, '----- Staves Set To '..Usestaff..' -----')
+    elseif command == 'tchangemagestaff' then
+        Changestaff = not Changestaff
+        add_to_chat(7, '----- Staves Will ' .. (Changestaff and '' or 'NOT ') .. 'Change -----')
     end
+    -- if string.lower(command[1]) == "t" or string.lower(command[1]) == "toggle" then
+        -- if command[2] == 'stavetouse' then
+            -- Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
+            -- --add_to_chat(7, '----- Staves Set To '..Usestaff..' -----')
+        -- elseif string.lower(command[2]) == 'changemagestaff' then
+            -- Changestaff = not Changestaff
+            -- --add_to_chat(7, '----- Staves Will ' .. (Changestaff and '' or 'NOT ') .. 'Change -----')
+        -- end
+    -- elseif string.lower(command[1]) == "s" or string.lower(command[1]) == "set" then
+        -- if string.lower(command[2]) == 'stavetouse' then
+            -- Usestaff = command[3]
+        -- end
 end

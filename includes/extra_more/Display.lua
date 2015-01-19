@@ -35,11 +35,11 @@ function initialize(text, settings, window_name)
             [3]={[1]='--Armor Settings--',[2]='Mode = \\cs(255,255,0)${amode}\\cr',[3]={[1]=(Conquest_Gear),[2]='-Conquest Gear-'},
             [4]={[1]=(Conquest_Gear),[2]='  Change Neck   ${cneckc}'},[5]={[1]=(Conquest_Gear),[2]='  Neck Type = \\cs(255,255,0)${cneck}\\cr'},
             [6]={[1]=(Conquest_Gear),[2]='  Change Ring   ${cringc}'},[7]={[1]=(Conquest_Gear),[2]='  Ring Type = \\cs(255,255,0)${cring}\\cr'},},
-            [4]={[1]='--System Settings--',[2]='Display Main Job',[3]='and LVL   ${tmjl}',[4]={[1]=(Registered_Events),[2]='Show Current '},
-            [5]={[1]=(Registered_Events),[2]='Skill Level   ${tskill}'},[6]='Show Swaps   ${tswap}',[7]='Debug Mode   ${debugm}',
-            [8]={[1]=(Debug),[2]='Show Debug  ${dbenable}'},[9]={[1]=(Debug),[2]='  in = ${debugtype}'},[10]={[1]=(File_Write),[2]='${filew|Force File Write}'},
-            [11]='${gsex1|Gearswap Export}',[12]='${regs|Reload Gearswap}',},[5]={[1]='--Include Settings--',[2]='Ammo   ${tammo}',[3]='Conquest Gear   ${tcgi}',
-            [4]='Debug   ${tdebug}',[5]='File Write   ${tfwi}',[6]='Main Job   ${tmji}',
+            [4]={[1]='--System Settings--',[2]={[1]=(Registered_Events),[2]='Display Main Job'},[3]={[1]=(Registered_Events),[2]='and LVL   ${tmjl}'},
+            [4]={[1]=(Registered_Events),[2]='Show Current '},[5]={[1]=(Registered_Events),[2]='Skill Level   ${tskill}'},[6]='Auto Shard Use   ${ashard}',
+            [7]='Show Swaps   ${tswap}',[8]='Debug Mode   ${debugm}',[9]={[1]=(Debug),[2]='Show Debug  ${dbenable}'},[10]={[1]=(Debug),[2]='  in = ${debugtype}'},
+            [11]={[1]=(File_Write),[2]='${filew|Force File Write}'},[12]='${gsex1|Gearswap Export}',[13]='${regs|Reload Gearswap}',},[5]={[1]='--Include Settings--',
+            [2]='Ammo   ${tammo}',[3]='Conquest Gear   ${tcgi}',[4]='Debug   ${tdebug}',[5]='File Write   ${tfwi}',[6]='Main Job   ${tmji}',
             [7]={[1]=(table.contains(jobs.magic, player.main_job)),[2]='Mage Stave   ${tmsi}'},[8]='Registered Events   ${trei}',[9]='Special Weapons   ${tswi}',
             [10]='Sub Job   ${tsji}',[11]='Weapon Skill   ${twsi}',},}
         if menu_build_list[menu_set] then
@@ -70,9 +70,10 @@ function initialize(text, settings, window_name)
         end
     else
         local menu_name_initialize = {
-        ['weapon_select_window']={[1]='Select Weapon',[2]='weapon_types',[3]='wep',[4]='weapon'},['range_select_window']={[1]='Select Range',[2]='range_type',
+        ['weapon_select_window']={[1]='Select Weapon',[2]='weapon_types',[3]='wep',[4]='weapon'},['range_select_window']={[1]='Select Range',[2]='range_types',
         [3]='rang',[4]='range'},['skill_select_window']={[1]='Select Skill',[2]='skill_type',[3]='skill',},['debug_select_window']={[1]='Select Debug',
-        [2]='debug_type',[3]='debug',},['tab_select_window']={[1]='Select Menu Tab',[2]='tab_type',[3]='tab',},}
+        [2]='debug_type',[3]='debug',},['tab_select_window']={[1]='Select Menu Tab',[2]='tab_type',[3]='tab',},
+        ['gear_select_window']={[1]='Select Armor',[2]='armor_types',[3]='ger'},}
         properties:append(menu_name_initialize[window_name][1])
         for i, v in ipairs(_G[menu_name_initialize[window_name][2]]) do
             if menu_name_initialize[window_name][4] then
@@ -137,7 +138,7 @@ function updatedisplay()
     end
     info.mjob = windower.ffxi.get_player().main_job_full
     info.mjob_lvl = windower.ffxi.get_player().main_job_level
-    info.amode = gear_mode[gear_mode_count]
+    info.amode = armor_types[armor_types_count]
     info.listm = menu_list[menu_set]
     info.tmji = MJi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     info.tsji = SJi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
@@ -157,11 +158,12 @@ function updatedisplay()
         info.skill_lvl = (skill[skill_type[skill_count]..' Capped'] and "Capped" or skill[skill_type[skill_count]..' Level'])
     end
     info.tskill = skillwatch and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.tswap = tswap and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.debugm = debugmod and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tswap = _settings.show_swaps and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.debugm = _settings.debug_mode and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     info.wept = string.gsub(weapon_types[weapon_types_count], "_", " ")
-    info.rwept = string.gsub(range_type[range_type_count], "_", " ")
+    info.rwept = string.gsub(range_types[range_types_count], "_", " ")
     info.dbenable = full_debug and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.ashard = auto_use_shards and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     if Debug then
         info.debugtype = string.gsub(debug_type[debug_count], "_", " ")
     end
@@ -182,7 +184,7 @@ function get_window_pos(x,y,check_windows)
     local my, mx, button_lines, hx, hy = 0,0,0,0,0,0
     for i, v in pairs(check_windows) do
         if check_windows[i][1] then
-            mx, my = windower.text.get_extents(_G[check_windows[i][2]]._name)
+            mx, my = texts.extents(_G[check_windows[i][2]])
             button_lines = _G[check_windows[i][2]]:text():count('\n') + 1
             hx = (x - _G[i].pos.x)
             hy = (y - _G[i].pos.y)
@@ -233,9 +235,10 @@ function set_loc(location,hy,menu_name,switch_tabl)
 end
 function extra_display(x,y,location,hy,check_windows)
     local code = {
-        ['weapon_select_window']={[1]='Select Weapon',[2]='weapon_types',[3]='wep',[4]='weapon'},['range_select_window']={[1]='Select Range',[2]='range_type',
+        ['weapon_select_window']={[1]='Select Weapon',[2]='weapon_types',[3]='wep',[4]='weapon'},['range_select_window']={[1]='Select Range',[2]='range_types',
         [3]='rang',[4]='range'},['skill_select_window']={[1]='Select Skill',[2]='skill_type',[3]='skill',},['debug_select_window']={[1]='Select Debug',
-        [2]='debug_type',[3]='debug',},['tab_select_window']={[1]='elect Menu Tab',[2]='tab_type',[3]='tab',},}
+        [2]='debug_type',[3]='debug',},['tab_select_window']={[1]='Select Menu Tab',[2]='tab_type',[3]='tab',},
+        ['gear_select_window']={[1]='Select Armor',[2]='armor_types',[3]='ger',[4]='armor'},}
     for i, v in pairs(check_windows) do
         if check_windows[i][1] then
             _G[check_windows[i][3]] = set_loc(location,hy,check_windows[i][2],code[check_windows[i][2]]) or 1
@@ -257,7 +260,8 @@ function mouse(mtype, x, y, delta, blocked)
     ['debug_select']={[1]=(Debug and debug_select_window and debug_select_window:hover(x, y) and debug_select_window:visible()),[2]='debug_select_window',[3]='debug_count'},
     ['tab_select']={[1]=(tab_select_window and tab_select_window:hover(x, y) and tab_select_window:visible()),[2]='tab_select_window',[3]='menu_set'},
     ['wep_select']={[1]=(weapon_select_window and weapon_select_window:hover(x, y) and weapon_select_window:visible()),[2]='weapon_select_window',[3]='weapon_types_count'},
-    ['range_select']={[1]=(range_select_window and range_select_window:hover(x, y) and range_select_window:visible()),[2]='range_select_window',[3]='range_type_count'},}
+    ['range_select']={[1]=(range_select_window and range_select_window:hover(x, y) and range_select_window:visible()),[2]='range_select_window',[3]='range_types_count'},
+    ['ger_select']={[1]=(gear_select_window and gear_select_window:hover(x, y) and gear_select_window:visible()),[2]='gear_select_window',[3]='armor_types_count'},}
     local my, mx, button_lines, hx, hy = get_window_pos(x,y,check_windows)
     if button_lines == 0 then
         windower.prim.set_visibility('window_button', false)
@@ -337,20 +341,23 @@ function menu_commands(a)
     elseif a == "{cring}" then
         Conquest.ring.case_id = (Conquest.ring.case_id % #Conquest.ring.case) + 1
     elseif a == "{amode}" then
-        gear_mode_count = (gear_mode_count % #gear_mode) + 1
+        ger_select = {text = {font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=(menu.pos.x - 120),y=(menu.pos.y)}}
+        gear_select_window = texts.new(ger_select)
+        initialize(gear_select_window, ger_select, 'gear_select_window')
+        gear_select_window:show()
     elseif a == '{tmji}' then
         MJi = not MJi
         if MJi and not Disable_All and gearswap.pathsearch({'includes/mjob/main_job_'..player.main_job..'.lua'}) then
             include('includes/mjob/main_job_'..player.main_job..'.lua')
         else
-            remove_functions('MJi')
+            remove_functions('MJi_')
         end
     elseif a == '{tsji}' then
         SJi = not SJi
         if SJi and not Disable_All and gearswap.pathsearch({'includes/sjob/sub_job_'..player.sub_job..'.lua'}) then
             include('includes/sjob/sub_job_'..player.sub_job..'.lua')
         else
-            remove_functions('SJi')
+            remove_functions('SJi_')
         end
     elseif a == '{tmsi}' then
         MSi = not MSi
@@ -358,7 +365,7 @@ function menu_commands(a)
                                                         gearswap.pathsearch({'includes/extra_more/MSi.lua'}) then
             include('includes/extra_more/MSi.lua')
         else
-            remove_functions('MSi')
+            remove_functions('MSi_')
         end
     elseif a == '{dbenable}' then
         full_debug = not full_debug
@@ -370,14 +377,14 @@ function menu_commands(a)
         if File_Write and not Disable_All and gearswap.pathsearch({'includes/extra_more/File_Write.lua'}) then
             include('includes/extra_more/File_Write.lua')
         else
-            remove_functions('File_Write')
+            remove_functions('File_Write_')
         end
     elseif a == '{twsi}' then
         WSi = not WSi
         if WSi and not Disable_All and gearswap.pathsearch({'includes/extra_more/WSi.lua'}) then
             include('includes/extra_more/WSi.lua')
         else
-            remove_functions('WSi')
+            remove_functions('WSi_')
         end
     elseif a == '{tammo}' then
         Ammo = not Ammo
@@ -385,35 +392,35 @@ function menu_commands(a)
                                                             gearswap.pathsearch({'includes/extra_more/Ammo.lua'}) then
             include('includes/extra_more/Ammo.lua')
         else
-            remove_functions('Ammo')
+            remove_functions('Ammo_')
         end
     elseif a == '{tswi}' then
         Special_Weapons = not Special_Weapons
         if Special_Weapons and not Disable_All and gearswap.pathsearch({'includes/extra_more/Special_Weapons.lua'}) then
             include('includes/extra_more/Special_Weapons.lua')
         else
-            remove_functions('Special_Weapons')
+            remove_functions('Special_Weapons_')
         end
     elseif a == '{tcgi}' then
         Conquest_Gear = not Conquest_Gear
         if Conquest_Gear and not Disable_All and gearswap.pathsearch({'includes/extra_more/Conquest_Gear.lua'}) then
             include('includes/extra_more/Conquest_Gear.lua')
         else
-            remove_functions('Conquest_Gear')
+            remove_functions('Conquest_Gear_')
         end
     elseif a == '{trei}' then
         Registered_Events = not Registered_Events
         if Registered_Events and not Disable_All and gearswap.pathsearch({'includes/extra_more/Registered_Events.lua'}) then
             include('includes/extra_more/Registered_Events.lua')
         else
-            remove_functions('Registered_Events')
+            remove_functions('Registered_Events_')
         end
     elseif a == '{tdebug}' then
         Debug = not Debug
         if Debug and not Disable_All and gearswap.pathsearch({'includes/extra_more/Debug.lua'}) then
             include('includes/extra_more/Debug.lua')
         else
-            remove_functions('Debug')
+            remove_functions('Debug_')
         end
     elseif a == '{tmjl}' then
         lvlwatch = not lvlwatch
@@ -435,21 +442,19 @@ function menu_commands(a)
     elseif a == "{tskill}" then
         skillwatch = not skillwatch
     elseif a == "{tswap}" then
-        tswap = not tswap
-        if tswap then
-            show_swaps(true)
-        else
+        if _settings.show_swaps then
             show_swaps(false)
+        else
+            show_swaps(true)
         end
     elseif a == "{debugm}" then
-        debugmod = not debugmod
-        if debugmod then
-            debug_mode(true)
-        else
+        if _settings.debug_mode then
             debug_mode(false)
+        else
+            debug_mode(true)
         end
     elseif a == "{regs|Reload Gearswap}" then
-        send_command('gs r')
+        send_command('lua reload gearswap')
     elseif a == "{gsex1|Gearswap Export}" then
         send_command('gs export')
     elseif a == "{filew|Force File Write}" then
@@ -459,6 +464,8 @@ function menu_commands(a)
         window_hidden = true
         button:show()
         windower.prim.set_visibility('window_button', false)
+    elseif a == '{ashard}' then
+        auto_use_shards = not auto_use_shards
     end
     if custom_menu_commands then
         custom_menu_commands(a)

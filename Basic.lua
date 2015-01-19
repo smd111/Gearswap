@@ -43,7 +43,9 @@ end
 include('includes/Extras.lua')
 --Job functions
 function gear_setup()
-    add_gear_modes({"test","tes2"})-- add more gear modes with this
+    -- add more gear modes with this called with armor_types[armor_types_count] Normal, Acc, Att, TP are already included
+    -- if you dont plan on using it remove or comment out
+    add_armor_modes = {"test","tes2"}
     ---------------------------------------
     --these are your base sets put in your
     --default sets for status idle/resting
@@ -94,7 +96,7 @@ function gear_setup()
     ---------------------------------------
     --put your weapons here
     --any that you do not want to use just comment out or remove 
-    --(these must be here)
+    --(there must be at lest one)
     ---------------------------------------
     sets.weapon = {}
     -- sets.weapon['Axe'] = {main="",sub="",}
@@ -109,10 +111,12 @@ function gear_setup()
     -- sets.weapon['Scythe'] = {main="",sub="",}
     -- sets.weapon['Staff'] = {main="",sub="",}
     -- sets.weapon['Sword'] = {main="",sub="",}
+    -- sets.weapon['Reserve'] = {main="",sub="",}
+    -- sets.weapon['None'] = {main=empty,sub=empty,}
     ---------------------------------------
     --put your range weapons here
     --any that you do not want to use just comment out or remove 
-    --(these must be here)
+    --(there must be at lest one)
     ---------------------------------------
     sets.range = {}
     -- sets.range['Archery'] = {range="",ammo="",}
@@ -243,6 +247,37 @@ function mf_self_command(command)
     ---------------------------------------
     --put your self_command rules here
     ---------------------------------------
+    if type(command) == 'table' then
+        if command[1]:lower() == 'set' or command[1]:lower() == 's' then
+            --put commands that you want to the set command for example: gs c s stepmax 3 note: changes the variable directly to what you want
+            --example code:
+            -- if command[2]:lower() == 'stepmax' then
+                -- Stepmax = tonumber(command[3])
+                -- add_to_chat(7,'Max step = ' ..Stepmax)
+            -- end
+        elseif command[1]:lower() == 'cycle' or command[1]:lower() == 'c' then
+            --put commands that you want to the cycle command for example: gs c c stepmax note: for cycling through all posible variables
+            --example code:
+            -- if command[2]:lower() == 'stepmax' then
+                -- Stepmax = (Stepmax % 5) + 1
+                -- add_to_chat(7,'Max step = ' ..Stepmax)
+            -- end
+        elseif command[1]:lower() == 'toggle' or command[1]:lower() == 't' then
+            --put commands that you want to the toggle command for example: gs c t stopsteps note: onle needed fot true/false variable
+            --example code:
+            -- if command == 'stopsteps' then
+                -- Stopsteps = not Stopsteps
+                -- add_to_chat(7, '----- Steps Will ' .. (Stopsteps and '' or 'Not ') .. 'Stop -----')
+            -- end
+        end
+    else
+        --put all other commands here example: gs c tstopsteps note: this is for single string commands
+        --example code:
+        -- if command == 'tstopsteps' then
+            -- Stopsteps = not Stopsteps
+            -- add_to_chat(7, '----- Steps Will ' .. (Stopsteps and '' or 'Not ') .. 'Stop -----')
+        -- end
+    end
 end
 function mf_sub_job_change(new,old)
     ---------------------------------------

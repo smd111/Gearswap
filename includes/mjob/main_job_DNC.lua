@@ -12,6 +12,107 @@ function MJi_precast(spell,status,set_gear)
     ---------------------------------------
     --equip example: equip_pre_cast = set_combine(equip_pre_cast, sets.Engaged)
     ---------------------------------------
+    if spell.type == 'Waltz' and not spell.en:startswith('Divine Waltz') then 
+        if spell.target.hpp <= 75 then
+            if player.tp >= 800 and player.main_job_level > 87 then
+                if spell.en ~= 'Curing Waltz V' then
+                    send_command('@input /ja "Curing Waltz V" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            elseif player.tp >= 650 and player.main_job_level > 70 then
+                if spell.en ~= 'Curing Waltz IV' then
+                    send_command('@input /ja "Curing Waltz IV" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            elseif player.tp >= 500 and player.main_job_level > 44 then
+                if spell.en ~= 'Curing Waltz III' then
+                    send_command('@input /ja "Curing Waltz III" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            elseif player.tp >= 350 and player.main_job_level > 29 then
+                if spell.en ~= 'Curing Waltz II' then
+                    send_command('@input /ja "Curing Waltz II" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            elseif player.tp >= 200 and player.main_job_level > 14 then
+                if spell.en ~= 'Curing Waltz' then
+                    send_command('@input /ja "Curing Waltz" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            else
+                status.end_spell=true
+            end
+        elseif spell.target.hpp >= 75 and spell.target.type == 'SELF' then
+            if has_any_buff_of(Waltz.debuff) and player.main_job_level > 34 then
+                if spell.en ~= 'Healing Waltz' then
+                    send_command('@input /ja "Healing Waltz" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            else
+                status.end_spell=true
+            end
+        else
+            status.end_spell=true
+        end
+    end
+    if spell.type == 'Samba' and spell.en ~= 'Haste Samba' then
+        if spell.en:startswith('Drain Samba') then
+            if player.tp >= 400 and player.main_job_level >= 65 then
+                if spell.en ~= 'Drain Samba III' then
+                    send_command('@input /ja "Drain Samba III" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            elseif player.tp >= 250 and player.main_job_level >= 35 then
+                if spell.en ~= 'Drain Samba II' then
+                    send_command('@input /ja "Drain Samba II" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            elseif player.tp >= 100 and player.main_job_level >= 5 then
+                if spell.en ~= 'Drain Samba' then
+                    send_command('@input /ja "Drain Samba" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            else
+                status.end_spell=true
+            end
+        elseif spell.en:startswith('Aspir Samba') then
+            if player.tp >= 250 and player.main_job_level >= 60 then
+                if spell.en ~= 'Aspir Samba II' then
+                    send_command('@input /ja "Aspir Samba II" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            elseif player.tp >= 100 and player.main_job_level >= 25 then
+                if spell.en ~= 'Aspir Samba' then
+                    send_command('@input /ja "Aspir Samba" <me>')
+                    status.end_spell=true
+                    status.end_event=true
+                    return
+                end
+            else
+                status.end_spell=true
+            end
+        end
+    end
     if spell.type == 'Step' then
         if spell.tp_cost > player.tp then
             status.end_spell=true
@@ -44,42 +145,46 @@ function MJi_precast(spell,status,set_gear)
     end
 end
 function MJi_buff_change(name,gain)
-    if Hwauto and windower.wc_match(name, "Max * Down|Magic * Down|* Down|bane|Bio|blindness|curse|Dia|disease|Shock|Rasp|Choke|Frost|Burn|Drown|Flash|paralysis|plague|poison|silence|slow|weight") then
-        if gain and player.tp >= 200 and player.sub_job_level > 34 then
+    if Hwauto and table.contains(Waltz.debuff,name) then
+        if gain and player.tp >= 200 and player.main_job_level > 34 then
             send_command('@input /ja "Healing Waltz" <me>')
         end
     end
 end
-function MJi_self_command(command)
-    ---------------------------------------
-    --put your self_command rules here
-    ---------------------------------------
-    if command == 'tstopsteps' then
-        Stopsteps = not Stopsteps
-        -- add_to_chat(7, '----- Steps Will ' .. (Stopsteps and '' or 'Not ') .. 'Stop -----')
-    end
-    if command == 'stepcount' then
-        Stepmax = (Stepmax % 5) + 1
-        -- add_to_chat(7,'Max step = ' ..Stepmax)
-    end
-    if command == 'autohw' then
-        Hwauto = not Hwauto
-        add_to_chat(7, '----- Auto Healing Waltz Is ' .. (Hwauto and 'Enabled' or 'Disabled'))
-    end
-    if command:lower():startswith('set ') or command:lower():startswith('s ') then
-        local commandArgs = command
-        if type(commandArgs) == 'string' then
-            commandArgs = T(commandArgs:split(' '))
-        end
-        if commandArgs[2]:lower() == 'steps' then
-            if tonumber(commandArgs[3]) <= 5 then
-                Stepmax = tonumber(commandArgs[3])
-            else
-                add_to_chat(7, "Cannot set max steps to "..commandArgs[3].." because max is 5.")
+function MJi_self_command(command
+    if type(command) == 'table' then
+        if command[1]:lower() == 'set' or command[1]:lower() == 's' then
+            if command[2]:lower() == 'stepmax' then
+                Stepmax = tonumber(command[3])
+                add_to_chat(7,'Max step = ' ..Stepmax)
+            end
+        elseif command[1]:lower() == 'cycle' or command[1]:lower() == 'c' then
+            if command[2]:lower() == 'stepmax' then
+                Stepmax = (Stepmax % 5) + 1
+                add_to_chat(7,'Max step = ' ..Stepmax)
+            end
+        elseif command[1]:lower() == 'toggle' or command[1]:lower() == 't' then
+            if command == 'stopsteps' then
+                Stopsteps = not Stopsteps
+                add_to_chat(7, '----- Steps Will ' .. (Stopsteps and '' or 'Not ') .. 'Stop -----')
+            end
+            if command == 'autohw' then
+                Hwauto = not Hwauto
+                add_to_chat(7, '----- Auto Healing Waltz Is ' .. (Hwauto and 'Enabled' or 'Disabled'))
             end
         end
-        if updatedisplay then
-            updatedisplay()
+    else
+        if command == 'tstopsteps' then
+            Stopsteps = not Stopsteps
+            add_to_chat(7, '----- Steps Will ' .. (Stopsteps and '' or 'Not ') .. 'Stop -----')
+        end
+        if command == 'stepcount' then
+            Stepmax = (Stepmax % 5) + 1
+            add_to_chat(7,'Max step = ' ..Stepmax)
+        end
+        if command == 'autohw' then
+            Hwauto = not Hwauto
+            add_to_chat(7, '----- Auto Healing Waltz Is ' .. (Hwauto and 'Enabled' or 'Disabled'))
         end
     end
 end

@@ -17,12 +17,12 @@ Conquest = {
     no_ring = {"Hall of Transference","Memory Flux","Promyvion - Dem","Promyvion - Holla","Promyvion - Mea","Promyvion - Vahzl","Spire of Dem","Spire of Holla",
         "Spire of Mea","Spire of Vahzl"},
     neck = {
-        case = {"Mage","Tank","Normal"},
+        ['case'] = {"Mage","Tank","Normal"},
         Mage = {[1] = {neck="Rep.Gold Medal"}, [2] = jobneck},
         Tank = {[1] = {neck="Windurstian Scarf"}, [2] = jobneck},
         Normal = {[1] = {neck="Grand T.K. Collar"},[2] = jobneck},},
     ring ={
-        case = {"Mage","Tank","Normal"},
+        ['case'] = {"Mage","Tank","Normal"},
         Mage = {[1] = {left_ring="Gnd.Kgt. Ring"}, [2] = jobring},
         Tank = {[1] = {left_ring="Ptr.Prt. Ring"},[2] = jobring},
         Normal = {[1] = {left_ring="Gld.Msk. Ring"},[2] = jobring},},}

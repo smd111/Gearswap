@@ -1,5 +1,5 @@
 function SJi_precast(spell,status,set_gear)
-    if Cure.spells:contains(spell.english) and spell.target.type == 'SELF' then
+    if table.contains(Cure.spells,spell.english) and spell.target.type == 'SELF' then
         if player.hpp <= 75 and player.mp >= 46 and player.sub_job_level >= 26 then
             if spell.english == 'Cure III' then
                 send_command('@input /ma "Cure III" <me>')
