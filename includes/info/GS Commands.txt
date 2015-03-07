@@ -1,0 +1,79 @@
+All GS Commands require "gs c" in the front of them
+
+Built in commands:
+  include basin commands -- always avalible
+    set armor -- sets armor to the desired armor type
+    set weapon -- sets weapon to the desired weapon type
+    set range  -- sets range to the desired range type
+        EXAMPLE: set weapon Club -- will set your weapon to Club
+        EXAMPLE(in chat): //gs c set weapon Club
+        
+    reload_gearswap -- reloads gearswap
+        EXAMPLE(in chat): //gs c reload_gearswap
+
+    toggledisplay -- makes invisable/visable include display(only if display include is in use)
+        EXAMPLE(in chat): //gs c toggledisplay
+    
+  Mage Stave -- only if mage stave include is in use and only on main jobs WHM, BLM, RDM, BRD, SMN, SCH, GEO
+    tstavetouse -- toggles between Atk and Acc staves
+        EXAMPLE(in chat): //gs c tstavetouse
+
+    tchangemagestaff -- toggles weather to equip mage staves
+        EXAMPLE(in chat): //gs c tchangemagestaff
+    
+  Conquest Gear -- only if conquest gear include is in use
+    cconneck -- cycles through the conquest neck gear type you want to use [Mage, Tank, Normal] (Mage:Rep.Gold Medal, Tank:Windurstian Scarf, Normal:Grand T.K. Collar)
+
+        EXAMPLE(in chat): //gs c cconneck
+    cconring -- cycles through the conquest ring gear type you want to use [Mage, Tank, Normal] (Mage:Gnd.Kgt. Ring, Tank:Ptr.Prt. Ring, Normal:Gld.Msk. Ring)
+        EXAMPLE(in chat): //gs c cconring
+
+    tconneckchange -- toggles on/off weather you wat to equip conquest neck gear
+        EXAMPLE(in chat): //gs c tconneckchange
+
+    tconringchange -- toggles on/off weather you wat to equip conquest ring gear
+        EXAMPLE(in chat): //gs c tconringchange
+
+    set cqneck -- sets conquest ring type (Mage, Tank, Normal)
+    set cqring  -- sets conquest ring type (Mage, Tank, Normal)
+        EXAMPLE(in chat): //gs c set cqneck tank
+    
+  Debug -- only if debug include is in use
+    tDebug -- toggles on and off verbose debug mode
+        EXAMPLE(in chat): //gs c tDebug
+
+    cDebugtype -- cycles through all debug modes (Status_Change, Pet_Change, Filtered_Action, Pretarget, Precast, Buff_Change, Midcast, Pet_Midcast,
+									  Aftercast, Pet_Aftercast, Indi_Change, Self_Command, All)
+        EXAMPLE(in chat): //gs c cDebugtype
+
+    set debug -- sets the debug mode you want (1=Status_Change, 2=Pet_Change, 3=Filtered_Action, 4=Pretarget, 5=Precast, 6=Buff_Change, 7=Midcast,
+								    8=Pet_Midcast, 9=Aftercast, 10=Pet_Aftercast, 11=Indi_Change, 12=Self_Command, 13=All)
+        EXAMPLE(in chat): //gs c set debug 8 --sets debug mode to Pet_Midcast
+        
+  Ninja_Wheel -- only if 
+    setnin/sn <element/level> <type>
+      element:                 --
+        element or ele
+        type:
+            - ice fire water lightning earth wind
+      level:                   --
+        level
+        type:
+            - 1  2  3 
+    startnin <type>
+      type:
+        - ninwheel or nw       -- starts single lvl nin wheel
+        - superninwheel or snw -- starts tri lvl nin wheel
+     Example1: -- this example setsup and starts nin wheel at Katon: Ichi and cycles through all the other spell of the selected level in the correct order till it casts Katon: Ichi again
+        gs c sn ele fire
+        gs c sn level 1
+        gs c startnin nw
+     Example2: -- this example setsup and starts nin wheel at Katon: Ichi and cycles through all the other spell in the correct order till it casts Katon: Ichi again
+        gs c sn ele fire
+        gs c sn level 1
+        gs c startnin snw
+    
+  Extra info:
+    for set you can use eather set or s
+
+  --ALL OTHER INCLUDED COMMANDS ARE HANDLED WITH THE DISPLAY INCLUDE--

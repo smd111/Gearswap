@@ -14,24 +14,25 @@ function SJi_precast(spell,status,set_gear)
                     send_command('@input /ja "Curing Waltz III" <me>')
                     status.end_spell=true
                     status.end_event=true
-                    return
+                    return set_gear
                 end
             elseif player.tp >= 350 and player.sub_job_level > 29 then
                 if spell.en ~= 'Curing Waltz II' then
                     send_command('@input /ja "Curing Waltz II" <me>')
                     status.end_spell=true
                     status.end_event=true
-                    return
+                    return set_gear
                 end
             elseif player.tp >= 200 and player.sub_job_level > 14 then
                 if spell.en ~= 'Curing Waltz' then
                     send_command('@input /ja "Curing Waltz" <me>')
                     status.end_spell=true
                     status.end_event=true
-                    return
+                    return set_gear
                 end
             else
                 status.end_spell=true
+                status.end_event=true
             end
         elseif spell.target.hpp >= 75 and spell.target.type == 'SELF' then
             if has_any_buff_of(Waltz.debuff) and player.sub_job_level > 34 then
@@ -39,13 +40,15 @@ function SJi_precast(spell,status,set_gear)
                     send_command('@input /ja "Healing Waltz" <me>')
                     status.end_spell=true
                     status.end_event=true
-                    return
+                    return set_gear
                 end
             else
                 status.end_spell=true
+                status.end_event=true
             end
         else
             status.end_spell=true
+            status.end_event=true
         end
     end
     if spell.type == 'Samba' and spell.en ~= 'Haste Samba' and spell.en ~= 'Aspir Samba' then
@@ -54,24 +57,25 @@ function SJi_precast(spell,status,set_gear)
                 send_command('@input /ja "Drain Samba II" <me>')
                 status.end_spell=true
                 status.end_event=true
-                return
+                return set_gear
             end
         elseif player.tp >= 100 and player.sub_job_level >= 5 then
             if spell.en ~= 'Drain Samba' then
                 send_command('@input /ja "Drain Samba" <me>')
                 status.end_spell=true
                 status.end_event=true
-                return
+                return set_gear
             end
         else
             status.end_spell=true
+            status.end_event=true
         end
     end
     if spell.type == 'Step' then
         if spell.tp_cost > player.tp then
             status.end_spell=true
             status.end_event=true
-            return
+            return set_gear
         end
         if Stopsteps then
             local fm_count = 0
@@ -81,7 +85,7 @@ function SJi_precast(spell,status,set_gear)
                     if fm_count >= Stepmax then
                         status.end_spell=true
                         status.end_event=true
-                        return
+                        return set_gear
                     end
                 end
             end
@@ -94,16 +98,17 @@ function SJi_precast(spell,status,set_gear)
         if player.tp >= 2750 then
             status.end_spell=true
             status.end_event=true
-            return
+            return set_gear
         end
     end
 end 
-function SJi_buff_change(name,gain)
+function SJi_buff_change(name,gain,buff_table,status,set_gear)
     if Hwauto and table.contains(Waltz.debuff,name) then
         if gain and player.tp >= 200 and player.sub_job_level > 34 then
             send_command('@input /ja "Healing Waltz" <me>')
         end
     end
+    return set_gear
 end
 function SJi_self_command(command)
     if type(command) == 'table' then

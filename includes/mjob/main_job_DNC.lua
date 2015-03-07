@@ -5,13 +5,8 @@ if not Stopsteps then
     Stopsteps = false
 end
     Hwauto = false
---any functions you do not need should be removed or will cause errors
+
 function MJi_precast(spell,status,set_gear)
-    ---------------------------------------
-    --put your precast rules here
-    ---------------------------------------
-    --equip example: equip_pre_cast = set_combine(equip_pre_cast, sets.Engaged)
-    ---------------------------------------
     if spell.type == 'Waltz' and not spell.en:startswith('Divine Waltz') then 
         if spell.target.hpp <= 75 then
             if player.tp >= 800 and player.main_job_level > 87 then
@@ -19,38 +14,39 @@ function MJi_precast(spell,status,set_gear)
                     send_command('@input /ja "Curing Waltz V" <me>')
                     status.end_spell=true
                     status.end_event=true
-                    return
+                    return set_gear
                 end
             elseif player.tp >= 650 and player.main_job_level > 70 then
                 if spell.en ~= 'Curing Waltz IV' then
                     send_command('@input /ja "Curing Waltz IV" <me>')
                     status.end_spell=true
                     status.end_event=true
-                    return
+                    return set_gear
                 end
             elseif player.tp >= 500 and player.main_job_level > 44 then
                 if spell.en ~= 'Curing Waltz III' then
                     send_command('@input /ja "Curing Waltz III" <me>')
                     status.end_spell=true
                     status.end_event=true
-                    return
+                    return set_gear
                 end
             elseif player.tp >= 350 and player.main_job_level > 29 then
                 if spell.en ~= 'Curing Waltz II' then
                     send_command('@input /ja "Curing Waltz II" <me>')
                     status.end_spell=true
                     status.end_event=true
-                    return
+                    return set_gear
                 end
             elseif player.tp >= 200 and player.main_job_level > 14 then
                 if spell.en ~= 'Curing Waltz' then
                     send_command('@input /ja "Curing Waltz" <me>')
                     status.end_spell=true
                     status.end_event=true
-                    return
+                    return set_gear
                 end
             else
                 status.end_spell=true
+                status.end_event=true
             end
         elseif spell.target.hpp >= 75 and spell.target.type == 'SELF' then
             if has_any_buff_of(Waltz.debuff) and player.main_job_level > 34 then
@@ -58,76 +54,59 @@ function MJi_precast(spell,status,set_gear)
                     send_command('@input /ja "Healing Waltz" <me>')
                     status.end_spell=true
                     status.end_event=true
-                    return
+                    return set_gear
                 end
             else
                 status.end_spell=true
+                status.end_event=true
             end
         else
             status.end_spell=true
+            status.end_event=true
         end
     end
-    if spell.type == 'Samba' and spell.en ~= 'Haste Samba' then
-        if spell.en:startswith('Drain Samba') then
-            if player.tp >= 400 and player.main_job_level >= 65 then
-                if spell.en ~= 'Drain Samba III' then
-                    send_command('@input /ja "Drain Samba III" <me>')
-                    status.end_spell=true
-                    status.end_event=true
-                    return
-                end
-            elseif player.tp >= 250 and player.main_job_level >= 35 then
-                if spell.en ~= 'Drain Samba II' then
-                    send_command('@input /ja "Drain Samba II" <me>')
-                    status.end_spell=true
-                    status.end_event=true
-                    return
-                end
-            elseif player.tp >= 100 and player.main_job_level >= 5 then
-                if spell.en ~= 'Drain Samba' then
-                    send_command('@input /ja "Drain Samba" <me>')
-                    status.end_spell=true
-                    status.end_event=true
-                    return
-                end
-            else
+    if spell.type == 'Samba' and spell.en ~= 'Haste Samba' and spell.en ~= 'Aspir Samba' and spell.en ~= 'Aspir Samba II' then
+        if player.tp >= 400 and player.main_job_level >= 65 then
+            if spell.en ~= 'Drain Samba III' then
+                send_command('@input /ja "Drain Samba III" <me>')
                 status.end_spell=true
+                status.end_event=true
+                return set_gear
             end
-        elseif spell.en:startswith('Aspir Samba') then
-            if player.tp >= 250 and player.main_job_level >= 60 then
-                if spell.en ~= 'Aspir Samba II' then
-                    send_command('@input /ja "Aspir Samba II" <me>')
-                    status.end_spell=true
-                    status.end_event=true
-                    return
-                end
-            elseif player.tp >= 100 and player.main_job_level >= 25 then
-                if spell.en ~= 'Aspir Samba' then
-                    send_command('@input /ja "Aspir Samba" <me>')
-                    status.end_spell=true
-                    status.end_event=true
-                    return
-                end
-            else
+        elseif player.tp >= 250 and player.main_job_level >= 35 then
+            if spell.en ~= 'Drain Samba II' then
+                send_command('@input /ja "Drain Samba II" <me>')
                 status.end_spell=true
+                status.end_event=true
+                return set_gear
             end
+        elseif player.tp >= 100 and player.main_job_level >= 5 then
+            if spell.en ~= 'Drain Samba' then
+                send_command('@input /ja "Drain Samba" <me>')
+                status.end_spell=true
+                status.end_event=true
+                return set_gear
+            end
+        else
+            status.end_spell=true
+            status.end_event=true
         end
     end
     if spell.type == 'Step' then
         if spell.tp_cost > player.tp then
             status.end_spell=true
             status.end_event=true
-            return
+            return set_gear
         end
         if Stopsteps then
-        local fm_count = 0
+            local fm_count = 0
             for i, v in pairs(buffactive) do
                 if string.startswith(tostring(i), 'finishing move') then
                     fm_count = tonumber(string.sub(i, 16))
                     if fm_count >= Stepmax then
                         status.end_spell=true
                         status.end_event=true
-                        return
+                        return set_gear
                     end
                 end
             end
@@ -140,18 +119,19 @@ function MJi_precast(spell,status,set_gear)
         if player.tp >= 2750 then
             status.end_spell=true
             status.end_event=true
-            return
+            return set_gear
         end
     end
-end
-function MJi_buff_change(name,gain)
+end 
+function MJi_buff_change(name,gain,buff_table,status,set_gear)
     if Hwauto and table.contains(Waltz.debuff,name) then
         if gain and player.tp >= 200 and player.main_job_level > 34 then
             send_command('@input /ja "Healing Waltz" <me>')
         end
     end
+    return set_gear
 end
-function MJi_self_command(command
+function MJi_self_command(command)
     if type(command) == 'table' then
         if command[1]:lower() == 'set' or command[1]:lower() == 's' then
             if command[2]:lower() == 'stepmax' then
