@@ -56,5 +56,4 @@ sets.ws={Dark={waist="Shadow Belt"},Water={waist="Aqua Belt"},Earth={waist="Soil
 --has buff function---------------------------------------------------------------------------------------------------------------
 function has_any_buff_of(buff_set)
     for i,v in pairs(buff_set) do if buffactive[v] ~= nil then return true end end
-    return false
 end

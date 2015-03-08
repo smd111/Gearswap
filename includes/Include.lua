@@ -55,6 +55,9 @@ function run_event(event_type,status,set_gear,...)
         if table.contains(check_event_type, event_type) and status.end_spell then cancel_spell() end
         if status.end_event then return end
     end
+    if gearchang_stopper(spell) then
+        return
+    end
     if not status.stop_swapping_gear then
         equip(set_gear)
     end
@@ -92,29 +95,30 @@ function get_sets()
     end
 end
 function filtered_action(spell)
-    if spell_stopper(spell) then cancel_spell() return end
     local status = {end_event=false,end_spell=false,stop_swapping_gear=true}
     local set_gear = {}
+    if spell_stopper(spell) then cancel_spell() return end
     set_gear = set_combine(set_gear, sets[player.status])
     run_event('filtered_action',status,set_gear,spell)
 end
 function pretarget(spell)
-    if spell_stopper(spell) then cancel_spell() return end
     local status = {end_event=false,end_spell=false,stop_swapping_gear=true}
     local set_gear = {}
+    if spell_stopper(spell) then cancel_spell() return end
     set_gear = set_combine(set_gear, sets[player.status])
     run_event('pretarget',status,set_gear,spell)
 end
 function precast(spell)
-    if spell_stopper(spell) then cancel_spell() return end
     local status = {end_event=false,end_spell=false,stop_swapping_gear=false}
     local set_gear = {}
+    if spell_stopper(spell) then cancel_spell() return end
     set_gear = set_combine(set_gear, sets[player.status])
     run_event('precast',status,set_gear,spell)
 end
 function midcast(spell)
     local status = {end_event=false,stop_swapping_gear=false}
     local set_gear = {}
+    if gearchang_stopper(spell) then return end
     set_gear = set_combine(set_gear, sets[player.status])
     if elemental_obi then
         set_gear = set_combine(set_gear, elemental_obi(spell,status,set_gear))
@@ -124,6 +128,7 @@ end
 function aftercast(spell)
     local status = {end_event=false,stop_swapping_gear=false}
     local set_gear = {}
+    if gearchang_stopper(spell) then return end
     set_gear = set_combine(set_gear, sets[player.status])
     run_event('aftercast',status,set_gear,spell)
     if player.in_combat and auto_use_shards then
@@ -153,12 +158,14 @@ end
 function pet_midcast(spell)
     local status = {end_event=false,stop_swapping_gear=false}
     local set_gear = {}
+    if gearchang_stopper(spell) then return end
     set_gear = set_combine(set_gear, sets[player.status])
     run_event('pet_midcast',status,set_gear,spell)
 end
 function pet_aftercast(spell)
     local status = {end_event=false,stop_swapping_gear=false}
     local set_gear = {}
+    if gearchang_stopper(spell) then return end
     set_gear = set_combine(set_gear, sets[player.status])
     run_event('pet_aftercast',status,set_gear,spell)
 end
@@ -213,6 +220,106 @@ function file_unload(new_job)
     run_event2('file_unload',new_job)
     if File_Write_do then
         File_Write_do()
+    end
+end
+----Check spell ruels-------------------------------------------------------------------------------------------------------------
+function spell_stopper(spell)
+    -- if midaction() or pet_midaction() then return true end
+    -- if spell.en ~= 'Ranged' and spell.type ~= 'Item' and spell_range_check(spell) then return true end
+    if gearchang_stopper(spell) and not Disable_All then return true end
+    if spell.en ~= 'Ranged' and spell.type ~= 'WeaponSkill' then
+        if spell and spell.action_type == 'Ability' then
+            if tonumber(windower.ffxi.get_ability_recasts()[spell.recast_id]) > 0 then
+                return false
+            end
+        elseif spell and spell.action_type == 'Magic' then
+            if tonumber(windower.ffxi.get_spell_recasts()[spell.id]) > 0 then
+                return false
+            end
+        end
+    end
+    if spell then
+        if spell.tp_cost and spell.tp_cost > player.tp then
+            return true
+        end
+        if (spell.mp_cost and spell.mp_cost > player.mp) and not (buffactive['Manawell'] or buffactive['Manafont']) then
+            return true
+        end
+    end
+    if min_fm_for_flourishes[spell.en] then
+        local fm_count = 0
+        for i, v in pairs(buffactive) do
+            if i:startswith("Finishing Move") then
+                fm_count = tonumber(string.match(i, '%d+'))
+            end
+        end
+        if min_fm_for_flourishes[spell.en] > fm_count then
+            return true
+        end
+    end
+    if player.tp < 1000 and spell.type == 'WeaponSkill'  then
+        return true
+    end
+    if partynames.party1 then
+        if spell.type == "Trust" and party.count > 1 then
+            if player.in_combat then
+                return true
+            end
+            if table.contains(partynames.party1,string.gsub(spell.en, "%s+", "")) then
+                return true
+            end
+        end
+    end
+    if not table.contains(transportation_spells, spell.en) and table.contains(cities, world.area) then
+        return true
+    end
+    if spell.target.name == nil then
+        return true
+    end
+end
+function spell_range_check(spell)
+    local range_mult = {
+        [0] = 0,
+        [1] = 1.642276421172564,
+        [2] = 1.642276421172564,
+        [3] = 1.642276421172564,
+        [4] = 1.642276421172564,
+        [5] = 1.642276421172564,
+        [6] = 1.642276421172564,
+        [7] = 1.642276421172564,
+        [8] = 1.642276421172564,
+        [9] = 1.642276421172564,
+        [10] = 1.642276421172564,
+        [11] = 1.642276421172564,
+        [12] = 1.642276421172564,
+        }
+    local spell_max_distance = spell.target.model_size + spell.range * range_mult[spell.range]
+    if spell_max_distance < spell.target.distance then
+        -- if player.target.type == "MONSTER" then
+            -- add_to_chat(7,"Monster out of "..spell.name.."'s max range of "..spell_max_distance)
+        -- elseif player.target.type == "NPC" then
+            -- add_to_chat(7,"NPC out of "..spell.name.."'s max range of "..spell_max_distance)
+        -- else
+            -- add_to_chat(7,"Player out of "..spell.name.."'s max range of "..spell_max_distance)        
+        -- end
+        return true
+    end
+end
+function gearchang_stopper(spell)
+    local stop_job_ability = {'Amnesia','Charm','Impairment','Petrification','Sleep','Stun','Terror'}
+    local stop_spell = {'Charm','Mute','Omerta','Petrification','Silence','Sleep','Stun','Terror'}
+    if spell and spell.action_type == "Ability" then
+        for i, v in ipairs(stop_job_ability) do
+            if buffactive[v] then
+                return true
+            end
+        end
+    elseif spell and spell.action_type == "Magic" then
+        for i, v in ipairs(stop_spell) do
+            if buffactive[v] then
+                return true
+            end
+        end
     end
 end
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -283,110 +390,4 @@ function extra_self_command(command)
 end
 if File_Write_do then
     File_Write_do()
-end
-----Check spell ruels-------------------------------------------------------------------------------------------------------------
-function spell_stopper(spell)
-    if spell.en ~= 'Ranged' and spell.type ~= 'WeaponSkill' then
-        if spell and spell.action_type == 'Ability' then
-            if tonumber(windower.ffxi.get_ability_recasts()[spell.recast_id]) > 0 then
-                return false
-            end
-        elseif spell and spell.action_type == 'Magic' then
-            if tonumber(windower.ffxi.get_spell_recasts()[spell.id]) > 0 then
-                return false
-            end
-        end
-    end
-    if spell then
-        if spell.tp_cost > player.tp then
-            return true
-        end
-        if spell.mp_cost > player.mp and not (buffactive['Manawell'] or buffactive['Manafont']) then
-            return true
-        end
-    end
-    if gearchang_stopper(spell) and not Disable_All then return true end
-    if spell.target.name == nil then
-        return true
-    end
-    if partynames.party1 then
-        if spell.type == "Trust" and party.count > 1 then
-            if player.in_combat then
-                return true
-            end
-            if table.contains(partynames.party1,string.gsub(spell.en, "%s+", "")) then
-                return true
-            end
-        end
-    end
-    if min_fm_for_flourishes[spell.en] then
-        local fm_count = 0
-        for i, v in pairs(buffactive) do
-            fm_count = string.match(i, 'Finishing Move (%d+)')
-            if min_fm_for_flourishes[spell.en] > fm_count then
-                return true
-            end
-        end
-    end
-    if not table.contains(transportation_spells, spell.en) and table.contains(cities, world.area) then
-        return true
-    end
-    -- if midaction() or pet_midaction() then
-        -- return true
-    -- end
-    if  player.tp < 1000 and spell.type == 'WeaponSkill'  then
-        return true
-    end
-    if player.main_job == "NIN" or player.sub_job == "NIN" then if nin_tool_check(spell) then return true end end
-    --if spell.en ~= 'Ranged' and spell.type ~= 'Item' and spell_range_check(spell) then return true end
-    if spell.en == 'Meditate' and (player.tp >= 2750 or buffactive['Invisible']) then
-        cancel_spell()        
-        return true
-    end
-end
-function spell_range_check(spell)
-    local range_mult = {
-        [0] = 0,
-        [1] = 1.642276421172564,
-        [2] = 1.642276421172564,
-        [3] = 1.642276421172564,
-        [4] = 1.642276421172564,
-        [5] = 1.642276421172564,
-        [6] = 1.642276421172564,
-        [7] = 1.642276421172564,
-        [8] = 1.642276421172564,
-        [9] = 1.642276421172564,
-        [10] = 1.642276421172564,
-        [11] = 1.642276421172564,
-        [12] = 1.642276421172564,
-        }
-    local spell_max_distance = spell.target.model_size + spell.range * range_mult[spell.range]
-    if spell_max_distance < spell.target.distance then
-        -- if player.target.type == "MONSTER" then
-            -- add_to_chat(7,"Monster out of "..spell.name.."'s max range of "..spell_max_distance)
-        -- elseif player.target.type == "NPC" then
-            -- add_to_chat(7,"NPC out of "..spell.name.."'s max range of "..spell_max_distance)
-        -- else
-            -- add_to_chat(7,"Player out of "..spell.name.."'s max range of "..spell_max_distance)        
-        -- end
-        return true
-    end
-    return false
-end
-function gearchang_stopper(spell)
-    local stop_job_ability = {'Amnesia','Charm','Impairment','Petrification','Sleep','Stun','Terror'}
-    local stop_spell = {'Charm','Mute','Omerta','Petrification','Silence','Sleep','Stun','Terror'}
-    if spell.action_type == "Ability" then
-        for i, v in ipairs(stop_job_ability) do
-            if buffactive[v] then
-                return true
-            end
-        end
-    elseif spell.action_type == "Magic" then
-        for i, v in ipairs(stop_spell) do
-            if buffactive[v] then
-                return true
-            end
-        end
-    end
 end

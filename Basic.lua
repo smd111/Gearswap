@@ -259,6 +259,13 @@ function mf_indi_change(indi_table,gain,status,set_gear) -- only needed for Geo 
     ---------------------------------------
     return set_gear
 end
+function mf_zone_change(new,old) -- only when Registered_Events include is active
+    ---------------------------------------
+    --put your zone_change rules here
+    --new string name of the new zone
+    --old string name of the old zone
+    ---------------------------------------
+end
 --[[ function custom_menu_update()
     local custom_rules_table = {}
     if SJi then

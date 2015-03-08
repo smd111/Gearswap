@@ -4,23 +4,22 @@ partynames ={}
 skill = {}
 seqid = string.char(0,0)
 skill_type = {'Axe','Club','Dagger','Great Axe','Great Katana','Great Sword','Hand-to-Hand','Katana','Polearm','Scythe','Staff','Sword','Archery','Marksmanship',
-            'Throwing','Evasion','Guard','Parrying','Shield','Blue Magic','Dark Magic','Divine Magic','Elemental Magic','Enfeebling Magic','Enhancing Magic',
-            'Geomancy','Handbell','Healing Magic','Ninjutsu','Singing','Stringed Instrument','Summoning Magic','Wind Instrument','Automaton Archery','Automaton Magic',
-            'Automaton Melee'}
+        'Throwing','Evasion','Guard','Parrying','Shield','Blue Magic','Dark Magic','Divine Magic','Elemental Magic','Enfeebling Magic','Enhancing Magic',
+        'Geomancy','Handbell','Healing Magic','Ninjutsu','Singing','Stringed Instrument','Summoning Magic','Wind Instrument','Automaton Archery','Automaton Magic',
+        'Automaton Melee'}
+cities = S{"Ru'Lude Gardens","Upper Jeuno","Lower Jeuno","Port Jeuno","Port Windurst","Windurst Waters","Windurst Woods","Windurst Walls","Heavens Tower",
+        "Port San d'Oria","Northern San d'Oria","Southern San d'Oria","Port Bastok","Bastok Markets","Bastok Mines","Metalworks","Aht Urhgan Whitegate",
+        "Tavanazian Safehold","Nashmau","Selbina","Mhaura","Norg","Eastern Adoulin","Western Adoulin","Kazham"}
 skill_count = 1
 
 -- added events--
--- Action event
--- function Registered_Events_event_action(act)
-    -- local action = Action(act)
-    -- if action:get_category_string() == 'item_finish' then
-        -- if action.raw.param == tbid and player.id == action.raw.actor_id then
-            -- send_command('wait 1.0;input /ma "'..last_nin_spell..'" <me>')
-            -- tool_bag_id = 0
-        -- end
-    -- end
--- end
---Registered_Events_action_id = windower.raw_register_event('action', Registered_Events_event_action)
+function Registered_Events_zone_change(new_id,old_id)
+    local new = res.zones[new_id].name
+    local old = res.zones[old_id].name
+    coroutine.sleep(2.25)
+    mf_zone_change(new,old)
+end
+Registered_Events_zone_change_id = windower.raw_register_event('zone change', Registered_Events_zone_change)
 -- LVL up event
 function Registered_Events_level_up()
     if updatedisplay then

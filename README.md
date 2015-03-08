@@ -1,5 +1,5 @@
 SMD's Gearswap Include files
-3.00 Alpha
+3.01 Alpha
 -------------------------------------------------------------------
 Setup--------------------------------------------------------------
 
@@ -7,6 +7,7 @@ you need to use my basic.lua (I have included several example main files in the 
 
 to use display include requires Segoe UI Symbol font
 this font is native to vista/win7/win8
+you can get this font here http://www.ufonts.com/download/segoe-ui-symbol/77998.html
 
 --------------------------------------------------------------------
 Features------------------------------------------------------------
@@ -40,6 +41,7 @@ all commands included with this include are listed in includes/info/GS Commands.
 
 --------------------------------------------------------------------
 What the Display can do for you-------------------------------------
+
 1. you can enably and disable all includes on the fly(except for the display)
 
 2. you can see you current job lvl with out opening any menus

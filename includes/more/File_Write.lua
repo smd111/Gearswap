@@ -7,12 +7,11 @@ function File_Write_do(a)
         windower.create_dir(lua_base_path..'data/'..player.name..'/Saves')
     end
     local file = io.open(lua_base_path..'data/'..player.name..'/Saves/job_'..player.main_job..'var.lua',"w")
-    file:write('  MJi = '..tostring(MJi)..'\n  SJi = '..tostring(SJi)..'\n  MSi = '..tostring(MSi)..'\n  WSi = '..tostring(WSi)..'\n  Ammo = '..tostring(Ammo)..
+    file:write('  MJi = '..tostring(MJi)..'\n  SJi = '..tostring(SJi)..'\n  MSi = '..tostring(MSi)..'\n  Ammo = '..tostring(Ammo)..
     '\n  Special_Weapons = '..tostring(Special_Weapons)..'\n  Conquest_Gear = '..tostring(Conquest_Gear)..'\n  File_Write = '..tostring(File_Write)..
-    '\n  Registered_Events = '..tostring(Registered_Events)..'\n  Debug = '..tostring(Debug)..'\n  Stepmax = '..tostring(Stepmax)..
-    '\nStopsteps = '..tostring(Stopsteps)..'\nConquest.neck.change = '..tostring(Conquest.neck.change)..'\nConquest.neck.case_id = '..tostring(Conquest.neck.case_id)..
-    '\nConquest.ring.change = '..tostring(Conquest.ring.change)..'\nConquest.ring.case_id = '..tostring(Conquest.ring.case_id)..
-    '\nspecialweaponwscount = '..tostring(specialweaponwscount)..'\nweapon_types_count = '..tostring(weapon_types_count)..
+    '\n  Registered_Events = '..tostring(Registered_Events)..'\n  Debug = '..tostring(Debug)..'\n  Stepmax = '..tostring(Stepmax)..'\nStopsteps = '..tostring(Stopsteps)..
+    '\nConquest.neck.change = '..tostring(Conquest.neck.change)..'\nConquest.neck.case_id = '..tostring(Conquest.neck.case_id)..'\nConquest.ring.change = '..tostring(Conquest.ring.change)..
+    '\nConquest.ring.case_id = '..tostring(Conquest.ring.case_id)..'\nspecialweaponwscount = '..tostring(specialweaponwscount)..'\nweapon_types_count = '..tostring(weapon_types_count)..
     '\nrange_types_count = '..tostring(range_types_count)..'\ngear_mode_count = '..tostring(gear_mode_count)..'\nauto_use_shards = '..tostring(auto_use_shards)..
     '\n  menu.pos.x = '..tostring(menu.pos.x)..'\n  menu.pos.y = '..tostring(menu.pos.y)..'\n  lvlwatch = '..tostring(lvlwatch)..'\n  tswap = '..tostring(tswap)..
     '\n  debugmod = '..tostring(debugmod)..'')
