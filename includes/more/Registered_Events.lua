@@ -17,7 +17,9 @@ function Registered_Events_zone_change(new_id,old_id)
     local new = res.zones[new_id].name
     local old = res.zones[old_id].name
     coroutine.sleep(2.25)
-    mf_zone_change(new,old)
+    if mf_zone_change then
+        mf_zone_change(new,old)
+    end
 end
 Registered_Events_zone_change_id = windower.raw_register_event('zone change', Registered_Events_zone_change)
 -- LVL up event

@@ -188,7 +188,7 @@ function buff_change(name,gain,buff_table)
             equip(sets[player.status], gear_equip(name,"buff_change",set_gear))
         end
     end
-    run_event(event_type,status,set_gear,name,gain,buff_table)
+    run_event('buff_change',status,set_gear,name,gain,buff_table)
 end
 function indi_change(indi_table,gain)
     local status = {end_event=false,stop_swapping_gear=true}
