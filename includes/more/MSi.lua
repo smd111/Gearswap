@@ -5,29 +5,30 @@ if not Usestaff then
     Usestaff = 'Atk' --Togle with //gs c tstaveuse (Atk for Attack Staves, Acc for Accuracy Staves)
 end
 
-    sets.staff = {
-        Atk = {Fire={main="Atar I",sub="Fire Grip"},Ice={main="Vourukasha I",sub="Ice Grip"},Wind={main="Vayuvata I",sub="Wind Grip"},
-            Earth={main="Vishrava I",sub="Earth Grip"},Lightning={main="Apamajas I",sub="Thunder Grip"},Water={main="Haoma I",sub="Water Grip"},
-            Light={main="Arka I",sub="Light Grip"},Dark={main="Xsaeta I",sub="Dark Grip"},},
-        Acc = {Fire={main="Atar II",sub="Fire Grip"},Ice={main="Vourukasha II",sub="Ice Grip"},Wind={main="Vayuvata II",sub="Wind Grip"},
-            Earth={main="Vishrava II",sub="Earth Grip"},Lightning={main="Apamajas II",sub="Thunder Grip"},Water={main="Haoma II",sub="Water Grip"},
-            Light={main="Arka II",sub="Light Grip"},Dark={main="Xsaeta II",sub="Dark Grip"},},
-        Cur = {main="Arka IV",sub="Dominie's Grip",body="Heka's Kalasiris",hands="Bokwus Gloves",neck="Phalaina Locket",left_ear="Roundel Earring",},}
+MSi_staves = {Fire="Atar",Ice="Vourukasha",Wind="Vayuvata",Earth="Vishrava",Lightning="Apamajas",Water="Haoma",Light="Arka",Dark="Xsaeta",}
+MSi_grips = {Fire="Fire",Ice="Ice",Wind="Wind",Earth="Earth",Lightning="Thunder",Water="Water",Light="Light",Dark="Dark",}
 
-function MSi_precast(spell,status,set_gear)
+function check_type()
+    if Usestaff == "Atk" then
+        return "I"
+    elseif Usestaff == "Acc" then
+        return "II"
+    end
+end
+function MSi_precast(status,set_gear,event_type,spell)
     if Changestaff then
-        if table.contains(Typ.spells,spell.type) then
-            if table.contains(Cure.spells,spell.english) then
-                set_gear = set_combine(set_gear, sets.staff.Cur)
+        if Typ.spells:contains(spell.type) then
+            if Cure.spells:contains(spell.english) then
+                set_gear = set_combine(set_gear, {main="Arka IV",sub="Dominie's Grip",body="Heka's Kalasiris",hands="Bokwus Gloves",neck="Phalaina Locket",left_ear="Roundel Earring",})
             else
-                set_gear = set_combine(set_gear, sets.staff[Usestaff][spell.element])
+                set_gear = set_combine(set_gear, {main=MSi_staves[spell.element].." "..check_type(),sub=MSi_grips[spell.element].." Grip"})
             end
         end
     end
     return set_gear
 end
 MSi_midcast = MSi_precast
-function MSi_self_command(command)
+function MSi_self_command(status,set_gear,event_type,command)
     if type(command) == 'table' then
         if command[1]:lower() == 'set' or command[1]:lower() == 's' then
             if command[2]:lower() == "staves" then

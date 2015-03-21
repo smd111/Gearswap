@@ -46,11 +46,14 @@ Built in commands:
 									  Aftercast, Pet_Aftercast, Indi_Change, Self_Command, All)
         EXAMPLE(in chat): //gs c cDebugtype
 
-    set debug -- sets the debug mode you want (1=Status_Change, 2=Pet_Change, 3=Filtered_Action, 4=Pretarget, 5=Precast, 6=Buff_Change, 7=Midcast,
+    set debug <mode> -- sets the debug mode you want (1=Status_Change, 2=Pet_Change, 3=Filtered_Action, 4=Pretarget, 5=Precast, 6=Buff_Change, 7=Midcast,
 								    8=Pet_Midcast, 9=Aftercast, 10=Pet_Aftercast, 11=Indi_Change, 12=Self_Command, 13=All)
         EXAMPLE(in chat): //gs c set debug 8 --sets debug mode to Pet_Midcast
         
-  Ninja_Wheel -- only if 
+    show variable/var <name> -- shows Global variables(the global variables that gs has exposed are player, pet, fellow, world, party, alliance, _settings)
+        EXAMPLE(in chat): //gs c show var player --will print the entire player table to chat
+        
+  Ninja_Wheel -- only if Ninja_Wheel include is active
     setnin/sn <element/level> <type>
       element:                 --
         element or ele

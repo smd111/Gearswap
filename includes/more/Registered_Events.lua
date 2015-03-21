@@ -7,16 +7,13 @@ skill_type = {'Axe','Club','Dagger','Great Axe','Great Katana','Great Sword','Ha
         'Throwing','Evasion','Guard','Parrying','Shield','Blue Magic','Dark Magic','Divine Magic','Elemental Magic','Enfeebling Magic','Enhancing Magic',
         'Geomancy','Handbell','Healing Magic','Ninjutsu','Singing','Stringed Instrument','Summoning Magic','Wind Instrument','Automaton Archery','Automaton Magic',
         'Automaton Melee'}
-cities = S{"Ru'Lude Gardens","Upper Jeuno","Lower Jeuno","Port Jeuno","Port Windurst","Windurst Waters","Windurst Woods","Windurst Walls","Heavens Tower",
-        "Port San d'Oria","Northern San d'Oria","Southern San d'Oria","Port Bastok","Bastok Markets","Bastok Mines","Metalworks","Aht Urhgan Whitegate",
-        "Tavanazian Safehold","Nashmau","Selbina","Mhaura","Norg","Eastern Adoulin","Western Adoulin","Kazham"}
 skill_count = 1
 
 -- added events--
 function Registered_Events_zone_change(new_id,old_id)
     local new = res.zones[new_id].name
     local old = res.zones[old_id].name
-    coroutine.sleep(2.25)
+    coroutine.sleep(3)
     if mf_zone_change then
         mf_zone_change(new,old)
     end

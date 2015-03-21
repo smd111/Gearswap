@@ -36,7 +36,7 @@ function nin_tool_open(typ)
         return nin_tools[typ].utb
     end
 end
-function nin_tool_rule(spell,status,set_gear)
+function nin_tool_rule(status,set_gear,event_type,spell)
     if spell.type == "Ninjutsu" then
         local typ = string.match(spell.en, '(%a+): %a+')
         if nin_tool_check(typ,spell) then

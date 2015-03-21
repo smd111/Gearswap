@@ -6,62 +6,21 @@ function include_setup()
     Display = true
     --Start with minimized window (Default: false)
     window_hidden = true
-    -----------------------------------------------------------------------------------------------------------------------------------
-    jobneck = {neck={ name="Magus Torque", augments={'MP+10','Mag. Acc.+1',}},} --if using the conquest include put the neck that you want as your main neck when conquest neck is not needed
-    jobring = {left_ring="Onyx Ring",} --if using the conquest include put the left_ring that you want as your main ring when conquest ring is not needed
-    -- example:
-    -- jobneck = {neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},}
-    -- jobring = {left_ring="Prouesse Ring",}
 end
 include('includes/Include.lua')
 --Job functions
 function gear_setup()
-    ---------------------------------------
-    -- add more weapon modes with this add_weapon_modes = {'name1','name2'}
-    -- called with armor_types[armor_types_count]
-    -- 'Axe, Club, Dagger, Great_Axe, Great_Sword, Hand-to-Hand, Polearm, Scythe, Staff, Sword, Great_Katana, Katana, Reserve, None are already included
-    -- if you dont plan on using it remove or comment out
-    ---------------------------------------
+    -- These are your Weapon sets
     sets.weapon['Axe'] = {main="",sub="",}
-    -- sets.weapon['Club'] = {main="",sub="",}
-    -- sets.weapon['Dagger'] = {main="",sub="",}
-    -- sets.weapon['Great_Axe'] = {main="",sub="",}
-    -- sets.weapon['Great_Sword'] = {main="",sub="",}
-    -- sets.weapon['Hand-to-Hand'] = {main="",sub="",}
-    -- sets.weapon['Great_Katana'] = {main="",sub="",}
-    -- sets.weapon['Katana'] = {main="",sub="",}
-    -- sets.weapon['Polearm'] = {main="",sub="",}
-    -- sets.weapon['Scythe'] = {main="",sub="",}
-    -- sets.weapon['Staff'] = {main="",sub="",}
-    -- sets.weapon['Sword'] = {main="",sub="",}
-    -- sets.weapon['Reserve'] = {main="",sub="",}
     sets.weapon['None'] = {main=empty,sub=empty,}
-    ---------------------------------------
-    -- add more range modes with this add_range_modes = {'name1','name2'}
-    -- called with range_types[range_types_count]
-    -- Archery, Marksmanship, Throwing, Fishing, Soultrapper, Wind_Instruments, String_Instruments, Handbells, Other are already included
-    -- if you dont plan on using it remove or comment out
-    ---------------------------------------
-    -- sets.range['Archery'] = {range="",ammo="",}
-    -- sets.range['Marksmanship'] = {range="",ammo="",}
+    -- These are your Range sets
     sets.range['Throwing'] = {range="Chakram",ammo=empty,}
-    -- sets.range['Fishing'] = {range="",ammo="",}
-    -- sets.range['Soultrapper'] = {range="",ammo="",}
-    -- sets.range['Wind Instruments'] = {range="",ammo="",}
-    -- sets.range['String Instruments'] = {range="",ammo="",}
-    -- sets.range['Handbells'] = {range="",ammo="",}
-    -- sets.range['Other'] = {range="",ammo="",}
-    ---------------------------------------
-    -- add more armor modes with this add_armor_modes = {'name1','name2'}
-    -- called with armor_types[armor_types_count]
-    -- Basic is already included
-    -- if you dont plan on using it remove or comment out
-    ---------------------------------------
+    -- These are your Armor sets
     sets.armor['Basic'] = {} -- do not change this
     ---------------------------------------
     -- these are your base sets put in your
     -- default sets for status idle/resting
-    -- engaged (these must be here)
+    -- /engaged (these must be here)
     ---------------------------------------
     sets.Engaged = {
         head="",
@@ -108,14 +67,32 @@ function gear_setup()
     ---------------------------------------
     --put your other sets here
     ---------------------------------------
+    --this include includes these set deviders
+    --sets.pretarget = {}
+    --sets.precast = {}
+    --sets.midcast = {}
+    --sets.aftercast = {}
+    --sets.pet_midcast = {}
+    --sets.pet_aftercast = {}
+    ---------------------------------------
+    --if you want to equip a specific set based
+    --on the event creat your set like this
+    --you only need to put in the gear that is
+    --different from you sets above and thay will
+    --be equiped automatically
+    --Example: for spell "Fire"
+    --sets.precast["Fire"] = {body="Outrider Mail",hands="Outrider Mittens",legs="Outrider Hose",}
+    --if you need to have the sam4e gear in precast and midcast do this
+    --sets.midcast["Fire"] = sets.precast["Fire"]
+    ---------------------------------------
 end
-function mf_file_unload(new_job)
+function mf_file_unload(status,set_gear,event_type,new_job)
     ---------------------------------------
     --put your file_unload rules here
     ---------------------------------------
     return
 end
-function mf_status_change(new,old,status,set_gear)
+function mf_status_change(status,set_gear,event_type,new,old)
     ----------------------------------------
     --put your status_change rules here
     ----------------------------------------
@@ -124,7 +101,7 @@ function mf_status_change(new,old,status,set_gear)
     ----------------------------------------
     return set_gear
 end
-function mf_pet_change(pet,gain,status,set_gear)
+function mf_pet_change(status,set_gear,event_type,pet,gain)
     ---------------------------------------
     --put your pet_change rules here
     --to stop processing of all precast rules use: return set_gear
@@ -134,7 +111,7 @@ function mf_pet_change(pet,gain,status,set_gear)
     ----------------------------------------
     return set_gear
 end
-function mf_filtered_action(spell,status,set_gear)
+function mf_filtered_action(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your filtered_action rules here
     --to stop processing of all filtered_action rules use: return set_gear
@@ -146,7 +123,7 @@ function mf_filtered_action(spell,status,set_gear)
     ----------------------------------------
     return set_gear
 end
-function mf_pretarget(spell,status,set_gear)
+function mf_pretarget(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your pretarget rules here
     ---------------------------------------
@@ -155,7 +132,7 @@ function mf_pretarget(spell,status,set_gear)
     ----------------------------------------
     return set_gear
 end
-function mf_precast(spell,status,set_gear)
+function mf_precast(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your precast rules here
     --to stop processing of all precast rules use: return set_gear
@@ -165,7 +142,7 @@ function mf_precast(spell,status,set_gear)
     ----------------------------------------
     return set_gear
 end
-function mf_buff_change(name,gain,buff_table,status,set_gear)
+function mf_buff_change(status,set_gear,event_type,name,gain,buff_table)
     ---------------------------------------
     --put your buff_change rules here
     ---------------------------------------
@@ -177,7 +154,7 @@ function mf_buff_change(name,gain,buff_table,status,set_gear)
     ----------------------------------------
     return set_gear
 end
-function mf_midcast(spell,status,set_gear)
+function mf_midcast(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your midcast rules here
     --to stop processing of all midcast rules use: return set_gear
@@ -187,7 +164,7 @@ function mf_midcast(spell,status,set_gear)
     ----------------------------------------
     return set_gear
 end
-function mf_pet_midcast(spell,status,set_gear)
+function mf_pet_midcast(status,set_gear,event_type,spell,)
     ---------------------------------------
     --put your pet_midcast rules here
     --to stop processing of all pet_midcast rules use: return set_gear
@@ -197,21 +174,21 @@ function mf_pet_midcast(spell,status,set_gear)
     ----------------------------------------
     return set_gear
 end
-function mf_aftercast(spell,status,set_gear)
+function mf_aftercast(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your aftercast rules here
     --to stop processing of all aftercast rules use: return set_gear
     ---------------------------------------
     return set_gear
 end
-function mf_pet_aftercast(spell,status,set_gear)
+function mf_pet_aftercast(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your pet_aftercast rules here
     --to stop processing of all pet_aftercast rules use: return set_gear
     ---------------------------------------
     return set_gear
 end
-function mf_self_command(command)
+function mf_self_command(status,set_gear,event_type,command)
     ---------------------------------------
     --put your self_command rules here
     ---------------------------------------
@@ -247,13 +224,13 @@ function mf_self_command(command)
         -- end
     end
 end
-function mf_sub_job_change(new,old,status,set_gear)
+function mf_sub_job_change(status,set_gear,event_type,new,old)
     ---------------------------------------
     --put your sub_job_change rules here
     ---------------------------------------
     return set_gear
 end
-function mf_indi_change(indi_table,gain,status,set_gear) -- only needed for Geo main/sub jobs
+function mf_indi_change(status,set_gear,event_type,indi_table,gain) -- only needed for Geo main/sub jobs
     ---------------------------------------
     --put your indi_change rules here
     ---------------------------------------
@@ -266,53 +243,27 @@ function mf_zone_change(new,old) -- only when Registered_Events include is activ
     --old string name of the old zone
     ---------------------------------------
 end
+--These are examples only use if you know how to create a text display--
 --[[ function custom_menu_update()
     local custom_rules_table = {}
-    if SJi then
-        custom_rules_table.stepm = Stepmax
-        custom_rules_table.ssteps = Stopsteps and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    end
-    if WSi then
-        custom_rules_table.cstaff = Changestaff and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-        custom_rules_table.ustaff = Usestaff
-    end
-    if Conquest_Gear then
-        custom_rules_table.cneckc = Conquest.neck.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-        custom_rules_table.cringc = Conquest.ring.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-        custom_rules_table.cneck = Conquest.neck.case[Conquest.neck.case_id]
-        custom_rules_table.cring = Conquest.ring.case[Conquest.ring.case_id]
-    end
-    custom_rules_table.mjob = windower.ffxi.get_player().main_job_full
-    custom_rules_table.mjob_lvl = windower.ffxi.get_player().main_job_level
+    custom_rules_table.stepmt = Stepmaxt and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    custom_rules_table.sstepst = Stopstepst and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     return custom_rules_table
 end]]
 --[[ function custom_menu_build()
-    local properties = L{}
-        if windower.ffxi.get_player().sub_job == 'DNC' and SJi then
-            properties:append('-Steps-')
-            properties:append('   Max Step = ${stepm}')
-            properties:append('   Stop Steps   ${ssteps}')
-        end
-        if windower.wc_match(windower.ffxi.get_player().main_job, "WHM|BLM|RDM|BRD|SMN|SCH|GEO") and WSi then
-            properties:append('Staves')
-            properties:append('  Will ${cstaff}Change')
-            properties:append('Staves Set To ${ustaff}')
-        end
-        if Conquest_Gear then
-            properties:append('Conquest Neck')
-            properties:append('  Will ${cneckc}Change')
-            properties:append('Conquest Ring')
-            properties:append('  Will ${cringc}Change')
-            properties:append('Conquest')
-            properties:append('  Neck Type = ${cneck}')
-            properties:append('  Ring Type = ${cring}')
-        end
-        if lvlwatch then
-            properties:append('${mjob}')
-            properties:append('   lvl = ${mjob_lvl}')
-        end
-    return properties
+    local custom_properties = L{}
+    custom_properties:append('-test6-')
+    custom_properties:append('   Max Step ${stepmt}')
+    custom_properties:append('   Stop Steps   ${sstepst}')
+    return custom_properties
 end]]
---[[ function custom_menu_commands(a)
-    print('a='..a)
+--[[ function custom_menu_commands(a))
+    if menu_set == 6 then
+        print(a)
+    end
+    if a == "{stepmt}" then
+        Stepmaxt = not Stepmaxt
+    elseif a == "{sstepst}" then
+        Stopstepst = not Stopstepst
+    end
 end]]

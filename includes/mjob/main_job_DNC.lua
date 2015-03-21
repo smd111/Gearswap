@@ -6,7 +6,7 @@ if not Stopsteps then
 end
     Hwauto = false
 
-function MJi_precast(spell,status,set_gear)
+function MJi_precast(status,set_gear,event_type,spell)
     if spell.type == 'Waltz' and not spell.en:startswith('Divine Waltz') then 
         if spell.target.hpp <= 75 then
             if player.tp >= 800 and player.main_job_level > 87 then
@@ -123,7 +123,7 @@ function MJi_precast(spell,status,set_gear)
         end
     end
 end 
-function MJi_buff_change(name,gain,buff_table,status,set_gear)
+function MJi_buff_change(status,set_gear,event_type,name,gain,buff_tabl)
     if Hwauto and table.contains(Waltz.debuff,name) then
         if gain and player.tp >= 200 and player.main_job_level > 34 then
             send_command('@input /ja "Healing Waltz" <me>')
@@ -131,7 +131,7 @@ function MJi_buff_change(name,gain,buff_table,status,set_gear)
     end
     return set_gear
 end
-function MJi_self_command(command)
+function MJi_self_command(status,set_gear,event_type,command)
     if type(command) == 'table' then
         if command[1]:lower() == 'set' or command[1]:lower() == 's' then
             if command[2]:lower() == 'stepmax' then

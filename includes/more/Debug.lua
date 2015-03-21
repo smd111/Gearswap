@@ -1,74 +1,22 @@
 
-    full_debug = false
-    debug_count = 1
-    debug_type = {"Status_Change","Pet_Change","Filtered_Action","Pretarget","Precast","Buff_Change","Midcast","Pet_Midcast","Aftercast","Pet_Aftercast",
+full_debug = false
+debug_count = 1
+debug_type = {"Status_Change","Pet_Change","Filtered_Action","Pretarget","Precast","Buff_Change","Midcast","Pet_Midcast","Aftercast","Pet_Aftercast",
     "Indi_Change","Pet_Status_Change","Sub_Job_Change","Self_Command","All"}
 
-function Debug_code(spell,...)
-    local a,b,c = unpack{...}
+function Debug_code(status,set_gear,event_type,spell)
     if full_debug then
-        if debug_type[debug_count]:lower() == c or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..c)
-            add_to_chat(7,"Spell Name = "..tostring(spell.name))
-            add_to_chat(7,"Spell Type = "..tostring(spell.type))
-            add_to_chat(7,"Spell Element = "..tostring(spell.element))
-            add_to_chat(7,"Spell Target Type = "..tostring(spell.target.type))
-            add_to_chat(7,"Day Element = "..tostring(world.day_element))
-            add_to_chat(7,"Weather Element = "..tostring(world.weather_element))
-            add_to_chat(7,"Moon Phase = "..tostring(world.moon))
-            add_to_chat(7,"Zone Name = "..tostring(world.zone))
-        end
-    end
-end
-function Debug_status_change(new,old,...)
-    local a,b,c = unpack{...}
-    if full_debug then
-        if debug_type[debug_count]:lower() == c or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..c)
-            add_to_chat(7,"Status New = "..tostring(new))
-            add_to_chat(7,"Status Old = "..tostring(old))
-        end
-    end
-end
-function Debug_sub_job_change(new,old,...)
-    local a,b,c = unpack{...}
-    if full_debug then
-        if debug_type[debug_count]:lower() == c or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..c)
-            add_to_chat(7,"New Sub Job= "..tostring(new))
-            add_to_chat(7,"Old Sub Job = "..tostring(old))
-        end
-    end
-end
-function Debug_pet_change(pet,gain,...)
-    local a,b,c = unpack{...}
-    if full_debug then
-        if debug_type[debug_count]:lower() == c or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..c)
-            add_to_chat(7,"Pet = "..tostring(pet)..", Gain = "..tostring(gain))
-            add_to_chat(7,"Pet Element = "..tostring(pet.element))
-        end
-    end
-end
-function Debug_buff_change(name,gain,buff_table,...)
-    local a,b,c = unpack{...}
-    if full_debug then
-        if debug_type[debug_count]:lower() == c or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..c)
-            add_to_chat(7,"Buff = "..tostring(name)..', Gain = '..tostring(gain))
-        end
-    end
-end
-function Debug_indi_change(indi_table,gain,...)
-    local a,b,c = unpack{...}
-    if full_debug then
-        if debug_type[debug_count]:lower() == c or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..c)
-            add_to_chat(7,"Indi Element = "..tostring(indi_table.element))
-            add_to_chat(7,"Indi Element_id = "..tostring(indi_table.element_id))
-            add_to_chat(7,"Indi Target = "..tostring(indi_table.target))
-            add_to_chat(7,"Indi Size = "..tostring(indi_table.size))
-            add_to_chat(7,"Indi Gain = "..tostring(gain))
+        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = "..event_type)
+            for i,v in pairs(spell) do
+                if type(spell[i]) == "table" and not S{"levels","flags"}:contains(i) then
+                    for i2,v2 in pairs(spell[i]) do
+                        add_to_chat(7,"spell."..i.."."..i2.." = "..tostring(v2))
+                    end
+                else
+                    add_to_chat(7,"spell."..i.." = "..tostring(v))
+                end
+            end
         end
     end
 end
@@ -79,9 +27,65 @@ Debug_midcast = Debug_code
 Debug_pet_midcast = Debug_code
 Debug_aftercast = Debug_code
 Debug_pet_aftercast = Debug_code
+function Debug_status_change(status,set_gear,event_type,new,old)
+    if full_debug then
+        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = "..event_type)
+            add_to_chat(7,"Status New = "..tostring(new))
+            add_to_chat(7,"Status Old = "..tostring(old))
+        end
+    end
+end
 Debug_pet_status_change = Debug_status_change
-function Debug_self_command(command,event_type)
-    print(command[1],command[2])
+function Debug_sub_job_change(status,set_gear,event_type,pet,gain)
+    if full_debug then
+        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = "..event_type)
+            add_to_chat(7,"New Sub Job= "..tostring(new))
+            add_to_chat(7,"Old Sub Job = "..tostring(old))
+        end
+    end
+end
+function Debug_pet_change(status,set_gear,event_type,pet,gain)
+    if full_debug then
+        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = "..event_type)
+            for i,v in pairs(pet) do
+                if type(pet[i]) == "table" then
+                    for i2,v2 in pairs(pet[i]) do
+                        add_to_chat(7,"pet."..i.."."..i2.." = "..v2)
+                    end
+                else
+                    add_to_chat(7,"pet."..i.." = "..v)
+                end
+            end
+            add_to_chat(7,"gain = "..tostring(gain))
+        end
+    end
+end
+function Debug_buff_change(status,set_gear,event_type,name,gain,buff_table)
+    if full_debug then
+        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = "..event_type)
+            add_to_chat(7,"buff = "..tostring(name)..', gain = '..tostring(gain))
+            for i,v in pairs(buff_table) do
+                add_to_chat(7,"buff_table."..i.." = "..v)
+            end
+        end
+    end
+end
+function Debug_indi_change(status,set_gear,event_type,indi_table,gain)
+    if full_debug then
+        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = "..event_type)
+            for i,v in pairs(indi_table) do
+                add_to_chat(7,"indi_table."..i.." = "..v)
+            end
+            add_to_chat(7,"gain = "..tostring(gain))
+        end
+    end
+end
+function Debug_self_command(status,set_gear,event_type,command)
     if full_debug then
         if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
             add_to_chat(7,"Event = "..event_type)
@@ -109,6 +113,25 @@ function Debug_self_command(command,event_type)
                 end 
             end
         end
+        if command[1]:lower() == 'show' and (command[2]:lower() == 'variable' or command[2]:lower() == 'var') then
+            if _G[command[3]:lower()] then
+                for i,v in pairs(_G[command[3]:lower()]) do
+                    if type(_G[command[3]:lower()][i]) == "table" and not S{"job_points","merits","case","wardrobe","sack","satchel","inventory"}:contains(i) then
+                        for i2,v2 in pairs(_G[command[3]:lower()][i]) do
+                            if type(_G[command[3]:lower()][i][i2]) == "table" then
+                                for i3,v3 in pairs(_G[command[3]:lower()][i][i2]) do
+                                    add_to_chat(7,command[3]:lower().."."..i.."."..i2.."."..i3.." = "..tostring(v3))
+                                end
+                            else
+                                add_to_chat(7,command[3]:lower().."."..i.."."..i2.." = "..tostring(v2))
+                            end
+                        end
+                    else
+                        add_to_chat(7,command[3]:lower().."."..i.." = "..tostring(v))
+                    end
+                end
+            end
+        end
     elseif command == 'tDebug' then
         full_debug = not full_debug
         send_command('clear log')
@@ -117,18 +140,6 @@ function Debug_self_command(command,event_type)
     elseif command == 'cDebugtype' then
         debug_count = (debug_count % #debug_type) + 1
         add_to_chat(7,'Debug Mode Type = ' .. tostring(debug_type[debug_count]))
-    end
-    if full_debug then
-        if debug_type[debug_count]:lower() == c or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..c)
-            if type(command) == "table" then
-                for i,v in ipairs(command) do
-                    add_to_chat(7,'Command['..i..'] = '..v)
-                end
-            else
-                add_to_chat(7,'Command = '..command)
-            end
-        end
     end
     if updatedisplay then
         updatedisplay()

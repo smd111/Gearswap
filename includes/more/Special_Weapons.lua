@@ -1,7 +1,7 @@
 if not specialweaponwscount then
     specialweaponwscount = 0
 end
-function Special_Weapon_precast(spell,status)
+function Special_Weapon_precast(status,set_gear,event_type,spell)
     local Special_Weapons_Data = {["Molva Maul"]="Randgrith",["Skogul Lance"]="Geirskogul",["Cleofun Axe"]="Onslaught",["Corbenic Sword"]="Knights of Round",
     ["Murti Bow"]="Namas Arrow",["Heofon Knuckles"]="Final Heaven",["Clement Skean"]="Mercy Stroke",["Khloros Blade"]="Scourge",["Barbarus Bhuj"]="Metatron Torment",
     ["Crisis Scythe"]="Catastrophe",["Sekirei"]="Blade: Metsu",["Ame-no-ohabari"]="Tachi: Kaiten",["Chthonic Staff"]="Gate of Tartarus",["Exequy Gun"]="Coronach"}

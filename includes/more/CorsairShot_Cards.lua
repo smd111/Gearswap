@@ -1,5 +1,6 @@
 function card_getmore(typ)
-    local c_case = typ.." Card Case"
+    local card_short = {Fire="Fire",Ice="Ice",Wind="Wind",Earth="Earth",Thunder="Thnd.",Water="Water",Light="Light",Dark="Dark",}
+    local c_case = card_short[typ].." Card Case"
     local t_case = "Trump Card Case"
     if player.inventory[c_case] ~= nil then
         return c_case
@@ -13,7 +14,7 @@ function card_check(typ)
         return true
     end
 end
-function card_rule(spell,status,set_gear)
+function card_rule(status,set_gear,event_type,spell)
     if spell.type == "CorsairShot" then
         local typ = string.match(spell.en, '(%a+) Shot')
         if card_check(typ) then

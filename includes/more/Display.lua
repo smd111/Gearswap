@@ -33,8 +33,8 @@ function initialize(text, settings, window_name)
             [12]={[1]=((windower.ffxi.get_player().main_job == 'NIN' and Ninw) or (windower.ffxi.get_player().sub_job == 'NIN' and Ninw)),[2]=' Start Type = ${ninstarttype}'},
             [13]={[1]=((windower.ffxi.get_player().main_job == 'NIN' and Ninw) or (windower.ffxi.get_player().sub_job == 'NIN' and Ninw)),[2]=' ${ninstart|Stoped}'},},
             [2]={[1]='--Weapon Settings--',[2]='Weapon Type = \\cs(255,255,0)${wept}\\cr',[3]='Range Type = \\cs(255,255,0)${rwept}\\cr',
-            [4]={[1]=(table.contains(jobs.magic, player.main_job) and WSi),[2]='-Mage Staves-'},[5]={[1]=(table.contains(jobs.magic, player.main_job) and WSi),[2]='   Auto Change   ${cstaff}'},
-            [6]={[1]=(table.contains(jobs.magic, player.main_job) and WSi),[2]='   Type \\cs(255,255,0)${ustaff}\\cr'},},
+            [4]={[1]=(jobs.magic:contains(player.main_job) and WSi),[2]='-Mage Staves-'},[5]={[1]=(jobs.magic:contains(player.main_job) and WSi),[2]='   Auto Change   ${cstaff}'},
+            [6]={[1]=(jobs.magic:contains(player.main_job) and WSi),[2]='   Type \\cs(255,255,0)${ustaff}\\cr'},},
             [3]={[1]='--Armor Settings--',[2]='Mode = \\cs(255,255,0)${amode}\\cr',[3]={[1]=(Conquest_Gear),[2]='-Conquest Gear-'},
             [4]={[1]=(Conquest_Gear),[2]='  Change Neck   ${cneckc}'},[5]={[1]=(Conquest_Gear),[2]='  Neck Type = \\cs(255,255,0)${cneck}\\cr'},
             [6]={[1]=(Conquest_Gear),[2]='  Change Ring   ${cringc}'},[7]={[1]=(Conquest_Gear),[2]='  Ring Type = \\cs(255,255,0)${cring}\\cr'},},
@@ -43,7 +43,7 @@ function initialize(text, settings, window_name)
             [11]={[1]=(File_Write),[2]='${filew|Force File Write}'},[1]='--System Settings--',[6]='Auto Shard Use   ${ashard}',[7]='Show Swaps   ${tswap}',
             [8]='Debug Mode   ${debugm}',[12]='${gsex1|Gearswap Export}',[13]='${regs|Reload Gearswap}',},
             [5]={[2]={[1]=(windower.ffxi.get_player().main_job == "NIN" or windower.ffxi.get_player().sub_job == "NIN"),[2]='Ninja Wheel   ${tninw}'},
-            [3]={[1]=(table.contains(jobs.ammo, player.main_job)),[2]='Ammo   ${tammo}'},[8]={[1]=(table.contains(jobs.magic, player.main_job)),[2]='Mage Stave   ${tmsi}'},
+            [3]={[1]=(jobs.ammo:contains(player.main_job)),[2]='Ammo   ${tammo}'},[8]={[1]=(jobs.magic:contains(player.main_job)),[2]='Mage Stave   ${tmsi}'},
             [1]='--Include Settings--',[4]='Conquest Gear   ${tcgi}',[5]='Debug   ${tdebug}',[6]='File Write   ${tfwi}',[7]='Main Job   ${tmji}',[9]='Registered Events   ${trei}',
             [10]='Special Weapons   ${tswi}',[11]='Sub Job   ${tsji}',},}
         if menu_build_list[menu_set] then
@@ -57,7 +57,7 @@ function initialize(text, settings, window_name)
                 end
             end
         elseif menu_set == 6 then --custom menu
-            properties:append('Custom Menu')
+            properties:append('--Custom Menu--')
             for i,v in pairs(custom_menu_build()) do
                 if type(v) == 'string' then
                     properties:append(v)
@@ -88,7 +88,7 @@ function initialize(text, settings, window_name)
                 properties:append('${'..menu_name_initialize[window_name][3]..''..i..'|'..string.gsub(v, "_", " ")..'}')
             end
         end
-        if custom_menu and window_name == 'tab_select_window' then
+        if custom_menu_update and custom_menu_build and custom_menu_commands and window_name == 'tab_select_window' then
             properties:append('${tab6|Custom Menu}')
         end
     end
@@ -140,46 +140,44 @@ function updatedisplay()
         info.cneck = Conquest.neck.case[Conquest.neck.case_id]
         info.cring = Conquest.ring.case[Conquest.ring.case_id]
     end
-    info.mjob = windower.ffxi.get_player().main_job_full
-    info.mjob_lvl = windower.ffxi.get_player().main_job_level
-    info.amode = armor_types[armor_types_count]
-    info.listm = menu_list[menu_set]
-    info.tmji = MJi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.tsji = SJi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.tmsi = MSi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.twsi = WSi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    if Ammo then
-        info.tammo = Ammo and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    end
-    info.tfwi = File_Write and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.tswi = Special_Weapons and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.tcgi = Conquest_Gear and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.trei = Registered_Events and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.tdebug = Debug and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.tmjl = lvlwatch and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     if Registered_Events then
         info.skill = skill_type[skill_count]
     end
     if skill and Registered_Events then
         info.skill_lvl = (skill[skill_type[skill_count]..' Capped'] and "Capped" or skill[skill_type[skill_count]..' Level'])
     end
-    info.tskill = skillwatch and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.tswap = _settings.show_swaps and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.debugm = _settings.debug_mode and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.wept = string.gsub(weapon_types[weapon_types_count], "_", " ")
-    info.rwept = string.gsub(range_types[range_types_count], "_", " ")
-    info.dbenable = full_debug and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    info.ashard = auto_use_shards and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     if Debug then
         info.debugtype = string.gsub(debug_type[debug_count], "_", " ")
     end
-    info.tninw = Ninw and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     if Ninw then
         info.ninstartele = ninja_wheel_element[ninja_wheel_element_count]
         info.ninstartlvl = ninja_wheel_start_lvl
         info.ninstart = (ninja_wheel_super_tog or ninja_wheel_tog) and '\\cs(0,255,0)Started\\cr' or '\\cs(255,255,0)Stoped\\cr'
         info.ninstarttype = ninja_wheel_start_type and 'Super' or 'Normal'
     end
+    info.listm = menu_list[menu_set]
+    info.tmji = MJi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tsji = SJi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tmsi = MSi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.twsi = WSi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tammo = Ammo and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tfwi = File_Write and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tswi = Special_Weapons and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tcgi = Conquest_Gear and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.trei = Registered_Events and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tdebug = Debug and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tmjl = lvlwatch and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tskill = skillwatch and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tswap = _settings.show_swaps and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.debugm = _settings.debug_mode and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.dbenable = full_debug and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.ashard = auto_use_shards and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.tninw = Ninw and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    info.wept = string.gsub(weapon_types[weapon_types_count], "_", " ")
+    info.rwept = string.gsub(range_types[range_types_count], "_", " ")
+    info.amode = string.gsub(armor_types[armor_types_count], "_", " ")
+    info.mjob = windower.ffxi.get_player().main_job_full
+    info.mjob_lvl = windower.ffxi.get_player().main_job_level
     if menu_set == 6 then
         for i,v in pairs(custom_menu_update()) do
             info[i] = v
@@ -206,19 +204,16 @@ function get_window_pos(x,y,check_windows)
     return my, mx, button_lines, hx, hy
 end
 function set_prim_loc(location,win_name,win_tabl,mx,hy)
-    local hide_button = {'{mjob}','{mjob_lvl}','{skill_lvl|Updating}'}
+    local hide_button = S{'{mjob}','{mjob_lvl}','{skill_lvl|Updating}'}
     for i, v in ipairs(location) do
         if (hy > location[i].ya and hy < location[i].yb) then
-            if type(switches_table[win_name][i]) == 'table' and not table.contains(hide_button, switches_table[win_name][i][1]) then
-                if not table.contains(hide_button, switches_table[win_name][i][1]) then
-                    windower.prim.set_position('window_button', _G[win_tabl].pos.x, (_G[win_tabl].pos.y + location[i].ya))
-                    windower.prim.set_size('window_button', mx, (location[i].yb - location[i].ya))
-                    windower.prim.set_visibility('window_button', true)
-                else
-                    windower.prim.set_position('window_button', 0, 0)
-                    windower.prim.set_size('window_button', 1, 1)
-                end
+            if type(switches_table[win_name][i]) == 'table' and not hide_button:contains(switches_table[win_name][i][1]) then
+                windower.prim.set_position('window_button', _G[win_tabl].pos.x, (_G[win_tabl].pos.y + location[i].ya))
+                windower.prim.set_size('window_button', mx, (location[i].yb - location[i].ya))
+                windower.prim.set_visibility('window_button', true)
             else
+                windower.prim.set_position('window_button', 0, 0)
+                windower.prim.set_size('window_button', 1, 1)
                 windower.prim.set_visibility('window_button', false)
             end
         end
@@ -327,72 +322,72 @@ function mouse(mtype, x, y, delta, blocked)
         end
     end
 end
-function menu_commands(a)
+function menu_commands(display_command)
     ----Include Rules----
-    if a == "{stepm}" then
+    if display_command == "{stepm}" then
         Stepmax = (Stepmax % 5) + 1
-    elseif a == "{ssteps}" then
+    elseif display_command == "{ssteps}" then
         Stopsteps = not Stopsteps
-    elseif a == "{cstaff}" then
+    elseif display_command == "{cstaff}" then
         Changestaff = not Changestaff
-    elseif a == "{ustaff}" then
+    elseif display_command == "{ustaff}" then
         Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
-    elseif a == "{cneckc}" then
+    elseif display_command == "{cneckc}" then
         Conquest.neck.change = not Conquest.neck.change
-    elseif a == "{cringc}" then
+    elseif display_command == "{cringc}" then
         Conquest.ring.change = not Conquest.ring.change
-    elseif a == "{cneck}" then
+    elseif display_command == "{cneck}" then
         Conquest.neck.case_id = (Conquest.neck.case_id % #Conquest.neck.case) + 1
-    elseif a == "{cring}" then
+    elseif display_command == "{cring}" then
         Conquest.ring.case_id = (Conquest.ring.case_id % #Conquest.ring.case) + 1
-    elseif a == "{ninstartele}" then
+    elseif display_command == "{ninstartele}" then
         ninja_wheel_element_count = (ninja_wheel_element_count % #ninja_wheel_element) + 1
         ninja_wheel_start_element = ninja_wheel_element[ninja_wheel_element_count]
-    elseif a == '{ninstartlvl}' then
+    elseif display_command == '{ninstartlvl}' then
         ninja_wheel_start_lvl = (ninja_wheel_start_lvl % 3) + 1
-    elseif a == '{ninstarttype}' then
+    elseif display_command == '{ninstarttype}' then
         ninja_wheel_start_type = not ninja_wheel_start_type
-    elseif a == '{ninstart|Stoped}' then
+    elseif display_command == '{ninstart|Stoped}' then
         if ninja_wheel_start_type then
             send_command("gs c startnin snw")
         else
             send_command("gs c startnin nw")
         end
-    elseif a == '{tmjl}' then
+    elseif display_command == '{tmjl}' then
         lvlwatch = not lvlwatch
-    elseif a == "{tskill}" then
+    elseif display_command == "{tskill}" then
         skillwatch = not skillwatch
-    elseif a == '{dbenable}' then
+    elseif display_command == '{dbenable}' then
         full_debug = not full_debug
-    elseif a == '{ashard}' then
+    elseif display_command == '{ashard}' then
         auto_use_shards = not auto_use_shards
-    elseif a == "{hid|HIDE}" then
+    elseif display_command == "{hid|HIDE}" then
         window:hide()
         window_hidden = true
         button:show()
         windower.prim.set_visibility('window_button', false)
     ----Gearswap Controls----
-    elseif a == "{tswap}" then
+    elseif display_command == "{tswap}" then
         if _settings.show_swaps then
             show_swaps(false)
         else
             show_swaps(true)
         end
-    elseif a == "{debugm}" then
+    elseif display_command == "{debugm}" then
         if _settings.debug_mode then
             debug_mode(false)
         else
             debug_mode(true)
         end
-    elseif a == "{regs|Reload Gearswap}" then
+    elseif display_command == "{regs|Reload Gearswap}" then
         send_command('lua reload gearswap')
-    elseif a == "{gsex1|Gearswap Export}" then
+    elseif display_command == "{gsex1|Gearswap Export}" then
         send_command('gs export')
-    elseif a == "{filew|Force File Write}" then
+    elseif display_command == "{filew|Force File Write}" then
         File_Write_do()
     else
         ----Window Open/Close Rules----
-        if table.contains({"{amode}","{listm}","{skill}","{wept}","{rwept}","{debugtype}"}, a) then
+        if S{"{amode}","{listm}","{skill}","{wept}","{rwept}","{debugtype}"}:contains(display_command) then
             local menu_open ={
             ["{amode}"]={[1]="gear_select_window",[2]="ger_select",[3]={text = {font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=(menu.pos.x - 120),y=(menu.pos.y)}},},
             ["{listm}"]={[1]="tab_select_window",[2]="tab_select",[3]={text = {font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=(menu.pos.x - 120),y=(menu.pos.y)}}},
@@ -401,7 +396,7 @@ function menu_commands(a)
             ["{rwept}"]={[1]="range_select_window",[2]="range_select",[3]={text = {font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=(menu.pos.x - 120),y=(menu.pos.y)}}},
             ["{debugtype}"]={[1]="debug_select_window",[2]="debug_select",[3]={text = {font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=(menu.pos.x - 120),y=(menu.pos.y)}}},}
             for i,v in pairs(menu_open) do
-                if a == i then
+                if display_command == i then
                     if not _G[menu_open[i][1]] then
                         _G[menu_open[i][2]] = menu_open[i][3]
                         _G[menu_open[i][1]] = texts.new(_G[menu_open[i][2]])
@@ -431,20 +426,20 @@ function menu_commands(a)
         ["{tmsi}"]={[1]="MSi",[2]='includes/more/MSi.lua',[3]="includes/more/MSi.lua",[4]="MSi_"},
         ["{tammo}"]={[1]="Ammo",[2]='includes/more/Ammo.lua',[3]="includes/more/Ammo.lua",[4]="Ammo_"},
         ["{tninw}"]={[1]="Ninw",[2]='includes/more/Ninja_Wheel.lua',[3]="includes/more/Ninja_Wheel.lua",[4]="ninja_wheel_"},}
-        if include_switch[a] then
-            _G[include_switch[a][1]] = not _G[include_switch[a][1]]
+        if include_switch[display_command] then
+            _G[include_switch[display_command][1]] = not _G[include_switch[display_command][1]]
             if File_Write_do then
                 File_Write_do()
             end
-            if _G[include_switch[a][1]] and not Disable_All and gearswap.pathsearch({include_switch[a][2]}) then
-                include(include_switch[a][3])
+            if _G[include_switch[display_command][1]] and not Disable_All and gearswap.pathsearch({include_switch[display_command][2]}) then
+                include(include_switch[display_command][3])
             else
-                remove_functions(include_switch[a][4])
+                remove_functions(include_switch[display_command][4])
             end
         end
     end
     if custom_menu_commands then
-        custom_menu_commands(a)
+        custom_menu_commands(display_command)
     end
     if File_Write_do then
         File_Write_do()

@@ -1,11 +1,11 @@
 --any functions you do not need should be removed or will cause errors
-function SJi_status_change(new,old,status,set_gear)
+function SJi_status_change(status,set_gear,event_type,new,old)
     ----------------------------------------
     --equip example: set_gear = set_combine(set_gear, sets.Engaged)
     ---------------------------------------
     return set_gear
 end
-function SJi_pretarget(spell,status,set_gear)
+function SJi_pretarget(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your pretarget rules here
     ----------------------------------------
@@ -13,7 +13,7 @@ function SJi_pretarget(spell,status,set_gear)
     ---------------------------------------
     return set_gear
 end
-function SJi_precast(spell,status,set_gear)
+function SJi_precast(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your precast rules here
     ----------------------------------------
@@ -21,7 +21,7 @@ function SJi_precast(spell,status,set_gear)
     ---------------------------------------
     return set_gear
 end
-function SJi_buff_change(name,gain,buff_table,status,set_gear)
+function SJi_buff_change(status,set_gear,event_type,name,gain,buff_table)
     ---------------------------------------
     --put your buff_change rules here
     ---------------------------------------
@@ -29,7 +29,7 @@ function SJi_buff_change(name,gain,buff_table,status,set_gear)
     ---------------------------------------
     return set_gear
 end
-function SJi_midcast(spell,status,set_gear)
+function SJi_midcast(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your midcast rules here
     ----------------------------------------
@@ -37,7 +37,7 @@ function SJi_midcast(spell,status,set_gear)
     ---------------------------------------
     return set_gear
 end
-function SJi_aftercast(spell,status,set_gear)
+function SJi_aftercast(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your aftercast rules here
     ----------------------------------------
@@ -45,7 +45,7 @@ function SJi_aftercast(spell,status,set_gear)
     ---------------------------------------
     return set_gear
 end
-function SJi_self_command(command)
+function SJi_self_command(status,set_gear,event_type,command)
     ---------------------------------------
     --put your self_command rules here
     ---------------------------------------
@@ -81,7 +81,7 @@ function SJi_self_command(command)
         -- end
     -- end
 end
-function SJi_pet_change(pet,gain,status,set_gear)
+function SJi_pet_change(status,set_gear,event_type,pet,gain)
     ---------------------------------------
     --put your pet_change rules here
     ----------------------------------------
@@ -89,7 +89,7 @@ function SJi_pet_change(pet,gain,status,set_gear)
     ---------------------------------------
     return set_gear
 end
-function SJi_pet_midcast(spell,status,set_gear)
+function SJi_pet_midcast(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your pet_midcast rules here
     ----------------------------------------
@@ -97,7 +97,7 @@ function SJi_pet_midcast(spell,status,set_gear)
     ---------------------------------------
     return set_gear
 end
-function SJi_pet_aftercast(spell,status,set_gear)
+function SJi_pet_aftercast(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your pet_aftercast rules here
     ----------------------------------------
@@ -105,7 +105,7 @@ function SJi_pet_aftercast(spell,status,set_gear)
     ---------------------------------------
     return set_gear
 end
-function SJi_filtered_action(spell,status,set_gear)
+function SJi_filtered_action(status,set_gear,event_type,spell)
     ---------------------------------------
     --put your filtered_action rules here
     ----------------------------------------
@@ -113,7 +113,7 @@ function SJi_filtered_action(spell,status,set_gear)
     ---------------------------------------
     return set_gear
 end
-function SJi_indi_change(indi_table,gain,status,set_gear) -- only needed for Geo main/sub jobs
+function SJi_indi_change(status,set_gear,event_type,indi_table,gain) -- only needed for Geo main/sub jobs
     ---------------------------------------
     --put your indi_change rules here
     ----------------------------------------
@@ -121,7 +121,7 @@ function SJi_indi_change(indi_table,gain,status,set_gear) -- only needed for Geo
     ---------------------------------------
     return set_gear
 end
-function SJi_file_unload(new_job)
+function SJi_file_unload(status,set_gear,event_type,new_job)
     ---------------------------------------
     --put your file_unload rules here
     ---------------------------------------
