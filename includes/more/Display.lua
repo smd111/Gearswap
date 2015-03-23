@@ -135,10 +135,10 @@ function updatedisplay()
         info.ustaff = Usestaff
     end
     if Conquest_Gear then
-        info.cneckc = Conquest.neck.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-        info.cringc = Conquest.ring.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-        info.cneck = Conquest.neck.case[Conquest.neck.case_id]
-        info.cring = Conquest.ring.case[Conquest.ring.case_id]
+        info.cneckc = Conquest_neck.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+        info.cringc = Conquest_ring.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+        info.cneck = Conquest_neck.case[Conquest_neck.case_id]
+        info.cring = Conquest_ring.case[Conquest_ring.case_id]
     end
     if Registered_Events then
         info.skill = skill_type[skill_count]
@@ -333,13 +333,13 @@ function menu_commands(display_command)
     elseif display_command == "{ustaff}" then
         Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
     elseif display_command == "{cneckc}" then
-        Conquest.neck.change = not Conquest.neck.change
+        Conquest_neck.change = not Conquest_neck.change
     elseif display_command == "{cringc}" then
-        Conquest.ring.change = not Conquest.ring.change
+        Conquest_ring.change = not Conquest_ring.change
     elseif display_command == "{cneck}" then
-        Conquest.neck.case_id = (Conquest.neck.case_id % #Conquest.neck.case) + 1
+        Conquest_neck.case_id = (Conquest_neck.case_id % #Conquest_neck.case) + 1
     elseif display_command == "{cring}" then
-        Conquest.ring.case_id = (Conquest.ring.case_id % #Conquest.ring.case) + 1
+        Conquest_ring.case_id = (Conquest_ring.case_id % #Conquest_ring.case) + 1
     elseif display_command == "{ninstartele}" then
         ninja_wheel_element_count = (ninja_wheel_element_count % #ninja_wheel_element) + 1
         ninja_wheel_start_element = ninja_wheel_element[ninja_wheel_element_count]
@@ -428,13 +428,13 @@ function menu_commands(display_command)
         ["{tninw}"]={[1]="Ninw",[2]='includes/more/Ninja_Wheel.lua',[3]="includes/more/Ninja_Wheel.lua",[4]="ninja_wheel_"},}
         if include_switch[display_command] then
             _G[include_switch[display_command][1]] = not _G[include_switch[display_command][1]]
-            if File_Write_do then
-                File_Write_do()
-            end
             if _G[include_switch[display_command][1]] and not Disable_All and gearswap.pathsearch({include_switch[display_command][2]}) then
                 include(include_switch[display_command][3])
             else
                 remove_functions(include_switch[display_command][4])
+            end
+            if File_Write_do then
+                File_Write_do()
             end
         end
     end

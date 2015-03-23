@@ -1,6 +1,7 @@
 tool_bag_id = 0
 menu = {pos = {x = 0,y = 0}}
-Conquest = {neck = {},ring = {}}
+Conquest_ring = {}
+Conquest_neck = {}
 partynames = {}
 auto_use_shards = false
 weapon_types_count = 1

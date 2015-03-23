@@ -11,15 +11,15 @@ if gearswap.pathsearch({'Saves/job_'..player.main_job..'var.lua'}) then
     include('Saves/job_'..player.main_job..'var.lua')
 end
 ----Include functions-------------------------------------------------------------------------------------------------------------
-function gear_equip_check(tab,event_type)
-    if type(tab) == "table" and tab.type and S{"WeaponSkill","Samba","Waltz"}:contains(tab.type) and event_type == "precast" then
+function gear_equip_check(tab)
+    if type(tab) == "table" and tab.type and S{"WeaponSkill","Samba","Waltz"}:contains(tab.type) and _global.current_event == "precast" then
         return false
     else
         return true
     end
 end
-function gear_equip(tab,event_type,set_gear)
-    if gear_equip_check(tab,event_type) then
+function gear_equip(tab,set_gear)
+    if gear_equip_check(tab) then
         if sets.weapon[weapon_types[weapon_types_count]] then
             set_gear = set_combine(set_gear, sets.weapon[weapon_types[weapon_types_count]])
         end
@@ -32,21 +32,18 @@ function gear_equip(tab,event_type,set_gear)
     end
     return set_gear
 end
-function run_event(event_type,status,set_gear,...)
+function run_event(status,set_gear,...)
     local a,b,c = unpack{...}
     local set_gear = set_gear
-    set_gear = set_combine(set_gear, gear_equip(a,event_type,set_gear))
-    if type(a) == "table" and _G["sets."..event_type] and _G["sets."..event_type][a.name] then
-        set_gear = set_combine(set_gear, _G["sets."..event_type][a.name])
+    set_gear = set_combine(set_gear, gear_equip(a,set_gear))
+    if type(a) == "table" and _G["sets.".._global.current_event] and _G["sets.".._global.current_event][a.name] then
+        set_gear = set_combine(set_gear, _G["sets.".._global.current_event][a.name])
     end
-    if Conquest_Gear_do then
-        set_gear = set_combine(set_gear, Conquest_Gear_do(set_gear))
-    end 
     for i, v in ipairs({"Conquest_Gear_","Debug_","Ammo_","extra_","Special_Weapon_","ninja_wheel_","MJi_","SJi_","MSi_","mf_","WS_Gear_","elemental_obi_"}) do
-        if _G[v..''..event_type] then
-            set_gear = set_combine(set_gear, _G[v..''..event_type](status,set_gear,event_type,a,b,c))
+        if _G[v..''.._global.current_event] then
+            set_gear = set_combine(set_gear, _G[v..''.._global.current_event](status,set_gear,a,b,c))
         end
-        if S{"filtered_action","pretarget","precast"}:contains(event_type) and status.end_spell then cancel_spell() end
+        if S{"filtered_action","pretarget","precast"}:contains(_global.current_event) and status.end_spell then cancel_spell() end
         if status.end_event then return end
     end
     if gearchang_stopper(spell) then
@@ -78,21 +75,21 @@ function filtered_action(spell)
     local set_gear = {}
     if spell_stopper(spell) then cancel_spell() return end
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('filtered_action',status,set_gear,spell)
+    run_event(status,set_gear,spell)
 end
 function pretarget(spell)
     local status = {end_event=false,end_spell=false,stop_swapping_gear=true}
     local set_gear = {}
     if spell_stopper(spell) then cancel_spell() return end
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('pretarget',status,set_gear,spell)
+    run_event(status,set_gear,spell)
 end
 function precast(spell)
     local status = {end_event=false,end_spell=false,stop_swapping_gear=false}
     local set_gear = {}
     if spell_stopper(spell) then cancel_spell() return end
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('precast',status,set_gear,spell)
+    run_event(status,set_gear,spell)
 end
 function midcast(spell)
     if spell.action_type == "Ability" then
@@ -102,17 +99,14 @@ function midcast(spell)
     local set_gear = {}
     if gearchang_stopper(spell) then return end
     set_gear = set_combine(set_gear, sets[player.status])
-    if elemental_obi then
-        set_gear = set_combine(set_gear, elemental_obi(set_gear,spell))
-    end
-    run_event('midcast',status,set_gear,spell)
+    run_event(status,set_gear,spell)
 end
 function aftercast(spell)
     local status = {end_event=false,stop_swapping_gear=false}
     local set_gear = {}
     if gearchang_stopper(spell) then return end
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('aftercast',status,set_gear,spell)
+    run_event(status,set_gear,spell)
     if player.in_combat and auto_use_shards then
         for sni, snv in ipairs({'C.','Z.','A.','P.'}) do
             for sci, scv in ipairs({'I','II','III','IV','V'}) do
@@ -127,33 +121,33 @@ function status_change(new,old)
     local status = {end_event=false,stop_swapping_gear=false}
     local set_gear = {}
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('status_change',status,set_gear,new,old)
+    run_event(status,set_gear,new,old)
 end
 function pet_change(pet,gain)
     local status = {end_event=false,stop_swapping_gear=false}
     local set_gear = {}
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('pet_change',status,set_gear,pet,gain)
+    run_event(status,set_gear,pet,gain)
 end
 function pet_midcast(spell)
     local status = {end_event=false,stop_swapping_gear=false}
     local set_gear = {}
     if gearchang_stopper(spell) then return end
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('pet_midcast',status,set_gear,spell)
+    run_event(status,set_gear,spell)
 end
 function pet_aftercast(spell)
     local status = {end_event=false,stop_swapping_gear=false}
     local set_gear = {}
     if gearchang_stopper(spell) then return end
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('pet_aftercast',status,set_gear,spell)
+    run_event(status,set_gear,spell)
 end
 function pet_status_change(new,old)
     local status = {end_event=false,stop_swapping_gear=true}
     local set_gear = {}
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('pet_status_change',status,set_gear,new,old)
+    run_event(status,set_gear,new,old)
 end
 function buff_change(name,gain,buff_table)
     local status = {end_event=false,stop_swapping_gear=true}
@@ -168,23 +162,22 @@ function buff_change(name,gain,buff_table)
             equip(sets[player.status], gear_equip(name,"buff_change",set_gear))
         end
     end
-    run_event('buff_change',status,set_gear,name,gain,buff_table)
+    run_event(status,set_gear,name,gain,buff_table)
 end
 function indi_change(indi_table,gain)
     local status = {end_event=false,stop_swapping_gear=true}
     local set_gear = {}
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('indi_change',status,set_gear,indi_table,gain)
+    run_event(status,set_gear,indi_table,gain)
 end
 function sub_job_change(new,old)
     send_command("gs r")
     local status = {end_event=false,stop_swapping_gear=true}
     local set_gear = {}
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('sub_job_change',status,set_gear,new,old)
+    run_event(status,set_gear,new,old)
 end
 function self_command(command)
-    send_command("gs r")
     local status = {end_event=false,stop_swapping_gear=true}
     local set_gear = {}
     set_gear = set_combine(set_gear, sets[player.status])
@@ -192,7 +185,7 @@ function self_command(command)
     if type(commandArgs) == 'string' and #commandArgs:split(' ') >= 2 then
         commandArgs = T(commandArgs:split(' '))
     end
-    run_event("self_command",status,set_gear,commandArgs)
+    run_event(status,set_gear,commandArgs)
     if File_Write_do then
         File_Write_do()
     end
@@ -201,17 +194,17 @@ function self_command(command)
     end
 end
 function file_unload(new_job)
-    send_command("gs r")
     local status = {end_event=false,stop_swapping_gear=true}
     local set_gear = {}
     set_gear = set_combine(set_gear, sets[player.status])
-    run_event('file_unload',status,set_gear,new_job)
+    run_event(status,set_gear,new_job)
     if File_Write_do then
         File_Write_do()
     end
 end
 ----Check spell ruels-------------------------------------------------------------------------------------------------------------
 function spell_stopper(spell)
+    if world.in_mog_house or world.mog_house then return true end
     -- if midaction() or pet_midaction() then return true end
     -- if spell.action_type ~= "Ranged Attack"  and spell.action_type ~= 'Item' and spell_range_check(spell) then return true end
     if gearchang_stopper(spell) and not Disable_All then return true end
@@ -327,9 +320,10 @@ if Disable_All then
     return
 else
     load_includes()
+    load_includes = nil
 end
 ----WS/Obi equip------------------------------------------------------------------------------------------------------------------
-function WS_Gear_precast(status,set_gear,event_type,spell)
+function WS_Gear_precast(status,set_gear,spell)
     if spell.type == "WeaponSkill" then
         if player.inventory["Fotia Gorget"] or player.wardrobe["Fotia Gorget"] then
             set_gear = set_combine(set_gear, {neck="Fotia Gorget"})
@@ -346,7 +340,7 @@ function WS_Gear_precast(status,set_gear,event_type,spell)
     return set_gear
 end
 WS_Gear_midcast = WS_Gear_precast
-function elemental_obi_midcast(set_gear,spell)
+function elemental_obi_midcast(status,set_gear,spell)
     if not Typ.abilitys:contains(spell.prefix) then
         if spell.element == world.weather_element or spell.element == world.day_element then
             if player.inventory["Hachirin-no-Obi"] or player.wardrobe["Hachirin-no-Obi"] then
@@ -359,7 +353,7 @@ function elemental_obi_midcast(set_gear,spell)
     return set_gear
 end
 --extra functions-----------------------------------------------------------------------------------------------------------------
-function extra_self_command(command)
+function extra_self_command(status,set_gear,command)
     if type(command) == 'table' then
         if command[1]:lower() == 'set' or command[1]:lower() == 's' then
             if _G[command[2]:lower()..'_types'] then

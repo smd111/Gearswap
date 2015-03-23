@@ -1,93 +1,90 @@
-Conquest = {
-    always=S{"Al'Taieu","Auroral Updraft","Empyreal Paradox","The Garden of Ru'Hmet","Grand Palace of Hu'Xzoi","Dynamis - Windurst","Dynamis - San d'Oria",
-        "Dynamis - Bastok","Dynamis - Jeuno","Dynamis - Beaucedine","Dynamis - Xarcabard","Dynamis - Valkurm","Dynamis - Buburimu","Dynamis - Qufim","Dynamis - Tavnazia",
-        "Apollyon","Temenos","Hall of Transference","Memory Flux","Promyvion - Dem","Promyvion - Holla","Promyvion - Mea","Promyvion - Vahzl","Spire of Dem",
-        "Spire of Holla","Spire of Mea","Spire of Vahzl"},
-    never=S{"Abyssea - La Theine","Abyssea - Konschtat","Abyssea - Tahrongi","Abyssea - Attohwa","Abyssea - Misareaux","Abyssea - Vunkerl","Abyssea - Altepa",
-        "Abyssea - Uleguerand","Abyssea - Grauberg","Abyssea - Empyreal Paradox","Southern San d'Oria [S]","East Ronfaure [S]","Jugner Forest [S]",
-        "Vunkerl Inlet [S]","Batallia Downs [S]","La Vaule [S]","Bastok Markets [S]","North Gustaberg [S]","Grauberg [S]","Pashhow Marshlands [S]",
-        "Rolanberry Fields [S]","Beadeaux [S]","Windurst Waters [S]","West Sarutabaruta [S]","Fort Karugo-Narugo [S]","Meriphataud Mountains [S]",
-        "Sauromugue Champaign [S]","Castle Oztroja [S]","Beaucedine Glacier [S]","Xarcabard [S]","Castle Zvahl Baileys [S]","Castle Zvahl Keep [S]","Throne Room [S]",
-        "Garlaige Citadel [S]","Crawlers' Nest [S]","The Eldieme Necropolis [S]","Ruhotz Silvermines","Everbloom Hollow","Provenance","Walk of Echoes",
-        "Open sea route to Al Zahbi","Open sea route to Mhaura","Al Zahbi","Aht Urhgan Whitegate","Wajaom Woodlands","Bhaflau Thickets","Nashmau","Arrapago Reef",
-        "Ilrusi Atoll","Periqia","Talacca Cove","Silver Sea route to Nashmau","Silver Sea route to Al Zahbi","The Ashu Talif","Mount Zhayolm","Halvung",
-        "Lebros Cavern","Navukgo Execution Chamber","Mamook","Mamool Ja Training Grounds","Jade Sepulcher","Aydeewa Subterrane","Leujaoam Sanctum",
-        "Chocobo Circuit","The Colosseum","Alzadaal Undersea Ruins","Zhayolm Remnants","Arrapago Remnants","Bhaflau Remnants","Silver Sea Remnants",
-        "Nyzul Isle","Hazhalm Testing Grounds","Caedarva Mire","Ghoyu's Reverie"},
-    no_ring=S{"Hall of Transference","Memory Flux","Promyvion - Dem","Promyvion - Holla","Promyvion - Mea","Promyvion - Vahzl","Spire of Dem","Spire of Holla",
-        "Spire of Mea","Spire of Vahzl"},
-    neck={
-        ['case']=S{"Mage","Tank","Normal"},
-        Mage={neck="Rep.Gold Medal"},
-        Tank={neck="Windurstian Scarf"},
-        Normal={neck="Grand T.K. Collar"},},
-    ring ={
-        ['case']=S{"Mage","Tank","Normal"},
-        Mage={left_ring="Gnd.Kgt. Ring"},
-        Tank={left_ring="Ptr.Prt. Ring"},
-        Normal={left_ring="Gld.Msk. Ring"},},}
+Conquest_Gear_areas = {
+    regions=S{"San d'Oria","Bastok","Windurst","Jeuno","Ronfaure","Zulkheim","Norvallen","Gustaberg","Derfland","Sarutabaruta","Kolshushu","Aragoneu",
+                    "Fauregandi","Valdeaunia","Qufim","Li'Telor","Kuzotz","Vollbow","Elshimo Lowlands","Elshimo Uplands","Tu'Lia","Dynamis","Movalpolos",
+                    "Tavnazian Marquisate","Tavnazian Archipelago","Promyvion","Lumoria","Limbus"},
+    always_ring=S{"San d'Oria","Bastok","Windurst","Jeuno","Dynamis","Lumoria"},
+    always_neck=S{"Dynamis","Promyvion","Lumoria","Limbus"},}
+    
+Conquest_neck['case']={"Mage","Tank","Normal"}
+Conquest_neck.Mage={neck="Rep.Gold Medal"}
+Conquest_neck.Tank={neck="Windurstian Scarf"}
+Conquest_neck.Normal={neck="Grand T.K. Collar"}
+Conquest_ring['case']={"Mage","Tank","Normal"}
+Conquest_ring.Mage={left_ring="Gnd.Kgt. Ring"}
+Conquest_ring.Tank={left_ring="Ptr.Prt. Ring"}
+Conquest_ring.Normal={left_ring="Gld.Msk. Ring"}
         
-if not Conquest.neck.change then
-    Conquest.neck.change = false
+if not Conquest_neck.change then
+    Conquest_neck.change = false
 end
-if not Conquest.neck.case_id then
-    Conquest.neck.case_id = 1
+if not Conquest_neck.case_id then
+    Conquest_neck.case_id = 1
 end
-if not Conquest.ring.change then
-    Conquest.ring.change = false
+if not Conquest_ring.change then
+    Conquest_ring.change = false
 end
-if not Conquest.ring.case_id then
-    Conquest.ring.case_id = 1
+if not Conquest_ring.case_id then
+    Conquest_ring.case_id = 1
 end
-function Conquest_Gear_do(set_gear)
+    
+function Conquest_Gear_code(status,set_gear)
     if has_any_buff_of(S{"Signet","Sanction","Sigil"}) then
-        if Conquest.always:contains(world.area) then
-            set_gear = set_combine(set_gear, Conquest.neck[Conquest.neck.case[Conquest.neck.case_id]])
-            if not Conquest.no_ring:contains(world.area) then
-                if Conquest.ring.change then
-                    set_gear = set_combine(set_gear, Conquest.ring[Conquest.ring.case[Conquest.ring.case_id]])
-                end
+        if world.conquest and Conquest_Gear_areas.regions:contains(world.conquest.region_name) then
+            if Conquest_Gear_areas.always_neck:contains(world.conquest.region_name) and Conquest_neck.change then
+                set_gear = set_combine(set_gear, Conquest_neck[Conquest_neck.case[Conquest_neck.case_id]])
             end
-        elseif not Conquest.never:contains(world.area) then
+            if Conquest_Gear_areas.always_ring:contains(world.conquest.region_name) and Conquest_ring.change then
+                set_gear = set_combine(set_gear, Conquest_ring[Conquest_ring.case[Conquest_ring.case_id]])
+            end
             if world.conquest.nation == player.nation then
-                if Conquest.ring.change then
-                    set_gear = set_combine(set_gear, Conquest.ring[Conquest.ring.case[Conquest.ring.case_id]])
+                if Conquest_ring.change then
+                    set_gear = set_combine(set_gear, Conquest_ringg[Conquest_ring.case[Conquest_ring.ring.case_id]])
                 end
             else
-                if Conquest.neck.change then
-                    set_gear = set_combine(set_gear, Conquest.neck[Conquest.neck.case[Conquest.neck.case_id]])
+                if Conquest_neck.change then
+                    set_gear = set_combine(set_gear, Conquest_neck[Conquest_neck.case[Conquest_neck.case_id]])
                 end
             end
         end
     end
     return set_gear
 end
-function Conquest_Gear_self_command(status,set_gear,event_type,command)
+Conquest_Gear_precast = Conquest_Gear_code
+Conquest_Gear_midcast = Conquest_Gear_code
+Conquest_Gear_pet_midcast = Conquest_Gear_code
+Conquest_Gear_aftercast = Conquest_Gear_code
+Conquest_Gear_pet_aftercast = Conquest_Gear_code
+Conquest_Gear_status_change = Conquest_Gear_code
+Conquest_Gear_pet_status_change = Conquest_Gear_code
+Conquest_Gear_sub_job_change = Conquest_Gear_code
+Conquest_Gear_pet_change = Conquest_Gear_code
+Conquest_Gear_indi_change = Conquest_Gear_code
+function Conquest_Gear_self_command(status,set_gear,command)
     if type(command) == 'table' then
         if command[1]:lower() == 'set' or command[1]:lower() == 's' then
             if command[2]:lower() == "cqneck" then
-                for i,v in ipairs(Conquest.neck.case) do
+                for i,v in ipairs(Conquest_neck.case) do
                     if v:lower() == command[3]:lower() then
-                        Conquest.neck.case_id = i
+                        Conquest_neck.case_id = i
                     end
                 end
-            elseif command[2]:lower(Conquest.ring.case) == "cqring" then
+            elseif command[2]:lower(Conquest_ring.case) == "cqring" then
                 for i,v in ipairs() do
                     if v:lower() == command[3]:lower() then
-                        Conquest.ring.case_id = i
+                        Conquest_ring.case_id = i
                     end
                 end
             end
         end
     else
         if command == "cconneck" then
-            Conquest.neck.case_id = (Conquest.neck.case_id % #Conquest.neck.case) + 1
+            Conquest_neck.case_id = (Conquest_neck.case_id % #Conquest_neck.case) + 1
         elseif command == "cconring" then
-            Conquest.ring.case_id = (Conquest.ring.case_id % #Conquest.ring.case) + 1
+            Conquest_ring.case_id = (Conquest_ring.case_id % #Conquest_ring.case) + 1
         elseif command == 'tconneckchange' then
-            Conquest.neck.change = not Conquest.neck.change
+            Conquest_neck.change = not Conquest_neck.change
         elseif command == 'tconringchange' then
-            Conquest.ring.change = not Conquest.ring.change
+            Conquest_ring.change = not Conquest_ring.change
         end
     end
 end

@@ -1,4 +1,4 @@
-function SJi_precast(status,set_gear,event_type,spell)
+function SJi_precast(status,set_gear,spell)
     if table.contains(Cure.spells,spell.english) and spell.target.type == 'SELF' then
         if player.hpp <= 75 and player.mp >= 88 and player.sub_job_level >= 41 then
             if spell.english ~= 'Cure IV' then

@@ -4,10 +4,10 @@ debug_count = 1
 debug_type = {"Status_Change","Pet_Change","Filtered_Action","Pretarget","Precast","Buff_Change","Midcast","Pet_Midcast","Aftercast","Pet_Aftercast",
     "Indi_Change","Pet_Status_Change","Sub_Job_Change","Self_Command","All"}
 
-function Debug_code(status,set_gear,event_type,spell)
+function Debug_code(status,set_gear,spell)
     if full_debug then
-        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..event_type)
+        if debug_type[debug_count]:lower() == _global.current_event or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = ".._global.current_event)
             for i,v in pairs(spell) do
                 if type(spell[i]) == "table" and not S{"levels","flags"}:contains(i) then
                     for i2,v2 in pairs(spell[i]) do
@@ -27,29 +27,29 @@ Debug_midcast = Debug_code
 Debug_pet_midcast = Debug_code
 Debug_aftercast = Debug_code
 Debug_pet_aftercast = Debug_code
-function Debug_status_change(status,set_gear,event_type,new,old)
+function Debug_status_change(status,set_gear,new,old)
     if full_debug then
-        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..event_type)
+        if debug_type[debug_count]:lower() == _global.current_event or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = ".._global.current_event)
             add_to_chat(7,"Status New = "..tostring(new))
             add_to_chat(7,"Status Old = "..tostring(old))
         end
     end
 end
 Debug_pet_status_change = Debug_status_change
-function Debug_sub_job_change(status,set_gear,event_type,pet,gain)
+function Debug_sub_job_change(status,set_gear,pet,gain)
     if full_debug then
-        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..event_type)
+        if debug_type[debug_count]:lower() == _global.current_event or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = ".._global.current_event)
             add_to_chat(7,"New Sub Job= "..tostring(new))
             add_to_chat(7,"Old Sub Job = "..tostring(old))
         end
     end
 end
-function Debug_pet_change(status,set_gear,event_type,pet,gain)
+function Debug_pet_change(status,set_gear,pet,gain)
     if full_debug then
-        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..event_type)
+        if debug_type[debug_count]:lower() == _global.current_event or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = ".._global.current_event)
             for i,v in pairs(pet) do
                 if type(pet[i]) == "table" then
                     for i2,v2 in pairs(pet[i]) do
@@ -63,10 +63,10 @@ function Debug_pet_change(status,set_gear,event_type,pet,gain)
         end
     end
 end
-function Debug_buff_change(status,set_gear,event_type,name,gain,buff_table)
+function Debug_buff_change(status,set_gear,name,gain,buff_table)
     if full_debug then
-        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..event_type)
+        if debug_type[debug_count]:lower() == _global.current_event or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = ".._global.current_event)
             add_to_chat(7,"buff = "..tostring(name)..', gain = '..tostring(gain))
             for i,v in pairs(buff_table) do
                 add_to_chat(7,"buff_table."..i.." = "..v)
@@ -74,10 +74,10 @@ function Debug_buff_change(status,set_gear,event_type,name,gain,buff_table)
         end
     end
 end
-function Debug_indi_change(status,set_gear,event_type,indi_table,gain)
+function Debug_indi_change(status,set_gear,indi_table,gain)
     if full_debug then
-        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..event_type)
+        if debug_type[debug_count]:lower() == _global.current_event or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = ".._global.current_event)
             for i,v in pairs(indi_table) do
                 add_to_chat(7,"indi_table."..i.." = "..v)
             end
@@ -85,10 +85,10 @@ function Debug_indi_change(status,set_gear,event_type,indi_table,gain)
         end
     end
 end
-function Debug_self_command(status,set_gear,event_type,command)
+function Debug_self_command(status,set_gear,command)
     if full_debug then
-        if debug_type[debug_count]:lower() == event_type or debug_type[debug_count] == "All" then
-            add_to_chat(7,"Event = "..event_type)
+        if debug_type[debug_count]:lower() == _global.current_event or debug_type[debug_count] == "All" then
+            add_to_chat(7,"Event = ".._global.current_event)
             if type(command) == "table" then
                 for i,v in pairs(command) do
                     add_to_chat(7,'Command['..i..'] = '..v)

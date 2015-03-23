@@ -12,23 +12,23 @@ ninja_wheel_element_list = {"Ice","Fire","Water","Lightning","Earth"}
 ninja_wheel_element_count = 1
 ninja_wheel_super_cycle = 1
 
-function ninja_wheel_precast(status,set_gear,event_type,spell)
+function ninja_wheel_precast(status,set_gear,spell)
     if spell.type == 'Ninjutsu' and not player.in_combat then
         ninja_wheel_tog = false
         ninja_wheel_super_tog = false
     end
 end
-function ninja_wheel_aftercast(status,set_gear,event_type,spell)
+function ninja_wheel_aftercast(status,set_gear,spell)
     if spell.type == 'Ninjutsu' then
         local name,level = string.match(spell.en, '(%a+): (%a+)')
         if spell.interrupted then
-            send_command('input /ma "'..name..': '..level..'" <t>')
+            send_command('wait 3.0;input /ma "'..name..': '..level..'" <t>')
             return
         end
         if ninja_wheel_tog then
             ninja_wheel_count = ninja_wheel_count + 1
             if ninja_wheel_count < 7 then
-                send_command('input /ma "'..ninja_wheel_next[name]..': '..level..'" <t>')
+                send_command('wait 3.0;input /ma "'..ninja_wheel_next[name]..': '..level..'" <t>')
             else
                 ninja_wheel_count = 0
                 ninja_wheel_tog = false
@@ -36,10 +36,10 @@ function ninja_wheel_aftercast(status,set_gear,event_type,spell)
         elseif ninja_wheel_super_tog then
             ninja_wheel_count = ninja_wheel_count + 1
             if ninja_wheel_count == 7 and not ninja_wheel_super_cycle == 3 then
-                send_command('input /ma "'..ninja_wheel_next[name]..': '..ninja_wheel_next_level[level]..'" <t>')
+                send_command('wait 3.0;input /ma "'..ninja_wheel_next[name]..': '..ninja_wheel_next_level[level]..'" <t>')
                 ninja_wheel_super_cycle = ninja_wheel_super_cycle + 1
             elseif ninja_wheel_count < 7 then
-                send_command('input /ma "'..ninja_wheel_next[name]..': '..level..'" <t>')
+                send_command('wait 3.0;input /ma "'..ninja_wheel_next[name]..': '..level..'" <t>')
             else
                 ninja_wheel_count = 0
                 ninja_wheel_super_cycle = 1
@@ -48,7 +48,7 @@ function ninja_wheel_aftercast(status,set_gear,event_type,spell)
         end
     end
 end
-function ninja_wheel_self_command(status,set_gear,event_type,command)
+function ninja_wheel_self_command(status,set_gear,command)
     if type(command) == "table" then
         if command[1]:lower() == 'startnin' then
             if command[2]:lower() == 'ninwheel' or command[2]:lower() == 'nw' then

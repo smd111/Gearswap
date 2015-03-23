@@ -31,7 +31,7 @@ function Ammo_reequip()
         return combined_ammo[sets.range[range_types[range_types_count]].ammo]
     end
 end
-function Ammo_pretarget(status,set_gear,event_type,spell)
+function Ammo_pretarget(status,set_gear,spell)
     if spell.english == "Ranged" and Ammo_check() then
         status.end_event = true
         status.end_spell = true
