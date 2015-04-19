@@ -1,18 +1,21 @@
-if not specialweaponwscount then
-    specialweaponwscount = 0
+if not special_weapon_ws_count then
+    special_weapon_ws_count = 0
 end
-function Special_Weapon_precast(status,set_gear,spell)
+special_weapon = {}
+function special_weapon.precast(status,current_event,spell)
     local Special_Weapons_Data = {["Molva Maul"]="Randgrith",["Skogul Lance"]="Geirskogul",["Cleofun Axe"]="Onslaught",["Corbenic Sword"]="Knights of Round",
     ["Murti Bow"]="Namas Arrow",["Heofon Knuckles"]="Final Heaven",["Clement Skean"]="Mercy Stroke",["Khloros Blade"]="Scourge",["Barbarus Bhuj"]="Metatron Torment",
     ["Crisis Scythe"]="Catastrophe",["Sekirei"]="Blade: Metsu",["Ame-no-ohabari"]="Tachi: Kaiten",["Chthonic Staff"]="Gate of Tartarus",["Exequy Gun"]="Coronach"}
     if spell.type == "WeaponSkill" then
-        if Special_Weapons_Data[player.equipment.main] and spell.en ~= Special_Weapons_Data[player.equipment.main] then
-            if specialweaponwscount < 13 then
-                specialweaponwscount = specialweaponwscount +1
-            elseif specialweaponwscount == 13 then
+        local main = (res.items:with('en', player.equipment.main) or res.items:with('ja', player.equipment.main))
+        if Special_Weapons_Data[main.en] and spell.en ~= Special_Weapons_Data[main.en] then
+            if special_weapon_ws_count < 13 then
+                special_weapon_ws_count = special_weapon_ws_count +1
+            elseif special_weapon_ws_count == 13 then
+                local new_ws = res.weapon_skills:with('en', Special_Weapons_Data[main.en])
                 status.end_spell=true
-                specialweaponwscount = 0
-                send_command('input /ws "'..Special_Weapons_Data[player.equipment.main]..'" <t>')
+                special_weapon_ws_count = 0
+                send_command('input /ws "'..new_ws[gearswap.language]..'" <t>')
                 return
             end
         end

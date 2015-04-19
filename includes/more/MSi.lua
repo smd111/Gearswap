@@ -1,28 +1,36 @@
 if not Changestaff then
-    Changestaff = false --Togle with //gs c tchangestaff (true for change staves, false for do not change staves)
+    Changestaff = false
 end
 if not Usestaff then
-    Usestaff = 'Atk' --Togle with //gs c tstaveuse (Atk for Attack Staves, Acc for Accuracy Staves)
+    Usestaff = 'Atk'
 end
-
-
-function MSi_precast(status,set_gear,spell)
-    local MSi_staves = {Fire="Atar",Ice="Vourukasha",Wind="Vayuvata",Earth="Vishrava",Lightning="Apamajas",Water="Haoma",Light="Arka",Dark="Xsaeta",}
-    local MSi_grips = {Fire="Fire",Ice="Ice",Wind="Wind",Earth="Earth",Lightning="Thunder",Water="Water",Light="Light",Dark="Dark",}
-    local MSi_type = {["Atk"]="I",["Acc"]="II"}
+msi = {}
+msi.staves = {Fire="Atar",Ice="Vourukasha",Wind="Vayuvata",Earth="Vishrava",Lightning="Apamajas",Water="Haoma",Light="Arka",Dark="Xsaeta",}
+msi.grips = {Fire="Fire",Ice="Ice",Wind="Wind",Earth="Earth",Lightning="Thunder",Water="Water",Light="Light",Dark="Dark",}
+msi.stype = {["Atk"]="I",["Acc"]="II"}
+msi.cure_gear = {en={main="Arka IV",sub="Dominie's Grip",body="Heka's Kalasiris",hands="Bokwus Gloves",neck="Phalaina Locket",left_ear="Roundel Earring",},
+                ja={main="アーカIV",sub="ドミニエズグリップ",body="ヘカカラシリス",hands="ボクワスグローブ",neck="ファライナロケット",left_ear="ラウンデルピアス",}}
+msi.lang = {english="en",japenese="ja"}
+function msi.precast(status,current_event,spell)
     if Changestaff then
         if Typ.spells:contains(spell.type) then
             if Cure.spells:contains(spell.english) then
-                set_gear = set_combine(set_gear, {main="Arka IV",sub="Dominie's Grip",body="Heka's Kalasiris",hands="Bokwus Gloves",neck="Phalaina Locket",left_ear="Roundel Earring",})
+                if sets.cure then
+                    sets.building[current_event] = set_combine(sets.building[current_event], msi.cure_gear[msi.lang[gearswap.language]], sets.cure)
+                else
+                    sets.building[current_event] = set_combine(sets.building[current_event], msi.cure_gear[msi.lang[gearswap.language]])
+                end
             else
-                set_gear = set_combine(set_gear, {main=MSi_staves[spell.element].." "..MSi_type[Usestaff],sub=MSi_grips[spell.element].." Grip"})
+                local spell_element = (type(spell.element)=='number' and res.elements[spell.element] or res.elements:with('name', spell.element))
+                local spell_stave = res.items:with('enl', msi.staves[spell_element.en]..' '..msi.stype[Usestaff])
+                local spell_grip = res.items:with('enl', msi.grips[spell_element.en].." Grip")
+                sets.building[current_event] = set_combine(sets.building[current_event], {main=sspell_stave[gearswap.language],sub=spell_grip[gearswap.language]})
             end
         end
     end
-    return set_gear
 end
-MSi_midcast = MSi_precast
-function MSi_self_command(status,set_gear,command)
+msi.midcast = msi.precast
+function msi.self_command(status,current_event,command)
     if type(command) == 'table' then
         if command[1]:lower() == 'set' or command[1]:lower() == 's' then
             if command[2]:lower() == "staves" then

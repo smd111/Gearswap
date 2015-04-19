@@ -10,9 +10,10 @@ end
 include('includes/Include.lua')
 --Job functions
 function gear_setup()
-    sets.weapon['Polearm'] = {main="Eminent Lance",sub="Danger Grip",}
-    sets.weapon['None'] = {main=empty,sub=empty,}
-    sets.range['Other'] = {range=empty,ammo="Fullmetal Bullet",}
+    waltz_stats = {vit=64,chr=77} --these are the stats need to calulate curing waltz hp recovery
+    sets.weapon['Polearm'] = {main="Eminent Lance",sub="Danger Grip"}
+    sets.weapon['None'] = {main=empty,sub=empty}
+    sets.range['Other'] = {range=empty,ammo="Fullmetal Bullet"}
     sets.armor['Basic'] = {}
     sets.Engaged = {
     head="Tema. Headband",
@@ -57,49 +58,46 @@ function gear_setup()
     back="Cerberus Mantle",
     }
 end
-function mf_file_unload(new_job)
-    return
+function mf.file_load()
+    send_command('lua load PetTP')
+    if windower.ffxi.get_info().mog_house then
+        send_command('org organize')
+    end
 end
-function mf_status_change(status,set_gear,new,old)
-    return set_gear
+function mf.file_unload(new_job)
+    if not S{'BST','PUP','GEO','DRG','SMN'}:contains(new_job) then
+        send_command('lua unload PetTP')
+    end
 end
-function mf_pet_change(status,set_gear,pet,gain)
-    return set_gear
+function mf.status_change(status,current_event,new,old)
 end
-function mf_filtered_action(status,set_gear,spell)
-    return set_gear
+function mf.pet_change(status,current_event,pet,gain)
 end
-function mf_pretarget(status,set_gear,spell)
-    return set_gear
+function mf.filtered_action(status,current_event,spell)
 end
-function mf_precast(status,set_gear,spell)
+function mf.pretarget(status,current_event,spell)
+end
+function mf.precast(status,current_event,spell)
     if pet.isvalid and spell.english == "Call Wyvern" then
         status.end_spell=true
         status.end_event=true
     end
     if spell.action_type == "Ranged Attack" then
-        set_gear = set_combine(set_gear, {left_ring="Fistmele Ring",right_ring="Longshot Ring"})
+        sets.building[current_event] = set_combine(sets.building[current_event], {left_ring="Fistmele Ring",right_ring="Longshot Ring"})
     end
-    return set_gear
 end
-function mf_buff_change(status,set_gear,name,gain,buff_table)
-    return set_gear
+function mf.buff_change(status,current_event,name,gain,buff_table)
 end
-function mf_midcast(status,set_gear,spell)
+function mf.midcast(status,current_event,spell)
     if spell.action_type == "Ranged Attack" then
-        set_gear = set_combine(set_gear, {left_ring="Fistmele Ring",right_ring="Longshot Ring"})
+        sets.building[current_event] = set_combine(sets.building[current_event], {left_ring="Fistmele Ring",right_ring="Longshot Ring"})
     end
-    return set_gear
 end
-function mf_pet_midcast(status,set_gear,spell)
-    return set_gear
+function mf.pet_midcast(status,current_event,spell)
 end
-function mf_aftercast(status,set_gear,spell)
-    return set_gear
+function mf.aftercast(status,current_event,spell)
 end
-function mf_pet_aftercast(status,set_gear,spell)
-    return set_gear
+function mf.pet_aftercast(status,current_event,spell)
 end
-function mf_self_command(command)
-    return
+function mf.self_command(command)
 end

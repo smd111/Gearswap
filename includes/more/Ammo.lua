@@ -1,41 +1,64 @@
-combined_ammo = {
-    ["Crude Arrow"]="Old Quiver",["Old Arrow"]="Rotten Quiver",["Stone Arrow"]="Stone Quiver",["Bone Arrow"]="Bone Quiver",["Beetle Arrow"]="Beetle Quiver",
-    ["Horn Arrow"]="Horn Quiver",["Scorpion Arrow"]="Scorpion Quiver",["Demon Arrow"]="Demon Quiver",["Iron Arrow"]="Iron Quiver",["Silver Arrow"]="Silver Quiver",
-    ["Kabura Arrow"]="Kabura Quiver",["Sleep Arrow"]="Sleep Quiver",["Antlion Arrow"]="Antlion Quiver",["Ruszor Arrow"]="Ruszor Quiver",
-    ["Gargouille Arrow"]="Gargou. Quiver",["Chapuli Arrow"]="Chapuli Quiver",["Mantid Arrow"]="Mantid Quiver",["Achiyal. Arrow"]="Achiyal. Quiver",
-    ["Adlivun Arrow"]="Adlivun Quiver",["Tulfaire Arrow"]="Tulfaire Quiver",["Raaz Arrow"]="Raaz Quiver",["Eminent Arrow"]="Eminent Quiver",
-    ["Ra'Kaznar Arrow"]="Ra'Kaznar Quiver",["T.K. Arrow"]="T.K. Quiver",["Cmb.Cst. Arrow"]="Cmb.Cst. Quiver",["Dogbolt"]="Old Bolt Box",
-    ["Irn.Msk. Bolt"]="Irn.Msk. Quiver",["Bronze Bolt"]="B. Bolt Quiver",["Mythril Bolt"]="M. Bolt Quiver",["Darksteel Bolt"]="D. Bolt Quiver",
-    ["Blind Bolt"]="Bln. Bolt Quiver",["Acid Bolt"]="Ac. Bolt Quiver",["Holy Bolt"]="Hol. Bolt Quiver",["Sleep Bolt"]="Slp. Bolt Quiver",
-    ["Venom Bolt"]="Vn. Bolt Quiver",["Bloody Bolt"]="Bld. Bolt Quiver",["Darkling Bolt"]="Dkl. Bolt Quiver",["Fusion Bolt"]="Fsn. Bolt Quiver",
-    ["Drk. Adm. Bolt"]="D.A. Bolt Quiver",["Adaman Bolt"]="A. Bolt Quiver",["Midrium Bolt"]="Mid. Bolt Quiver",["Damascus Bolt"]="Dm. Bolt Quiver",
-    ["Oxidant Bolt"]="O. Bolt Quiver",["Achiyal. Bolt"]="Al. Bolt Quiver",["Adlivun Bolt"]="Ad. Bolt Quiver",["Titanium Bolt"]="T. Bolt Quiver",
-    ["Bismuth Bolt"]="Bi. Bolt Quiver",["Eminent Bolt"]="Em. Bolt Quiver",["Abrasion Bolt"]="Abr. Bolt Quiver",["Righteous Bolt"]="Rig. Bolt Quiver",
-    ["Ra'Kaznar Bolt"]="Ra. Bolt Quiver",["Antique Bullet"]="Old Bullet Box",["Silver Bullet"]="Silv. Bul. Pouch",["Spartan Bullet"]="Spar. Bul. Pouch",
-    ["Corsair Bullet"]="Cor. Bull. Pouch",["Iron Bullet"]="Iron Bull. Pouch",["Bronze Bullet"]="Brz. Bull. Pouch",["Bullet"]="Bullet Pouch",
-    ["Steel Bullet"]="Stl. Bull. Pouch",["Dweomer Bullet"]="Dwm. Bul. Pouch",["Oberon's Bullet"]="Obr. Bull. Pouch",["Drk. Adm. Bullet"]="D.A. Bull. Pouch",
-    ["Orichalc. Bullet"]="O. Bull. Pouch",["Adaman Bullet"]="A. Bull. Pouch",["Midrium Bullet"]="Mid. Bul. Pouch",["Damascus Bullet"]="Dm. Bul. Pouch",
-    ["Achiyal. Bullet"]="Al. Bull. Pouch",["Adlivun Bullet"]="Ad. Bull. Pouch",["Titanium Bullet"]="Ti. Bull. Pouch",["Bismuth Bullet"]="Bi. Bull. Pouch",
-    ["Eminent Bullet"]="Em. Bul. Pouch",["Ra'Kaznar Bullet"]="Ra. Bul. Pouch",}
-
-    sets.ammo_empty = {ammo=empty,}
---Ammo functions
-function Ammo_check()
-    if player.inventory[combined_ammo[sets.range[range_types[range_types_count]].ammo]] and player.inventory[sets.range[range_types[range_types_count]].ammo] == nil then
-        return true
+ammo = {}
+sets.ammo_empty = {ammo=empty,}
+ammo.item_use = "none"
+function ammo.to_bag(ammo)
+    local find_bag_type = {}
+    local find_ammo_type = {}
+    local bag_type = 'none'
+    local ammo_name = ""
+    if ammo == "Bullet" or ammo:contains("ブレット") then
+        find_bag_type = res.items[5363]
+    elseif ammo == "Antique Bullet" or ammo == "Atq. Bullet +1" or ammo:contains("旧式弾") then
+        local number = tonumber(string.match(ammo, '%d')) or 0
+        local id = 5284 + number
+        find_bag_type = res.items[id]
+    elseif ammo:contains("Dogbolt") or ammo:contains("ドッグボルト") then
+        local number = tonumber(string.match(ammo, '%d')) or 0
+        local id = 5278 + number
+        find_bag_type = res.items[id]
+    elseif ammo:contains("Crude Arrow") or ammo:contains("野矢") then
+        local number = tonumber(string.match(ammo, '%d')) or 0
+        local id = 5270 + number
+        find_bag_type = res.items[id]
+    elseif ammo == "Old Arrow" or ammo:contains("古びた矢") then
+        find_bag_type = res.items[4196]
+    else
+        find_ammo_type = (res.items:with('en', ammo) or res.items:with('ja', ammo))
+        ammo_name = (string.match(find_ammo_type.enl, '(.+) bolt') or string.match(find_ammo_type.enl, '(.+) arrow') or string.match(find_ammo_type.enl, '(.+) bullet'))
+        if find_ammo_type then
+            if find_ammo_type.en:contains('Bolt') then
+                bag_type = 'bolt quiver'
+            elseif find_ammo_type.en:contains('Arrow') then
+                bag_type = 'quiver'
+            elseif find_ammo_type.en:contains('Bullet') then
+                bag_type = 'bullet pouch'
+            end
+        end
+        find_bag_type = (res.items:with('enl', ammo_name..' '..bag_type) or res.items:with('enl', ammo_name..' bolt quiver') or
+            res.items:with('enl', ammo_name..' quiver') or res.items:with('enl', ammo_name..' pouch') or res.items:with('enl', "Oberon bullet pouch"))
     end
-    return false
-end
-function Ammo_reequip()
-    if player.inventory[combined_ammo[sets.range[range_types[range_types_count]].ammo]] ~= nil then
-        return combined_ammo[sets.range[range_types[range_types_count]].ammo]
+    if not find_bag_type then
+        return false
+    else
+        return find_bag_type
     end
 end
-function Ammo_pretarget(status,set_gear,spell)
-    if spell.english == "Ranged" and Ammo_check() then
+function ammo.precast(status,current_event,spell)
+    if spell.english == "Ranged" and player.equipment.ammo ~= sets.range[range_types[range_types_count]].ammo then
+        local ammo_bag = ammo.to_bag(sets.range[range_types[range_types_count]].ammo)[gearswap.language]
+        if ammo_bag and player.inventory[ammo_bag] then
+            equip(sets.ammo_empty)
+            ammo.item_use = ammo_bag
+            send_command('input /item "'..ammo_bag..'" <me>')
+        else
+            add_to_chat(7,"No Ammo Bag Found For "..sets.range[range_types[range_types_count]].ammo)
+        end
         status.end_event = true
         status.end_spell = true
-        equip(sets.ammo_empty)
-        send_command('input /item "'..Ammo_reequip()..'" <me>')
+    end
+end
+function ammo.aftercast(status,current_event,spell)
+    if spell.english == ammo.item_use then
+        ammo.item_use = 'none'
     end
 end

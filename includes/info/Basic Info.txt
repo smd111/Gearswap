@@ -14,14 +14,13 @@ Already defind sets
     sets.range = {}
     sets.weapon = {}
 
-All Includes can be enabled/disabled on the fly but only what the Display include is in use
-    these are the includes that are available and what thay do:
+All Includes can be enabled/disabled on the fly but only when the Display include is in use these are the includes that are available and what thay do:
         Ammo -- auto opens arrow/bolt/bullet bags(that are in you invitory) when you run out of ammo and try to use /range
         Conquest_Gear -- automaticaly switches around you conquest gear depending on your zone and its conquest info
         CorsairShot_Cards -- auto opens card cases(that are in you invitory) when you try to use cor shot and you do not have any cards left
         Debug -- gives more info then gearswap does based on the settings you give it
         Display -- displays all posible settings on screen
-        MSi(Magen Stave) -- auto switches main and sub to the the correct magen stave and elemantal grip
+        MSi(Magian Stave) -- auto switches main and sub to the the correct magen stave and elemantal grip
         Ninja_Tool -- auto opens nin tool bags(that are in you invitory) when you use a ninjutsu and do not have the correct tools to cast it
         Special_Weapons -- counts an switches your ws to the correct one when your main hand holds a fake mythic weapon(from abyssea)
         File_Write -- saves user setting and other data so it can be recovered the next time you use the same job

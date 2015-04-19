@@ -1,7 +1,8 @@
-tool_bag_id = 0
-menu = {pos = {x = 0,y = 0}}
-Conquest_ring = {}
-Conquest_neck = {}
+menu = {pos = {x = 100,y = 100}}
+mf = {}
+conquest={}
+conquest.ring={}
+conquest.neck={}
 partynames = {}
 auto_use_shards = false
 weapon_types_count = 1
@@ -16,6 +17,7 @@ sets.pet_aftercast = {}
 sets.armor = {}
 sets.range = {}
 sets.weapon = {}
+sets.building = {}
 
         --WALTZ TABLE (use Waltz.debuff or Waltz.spells)
         --This table is will give the waltz spells and all the debuffs that healing waltz can remove
@@ -59,8 +61,3 @@ weapon_types = T{"Not Set"}
 range_types = T{"Not Set"}
         --Armore types
 armor_types = T{"Not Set"}
-
---has buff function---------------------------------------------------------------------------------------------------------------
-function has_any_buff_of(buff_set)
-    for i,v in pairs(buff_set) do if buffactive[v] ~= nil then return true end end
-end

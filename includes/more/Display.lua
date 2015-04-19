@@ -3,17 +3,10 @@ menu.bg = {alpha = 200}
 menu.flags = {draggable=true}
 min_window = {text = {font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=0,y=400}}
 auto_hide_cycle = 0
-skillwatch = false
-lvlwatch = false
+if not skillwatch then skillwatch = false end
+if not lvlwatch then lvlwatch = false end
 tab_type = {'Job Settings','Weapon Settings','Armor Settings','System Settings','Include Settings'}
 --display functions---------------------------------------------------------------------------------------------------------------
---Display Creator
-if not tswap then
-    tswap = false
-end
-if not debugmod then
-    debugmod = false
-end
 menu_set = 1
 window = texts.new(menu)
 button = texts.new(min_window)
@@ -22,26 +15,29 @@ function initialize(text, settings, window_name)
     if window_name == 'window' then
         properties:append('${listm}')
         properties:append('Gearswap   \\cs(255,255,0)${hid|HIDE}\\cr')
-        local menu_build_list = {[1]={[2]={[1]=((windower.ffxi.get_player().main_job == 'DNC' and MJi) or (windower.ffxi.get_player().sub_job == 'DNC' and SJi)),[2]='-Steps-'},
-            [3]={[1]=((windower.ffxi.get_player().main_job == 'DNC' and MJi) or (windower.ffxi.get_player().sub_job == 'DNC' and SJi)),[2]='   Max Step = ${stepm}'},
-            [4]={[1]=((windower.ffxi.get_player().main_job == 'DNC' and MJi) or (windower.ffxi.get_player().sub_job == 'DNC' and SJi)),[2]='   Stop Steps   ${ssteps}'},
-            [1]='--Job Settings--',[5]={[1]=(lvlwatch),[2]='${mjob}'},[6]={[1]=(lvlwatch),[2]='   lvl = ${mjob_lvl}'},
-            [7]={[1]=(skillwatch and Registered_Events),[2]='${skill}'},[8]={[1]=(skillwatch and Registered_Events),[2]='   lvl = ${skill_lvl|Updating}'},
+        local menu_build_list = {[1]={[2]={[1]=((windower.ffxi.get_player().main_job == 'DNC') or (windower.ffxi.get_player().sub_job == 'DNC')),[2]='-Steps-'},
+            [3]={[1]=((windower.ffxi.get_player().main_job == 'DNC') or (windower.ffxi.get_player().sub_job == 'DNC')),[2]='   Max Step = ${stepm}'},
+            [4]={[1]=((windower.ffxi.get_player().main_job == 'DNC') or (windower.ffxi.get_player().sub_job == 'DNC')),[2]='   Stop Steps   ${ssteps}'},
+            [1]='--Job Settings--',[5]={[1]=(lvlwatch),[2]='${mjob}'},[6]={[1]=(lvlwatch),[2]='   lvl = ${mjob_lvl}'},[7]={[1]=(skillwatch and Registered_Events),[2]='${skill}'},
+            [8]={[1]=(skillwatch and Registered_Events),[2]='   lvl = ${skill_lvl|Updating}'},
             [9]={[1]=((windower.ffxi.get_player().main_job == 'NIN' and Ninw) or (windower.ffxi.get_player().sub_job == 'NIN' and Ninw)),[2]='Nin Wheel'},
             [10]={[1]=((windower.ffxi.get_player().main_job == 'NIN' and Ninw) or (windower.ffxi.get_player().sub_job == 'NIN' and Ninw)),[2]=' Start LVL = ${ninstartlvl}'},
             [11]={[1]=((windower.ffxi.get_player().main_job == 'NIN' and Ninw) or (windower.ffxi.get_player().sub_job == 'NIN' and Ninw)),[2]=' Start ELE = ${ninstartele}'},
             [12]={[1]=((windower.ffxi.get_player().main_job == 'NIN' and Ninw) or (windower.ffxi.get_player().sub_job == 'NIN' and Ninw)),[2]=' Start Type = ${ninstarttype}'},
-            [13]={[1]=((windower.ffxi.get_player().main_job == 'NIN' and Ninw) or (windower.ffxi.get_player().sub_job == 'NIN' and Ninw)),[2]=' ${ninstart|Stoped}'},},
+            [13]={[1]=((windower.ffxi.get_player().main_job == 'NIN' and Ninw) or (windower.ffxi.get_player().sub_job == 'NIN' and Ninw)),[2]=' ${ninstart|Stoped}'},
+            [14]={[1]=(show_aggro),[2]='-Aggro Count-'},[15]={[1]=(show_aggro),[2]='   Player = ${pagro|0}'},[16]={[1]=(show_aggro),[2]='   Party = ${pragro|0}'},
+            [17]={[1]=(show_aggro),[2]='   Alliance = ${aagro|0}'},[18]={[1]=(show_aggro),[2]='   Pet = ${ptgro|0}'},} ,
             [2]={[1]='--Weapon Settings--',[2]='Weapon Type = \\cs(255,255,0)${wept}\\cr',[3]='Range Type = \\cs(255,255,0)${rwept}\\cr',
             [4]={[1]=(jobs.magic:contains(player.main_job) and WSi),[2]='-Mage Staves-'},[5]={[1]=(jobs.magic:contains(player.main_job) and WSi),[2]='   Auto Change   ${cstaff}'},
             [6]={[1]=(jobs.magic:contains(player.main_job) and WSi),[2]='   Type \\cs(255,255,0)${ustaff}\\cr'},},
             [3]={[1]='--Armor Settings--',[2]='Mode = \\cs(255,255,0)${amode}\\cr',[3]={[1]=(Conquest_Gear),[2]='-Conquest Gear-'},
             [4]={[1]=(Conquest_Gear),[2]='  Change Neck   ${cneckc}'},[5]={[1]=(Conquest_Gear),[2]='  Neck Type = \\cs(255,255,0)${cneck}\\cr'},
             [6]={[1]=(Conquest_Gear),[2]='  Change Ring   ${cringc}'},[7]={[1]=(Conquest_Gear),[2]='  Ring Type = \\cs(255,255,0)${cring}\\cr'},},
-            [4]={[2]={[1]=(Registered_Events),[2]='Display Main Job'},[3]={[1]=(Registered_Events),[2]='and LVL   ${tmjl}'},[4]={[1]=(Registered_Events),[2]='Show Current '},
-            [5]={[1]=(Registered_Events),[2]='Skill Level   ${tskill}'},[9]={[1]=(Debug),[2]='Show Debug  ${dbenable}'},[10]={[1]=(Debug),[2]='  in = ${debugtype}'},
-            [11]={[1]=(File_Write),[2]='${filew|Force File Write}'},[1]='--System Settings--',[6]='Auto Shard Use   ${ashard}',[7]='Show Swaps   ${tswap}',
-            [8]='Debug Mode   ${debugm}',[12]='${gsex1|Gearswap Export}',[13]='${regs|Reload Gearswap}',},
+            [4]={[2]={[1]=(Registered_Events),[2]='Display Main Job'},[3]={[1]=(Registered_Events),[2]='and LVL   ${tmjl}'},[4]={[1]=(Registered_Events),
+            [2]='Show Current '},[5]={[1]=(Registered_Events),[2]='Skill Level   ${tskill}'},[6]={[1]=(Registered_Events),[2]='Show Aggro Count  ${aggroenable}'},
+            [10]={[1]=(Debug),[2]='Show Debug  ${dbenable}'},[11]={[1]=(Debug),[2]='  in = ${debugtype}'},[12]={[1]=(File_Write),[2]='${filew|Force File Write}'},
+            [1]='--System Settings--',[7]='Auto Shard Use   ${ashard}',[8]='Show Swaps   ${tswap}',[9]='Debug Mode   ${debugm}',[13]='${gsex1|Gearswap Export}',
+            [14]='${regs|Reload Gearswap}',},
             [5]={[2]={[1]=(windower.ffxi.get_player().main_job == "NIN" or windower.ffxi.get_player().sub_job == "NIN"),[2]='Ninja Wheel   ${tninw}'},
             [3]={[1]=(jobs.ammo:contains(player.main_job)),[2]='Ammo   ${tammo}'},[8]={[1]=(jobs.magic:contains(player.main_job)),[2]='Mage Stave   ${tmsi}'},
             [1]='--Include Settings--',[4]='Conquest Gear   ${tcgi}',[5]='Debug   ${tdebug}',[6]='File Write   ${tfwi}',[7]='Main Job   ${tmji}',[9]='Registered Events   ${trei}',
@@ -65,8 +61,9 @@ function initialize(text, settings, window_name)
             end
         end
     elseif window_name == 'button' then
-        local button_list = {[1]={[1]='${mjob}   lvl = ${mjob_lvl}',[2]=(lvlwatch),},
-            [2]={[1]='${skill}   lvl = ${skill_lvl|Updating}',[2]=(skillwatch and Registered_Events),},[3]={[1]='\n > \n ',[2]=(not skillwatch and not lvlwatch)},}
+        local button_list = {[1]={[1]='${mjob}   lvl = ${mjob_lvl}',[2]=(lvlwatch and Registered_Events),},[2]={[1]='${skill}   lvl = ${skill_lvl|Updating}',[2]=(skillwatch and Registered_Events),},
+        [3]={[1]='Aggro Count Total = ${totalagro}',[2]=(show_aggro and Registered_Events),},[4]={[1]='\n > \n ',[2]=(not (skillwatch or lvlwatch or show_aggro))},
+        [5]={[1]='\n > \n ',[2]=((skillwatch or lvlwatch or show_aggro) and not Registered_Events)},}
         for i, v in ipairs(button_list) do
             if button_list[i][2] then
                 properties:append(button_list[i][1])
@@ -75,11 +72,11 @@ function initialize(text, settings, window_name)
     else
         local menu_name_initialize = {
         ['weapon_select_window']={[1]='Select Weapon',[2]='weapon_types',[3]='wep',[4]='weapon'},['range_select_window']={[1]='Select Range',[2]='range_types',
-        [3]='rang',[4]='range'},['skill_select_window']={[1]='Select Skill',[2]='skill_type',[3]='skill',},['debug_select_window']={[1]='Select Debug',
-        [2]='debug_type',[3]='debug',},['tab_select_window']={[1]='Select Menu Tab',[2]='tab_type',[3]='tab',},
+        [3]='rang',[4]='range'},['skill_select_window']={[1]='Select Skill',[2]='registered_events.skill_type',[3]='registered_events.skill',},
+        ['debug_select_window']={[1]='Select Debug',[2]='fdebug.type',[3]='debug',},['tab_select_window']={[1]='Select Menu Tab',[2]='tab_type',[3]='tab',},
         ['gear_select_window']={[1]='Select Armor',[2]='armor_types',[3]='ger',[4]='armor'},}
         properties:append(menu_name_initialize[window_name][1])
-        for i, v in ipairs(_G[menu_name_initialize[window_name][2]]) do
+        for i, v in ipairs(string_to_table(menu_name_initialize[window_name][2])) do
             if menu_name_initialize[window_name][4] then
                 if sets[menu_name_initialize[window_name][4]][v] then
                     properties:append('${'..menu_name_initialize[window_name][3]..''..i..'|'..string.gsub(v, "_", " ")..'}')
@@ -126,36 +123,37 @@ function updatedisplay()
     initialize(window, menu, 'window')
     initialize(button, min_window, 'button')
     local info = {}
-    if SJi then
-        info.stepm = Stepmax
-        info.ssteps = Stopsteps and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    end
-    if WSi then
-        info.cstaff = Changestaff and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-        info.ustaff = Usestaff
-    end
     if Conquest_Gear then
-        info.cneckc = Conquest_neck.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-        info.cringc = Conquest_ring.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-        info.cneck = Conquest_neck.case[Conquest_neck.case_id]
-        info.cring = Conquest_ring.case[Conquest_ring.case_id]
+        info.cneckc = conquest.neck.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+        info.cringc = conquest.ring.change and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+        info.cneck = conquest_gear.neck.case[conquest.neck.case_id]
+        info.cring = conquest_gear.ring.case[conquest.ring.case_id]
     end
     if Registered_Events then
-        info.skill = skill_type[skill_count]
+        info.aagro = aggro_count('alliance')
+        info.pragro = aggro_count('party')
+        info.pagro = aggro_count('player')
+        info.ptgro = aggro_count('pet')
+        info.totalagro = aggro_count()
     end
-    if skill and Registered_Events then
-        info.skill_lvl = (skill[skill_type[skill_count]..' Capped'] and "Capped" or skill[skill_type[skill_count]..' Level'])
+    if registered_events and registered_events.skill and Registered_Events then
+        info.skill = registered_events.skill_type[skill_count]
+        info.skill_lvl = (registered_events.skill[registered_events.skill_type[skill_count]..' Capped'] and "Capped" 
+        or registered_events.skill[registered_events.skill_type[skill_count]..' Level'])
     end
     if Debug then
-        info.debugtype = string.gsub(debug_type[debug_count], "_", " ")
+        info.debugtype = string.gsub(fdebug.type[fdebug.count], "_", " ")
     end
     if Ninw then
-        info.ninstartele = ninja_wheel_element[ninja_wheel_element_count]
-        info.ninstartlvl = ninja_wheel_start_lvl
-        info.ninstart = (ninja_wheel_super_tog or ninja_wheel_tog) and '\\cs(0,255,0)Started\\cr' or '\\cs(255,255,0)Stoped\\cr'
-        info.ninstarttype = ninja_wheel_start_type and 'Super' or 'Normal'
+        info.ninstartele = ninja_wheel.element_list[ninja_wheel.element_count]
+        info.ninstartlvl = ninja_wheel.start_lvl
+        info.ninstart = (ninja_wheel.super_tog or ninja_wheel.tog) and '\\cs(0,255,0)Started\\cr' or '\\cs(255,255,0)Stoped\\cr'
+        info.ninstarttype = ninja_wheel.start_type and 'Super' or 'Normal'
     end
+    info.stepm = Stepmax
+    info.ssteps = Stopsteps and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     info.listm = menu_list[menu_set]
+    info.aggroenable = show_aggro and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     info.tmji = MJi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     info.tsji = SJi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
     info.tmsi = MSi and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
@@ -204,7 +202,7 @@ function get_window_pos(x,y,check_windows)
     return my, mx, button_lines, hx, hy
 end
 function set_prim_loc(location,win_name,win_tabl,mx,hy)
-    local hide_button = S{'{mjob}','{mjob_lvl}','{skill_lvl|Updating}'}
+    local hide_button = S{'{mjob}','{mjob_lvl}','{skill_lvl|Updating}','{pagro|0}','{pragro|0}','{aagro|0},{ptgro|0}'}
     for i, v in ipairs(location) do
         if (hy > location[i].ya and hy < location[i].yb) then
             if type(switches_table[win_name][i]) == 'table' and not hide_button:contains(switches_table[win_name][i][1]) then
@@ -220,9 +218,9 @@ function set_prim_loc(location,win_name,win_tabl,mx,hy)
     end
 end
 function set_count(switch_tabl,switch)
-    for i, v in ipairs(_G[switch_tabl[2]]) do
+    for i,v in ipairs(string_to_table(switch_tabl[2])) do
         for w in string.gmatch(switch, '|(.-)}') do
-            if w == string.gsub(v, "_", " ") then
+            if string.gsub(w, "_", " ") == string.gsub(v, "_", " ") then
                 return i
             elseif "Custom Menu" == w then
                 return 6
@@ -244,19 +242,23 @@ end
 function extra_display(x,y,location,hy,check_windows)
     local code = {
         ['weapon_select_window']={[1]='Select Weapon',[2]='weapon_types',[3]='wep',[4]='weapon'},['range_select_window']={[1]='Select Range',[2]='range_types',
-        [3]='rang',[4]='range'},['skill_select_window']={[1]='Select Skill',[2]='skill_type',[3]='skill',},['debug_select_window']={[1]='Select Debug',
-        [2]='debug_type',[3]='debug',},['tab_select_window']={[1]='Select Menu Tab',[2]='tab_type',[3]='tab',},
+        [3]='rang',[4]='range'},['skill_select_window']={[1]='Select Skill',[2]='registered_events.skill_type',[3]='registered_events.skill',},['debug_select_window']={[1]='Select Debug',
+        [2]='fdebug.type',[3]='debug',},['tab_select_window']={[1]='Select Menu Tab',[2]='tab_type',[3]='tab',},
         ['gear_select_window']={[1]='Select Armor',[2]='armor_types',[3]='ger',[4]='armor'},}
     for i, v in pairs(check_windows) do
         if check_windows[i][1] then
-            _G[check_windows[i][3]] = set_loc(location,hy,check_windows[i][2],code[check_windows[i][2]]) or 1
-            _G[check_windows[i][2]]:hide()
-            _G[check_windows[i][2]]:destroy()
-            _G[check_windows[i][2]] = nil
+            local tab = {}
+            for k, v in  string.gmatch(check_windows[i][3], "([%w_]+)%.([%w_]+)") do tab[1] = k tab[2] = v end
+            if _G[check_windows[i][3]] then
+                _G[check_windows[i][3]] = set_loc(location,hy,check_windows[i][2],code[check_windows[i][2]]) or 1
+            else
+                _G[tab[1]][tab[2]] = set_loc(location,hy,check_windows[i][2],code[check_windows[i][2]]) or 1
+            end
+            kill_window(check_windows[i][2])
             switches_table[check_windows[i][2]] = nil
             windower.prim.set_visibility('window_button', false)
-            if File_Write_do then
-                File_Write_do()
+            if file_write and file_write.write then
+                file_write.write()
             end
         end
     end
@@ -266,7 +268,7 @@ function mouse(mtype, x, y, delta, blocked)
     local check_windows = {['menu']={[1]=(window:hover(x, y) and window:visible()),[2]='window'},
     ['min_window']={[1]=(button:hover(x, y) and button:visible()),[2]='button'},
     ['skill_select']={[1]=(skillwatch and skill_select_window and skill_select_window:hover(x, y) and skill_select_window:visible()),[2]='skill_select_window',[3]='skill_count'},
-    ['debug_select']={[1]=(Debug and debug_select_window and debug_select_window:hover(x, y) and debug_select_window:visible()),[2]='debug_select_window',[3]='debug_count'},
+    ['debug_select']={[1]=(Debug and debug_select_window and debug_select_window:hover(x, y) and debug_select_window:visible()),[2]='debug_select_window',[3]='fdebug.count'},
     ['tab_select']={[1]=(tab_select_window and tab_select_window:hover(x, y) and tab_select_window:visible()),[2]='tab_select_window',[3]='menu_set'},
     ['wep_select']={[1]=(weapon_select_window and weapon_select_window:hover(x, y) and weapon_select_window:visible()),[2]='weapon_select_window',[3]='weapon_types_count'},
     ['range_select']={[1]=(range_select_window and range_select_window:hover(x, y) and range_select_window:visible()),[2]='range_select_window',[3]='range_types_count'},
@@ -322,10 +324,15 @@ function mouse(mtype, x, y, delta, blocked)
         end
     end
 end
+function kill_window(w)
+    _G[w]:hide()
+    _G[w]:destroy()
+    _G[w] = nil
+end
 function menu_commands(display_command)
     ----Include Rules----
     if display_command == "{stepm}" then
-        Stepmax = (Stepmax % 5) + 1
+        Stepmax = (Stepmax % 6) + 1
     elseif display_command == "{ssteps}" then
         Stopsteps = not Stopsteps
     elseif display_command == "{cstaff}" then
@@ -333,22 +340,22 @@ function menu_commands(display_command)
     elseif display_command == "{ustaff}" then
         Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
     elseif display_command == "{cneckc}" then
-        Conquest_neck.change = not Conquest_neck.change
+        conquest.neck.change = not conquest.neck.change
     elseif display_command == "{cringc}" then
-        Conquest_ring.change = not Conquest_ring.change
+        conquest.ring.change = not conquest.ring.change
     elseif display_command == "{cneck}" then
-        Conquest_neck.case_id = (Conquest_neck.case_id % #Conquest_neck.case) + 1
+        conquest.neck.case_id = (conquest.neck.case_id % #conquest_gear.neck.case) + 1
     elseif display_command == "{cring}" then
-        Conquest_ring.case_id = (Conquest_ring.case_id % #Conquest_ring.case) + 1
+        conquest.ring.case_id = (conquest.ring.case_id % #conquest_gear.ring.case) + 1
     elseif display_command == "{ninstartele}" then
-        ninja_wheel_element_count = (ninja_wheel_element_count % #ninja_wheel_element) + 1
-        ninja_wheel_start_element = ninja_wheel_element[ninja_wheel_element_count]
+        ninja_wheel.element_count = (ninja_wheel.element_count % #ninja_wheel.element_list) + 1
+        ninja_wheel.start_element = ninja_wheel.element_list[ninja_wheel.element_count]
     elseif display_command == '{ninstartlvl}' then
-        ninja_wheel_start_lvl = (ninja_wheel_start_lvl % 3) + 1
+        ninja_wheel.start_lvl = (ninja_wheel.start_lvl % 3) + 1
     elseif display_command == '{ninstarttype}' then
-        ninja_wheel_start_type = not ninja_wheel_start_type
+        ninja_wheel.start_type = not ninja_wheel.start_type
     elseif display_command == '{ninstart|Stoped}' then
-        if ninja_wheel_start_type then
+        if ninja_wheel.start_type then
             send_command("gs c startnin snw")
         else
             send_command("gs c startnin nw")
@@ -359,6 +366,8 @@ function menu_commands(display_command)
         skillwatch = not skillwatch
     elseif display_command == '{dbenable}' then
         full_debug = not full_debug
+    elseif display_command == '{aggroenable}' then
+        show_aggro = not show_aggro
     elseif display_command == '{ashard}' then
         auto_use_shards = not auto_use_shards
     elseif display_command == "{hid|HIDE}" then
@@ -366,6 +375,12 @@ function menu_commands(display_command)
         window_hidden = true
         button:show()
         windower.prim.set_visibility('window_button', false)
+        local win_kill={"gear_select_window","tab_select_window","skill_select_window","weapon_select_window","range_select_window","debug_select_window"}
+        for i,v in ipairs(win_kill) do
+            if _G[v] then
+                kill_window(v)
+            end
+        end
     ----Gearswap Controls----
     elseif display_command == "{tswap}" then
         if _settings.show_swaps then
@@ -384,7 +399,7 @@ function menu_commands(display_command)
     elseif display_command == "{gsex1|Gearswap Export}" then
         send_command('gs export')
     elseif display_command == "{filew|Force File Write}" then
-        File_Write_do()
+        file_write.write()
     else
         ----Window Open/Close Rules----
         if S{"{amode}","{listm}","{skill}","{wept}","{rwept}","{debugtype}"}:contains(display_command) then
@@ -403,56 +418,53 @@ function menu_commands(display_command)
                         initialize(_G[menu_open[i][1]], _G[menu_open[i][2]], menu_open[i][1])
                         _G[menu_open[i][1]]:show()
                     else
-                        _G[menu_open[i][1]]:hide()
-                        _G[menu_open[i][1]]:destroy()
-                        _G[menu_open[i][1]] = nil
+                        kill_window(menu_open[i][1])
                     end
                 elseif _G[menu_open[i][1]] then
-                    _G[menu_open[i][1]]:hide()
-                    _G[menu_open[i][1]]:destroy()
-                    _G[menu_open[i][1]] = nil
+                    kill_window(menu_open[i][1])
                 end
             end
         end
         ----Include Enable/Disable Rules----
         local include_switch = {
-        ["{tmji}"]={[1]="MJi",[2]='includes/mjob/main_job_'..player.main_job..'.lua',[3]='includes/mjob/main_job_'..player.main_job..'.lua',[4]="MJi_"},
-        ["{tsji}"]={[1]="SJi",[2]='includes/sjob/sub_job_'..player.sub_job..'.lua',[3]='includes/sjob/sub_job_'..player.sub_job..'.lua',[4]="SJi_"},
-        ["{tfwi}"]={[1]="File_Write",[2]='includes/more/File_Write.lua',[3]='includes/more/File_Write.lua',[4]="File_Write_"},
-        ["{tswi}"]={[1]="Special_Weapons",[2]="includes/more/Special_Weapons.lua",[3]="includes/more/Special_Weapons.lua",[4]="Special_Weapons_"},
-        ["{tcgi}"]={[1]="Conquest_Gear",[2]="includes/more/Conquest_Gear.lua",[3]="includes/more/Conquest_Gear.lua",[4]="Conquest_Gear_"},
-        ["{trei}"]={[1]="Registered_Events",[2]="includes/more/Registered_Events.lua",[3]="includes/more/Registered_Events.lua",[4]="Registered_Events_"},
-        ["{tdebug}"]={[1]="Debug",[2]="includes/more/Debug.lua",[3]="includes/more/Debug.lua",[4]="Debug_"},
-        ["{tmsi}"]={[1]="MSi",[2]='includes/more/MSi.lua',[3]="includes/more/MSi.lua",[4]="MSi_"},
-        ["{tammo}"]={[1]="Ammo",[2]='includes/more/Ammo.lua',[3]="includes/more/Ammo.lua",[4]="Ammo_"},
-        ["{tninw}"]={[1]="Ninw",[2]='includes/more/Ninja_Wheel.lua',[3]="includes/more/Ninja_Wheel.lua",[4]="ninja_wheel_"},}
+        ["{tmji}"]={[1]="MJi",[2]='includes/mjob/main_job_'..player.main_job..'.lua',[3]="mji"},
+        ["{tsji}"]={[1]="SJi",[2]='includes/sjob/sub_job_'..player.sub_job..'.lua',[3]="sji"},
+        ["{tfwi}"]={[1]="File_Write",[2]='includes/more/File_Write.lua',[3]="file_write"},
+        ["{tswi}"]={[1]="Special_Weapons",[2]="includes/more/Special_Weapons.lua",[3]="special_weapon"},
+        ["{tcgi}"]={[1]="Conquest_Gear",[2]="includes/more/Conquest_Gear.lua",[3]="conquest_gear"},
+        ["{trei}"]={[1]="Registered_Events",[2]="includes/more/Registered_Events.lua",[3]="registered_events"},
+        ["{tdebug}"]={[1]="Debug",[2]="includes/more/Debug.lua",[3]="fdebug"},
+        ["{tmsi}"]={[1]="MSi",[2]='includes/more/MSi.lua',[3]="includes/more/MSi.lua",[4]="msi"},
+        ["{tammo}"]={[1]="Ammo",[2]='includes/more/Ammo.lua',[3]="ammo"},
+        ["{tninw}"]={[1]="Ninw",[2]='includes/more/Ninja_Wheel.lua',[3]="ninja_wheel"},}
         if include_switch[display_command] then
             _G[include_switch[display_command][1]] = not _G[include_switch[display_command][1]]
             if _G[include_switch[display_command][1]] and not Disable_All and gearswap.pathsearch({include_switch[display_command][2]}) then
-                include(include_switch[display_command][3])
-            else
-                remove_functions(include_switch[display_command][4])
+                include(include_switch[display_command][2])
+            elseif not _G[include_switch[display_command][1]] then
+                remove_functions(include_switch[display_command][3])
             end
-            if File_Write_do then
-                File_Write_do()
-            end
+            -- if file_write and file_write.write then
+                -- file_write.write()
+            -- end
         end
     end
     if custom_menu_commands then
         custom_menu_commands(display_command)
     end
-    if File_Write_do then
-        File_Write_do()
+    if file_write and file_write.write then
+        file_write.write()
     end
 end
 mouse_id = windower.raw_register_event('mouse', mouse)
 function remove_functions(remove_function_name)
-    for i, v in pairs(_G) do
-        if i:startswith(remove_function_name) and i:endswith('id') then
-            windower.unregister_event(_G[i])
-            _G[i] = nil
-        elseif i:startswith(remove_function_name) then
-            _G[i] = nil
+    if _G[remove_function_name] then
+        for i, v in pairs(_G[remove_function_name]) do
+            if i:endswith('id') then
+                windower.unregister_event(v)
+            else
+                _G[remove_function_name][i] = nil
+            end
         end
     end
 end

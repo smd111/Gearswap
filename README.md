@@ -1,5 +1,5 @@
 SMD's Gearswap Include files
-3.07 Alpha
+4.00 Alpha
 -------------------------------------------------------------------
 Setup--------------------------------------------------------------
 
@@ -18,7 +18,7 @@ Features------------------------------------------------------------
 
 -- CorsairShot_Cards -- auto opens card cases(that are in you invitory) when you try to use cor shot and you do not have any cards left
 
--- MSi(Magen Stave) -- auto switches main and sub to the the correct magen stave and elemantal grip
+-- MSi(Magian Stave) -- auto switches main and sub to the the correct magen stave and elemantal grip
 
 -- Ninja_Tool -- auto opens nin tool bags(that are in you invitory) when you use a ninjutsu and do not have the correct tools to cast it
 
@@ -42,15 +42,15 @@ all commands included with this include are listed in includes/info/GS Commands.
 --------------------------------------------------------------------
 What the Display can do for you-------------------------------------
 
-1. you can enably and disable all includes on the fly(except for the display)
+1. you can enable and disable all includes on the fly (except for the display)
 
-2. you can see you current job lvl with out opening any menus
+2. you can see your current job lvl with out opening any menus
 
-3. you can see your current skill lvl on any skill (combat/magic/automation) with out opening a menu
+3. you can see your current skill lvl on any skill (combat/magic/automation) with out opening any menus
 
 4. you can just use a mouse click to adjust settings no need to type in any commands
 
-5. you can build your own display in to the display for info you wat to show(advanced users only)
+5. you can build your own display in to the display for info you want to show or setting you want access to(advanced users only)
 
 --------------------------------------------------------------------
 To do---------------------------------------------------------------
@@ -71,4 +71,4 @@ Arcon --for helping me learn more about lua in windower
 
 Byrth -- for creating Gearswap and helping me with code that i could not figure out on my own
 
-Anybody else i missed --thanks for the help
+Anybody else i missed -- thanks for the help

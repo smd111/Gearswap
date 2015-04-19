@@ -10,12 +10,13 @@ end
 include('includes/Include.lua')
 --Job functions
 function gear_setup()
-    -- These are your Weapon sets
-    sets.weapon['Axe'] = {main="",sub="",}
-    sets.weapon['None'] = {main=empty,sub=empty,}
-    -- These are your Range sets
-    sets.range['Throwing'] = {range="Chakram",ammo=empty,}
-    -- These are your Armor sets
+    waltz_stats = {vit=68,chr=81} --these are the stats need to calulate curing waltz hp recovery
+    -- These are your Weapon sets (you can add as many as you want)
+    sets.weapon['Axe'] = {main="",sub=""}
+    sets.weapon['None'] = {main=empty,sub=empty}
+    -- These are your Range sets (you can add as many as you want)
+    sets.range['Throwing'] = {range="",ammo=empty}
+    -- These are your Armor sets (you can add as many as you want)
     sets.armor['Basic'] = {} -- do not change this
     ---------------------------------------
     -- these are your base sets put in your
@@ -86,32 +87,43 @@ function gear_setup()
     --sets.midcast["Fire"] = sets.precast["Fire"]
     ---------------------------------------
 end
-function mf_file_unload(status,set_gear,event_type,new_job)
+function mf.file_load()
+    ---------------------------------------
+    --put your file_load rules here
+    --everything here will happen 1.5 seconds
+    --after gearswap load your file
+    --i use this for my commands like
+    --loading exter plugins and running Organizer's
+    --commands
+    ---------------------------------------
+    --Example: 
+    --send_command('org organize')
+    --send_command('lua load PetTP')
+    ---------------------------------------
+end
+function mf.file_unload(status,current_event,new_job)
     ---------------------------------------
     --put your file_unload rules here
     ---------------------------------------
-    return
 end
-function mf_status_change(status,set_gear,event_type,new,old)
+function mf.status_change(status,current_event,new,old)
     ----------------------------------------
     --put your status_change rules here
     ----------------------------------------
     --add gear to change with
-    --set_gear = set_combine(set_gear, <setname>)
+    --sets.building[current_event] = set_combine(sets.building[current_event], <setname>)
     ----------------------------------------
-    return set_gear
 end
-function mf_pet_change(status,set_gear,event_type,pet,gain)
+function mf.pet_change(status,current_event,pet,gain)
     ---------------------------------------
     --put your pet_change rules here
     --to stop processing of all precast rules use: return set_gear
     ---------------------------------------
     --add gear to change with
-    --set_gear = set_combine(set_gear, <setname>)
+    --sets.building[current_event] = set_combine(sets.building[current_event], <setname>)
     ----------------------------------------
-    return set_gear
 end
-function mf_filtered_action(status,set_gear,event_type,spell)
+function mf.filtered_action(status,current_event,spell)
     ---------------------------------------
     --put your filtered_action rules here
     --to stop processing of all filtered_action rules use: return set_gear
@@ -121,28 +133,25 @@ function mf_filtered_action(status,set_gear,event_type,spell)
     --is a spell/ability your current job
     --does not have
     ----------------------------------------
-    return set_gear
 end
-function mf_pretarget(status,set_gear,event_type,spell)
+function mf.pretarget(status,current_event,spell)
     ---------------------------------------
     --put your pretarget rules here
     ---------------------------------------
     --add gear to change with
-    --set_gear = set_combine(set_gear, <setname>)
+    --sets.building[current_event] = set_combine(sets.building[current_event], <setname>)
     ----------------------------------------
-    return set_gear
 end
-function mf_precast(status,set_gear,event_type,spell)
+function mf.precast(status,current_event,spell)
     ---------------------------------------
     --put your precast rules here
     --to stop processing of all precast rules use: return set_gear
     ---------------------------------------
     --add gear to change with
-    --set_gear = set_combine(set_gear, <setname>)
+    --sets.building[current_event] = set_combine(sets.building[current_event], <setname>)
     ----------------------------------------
-    return set_gear
 end
-function mf_buff_change(status,set_gear,event_type,name,gain,buff_table)
+function mf.buff_change(status,current_event,name,gain,buff_table)
     ---------------------------------------
     --put your buff_change rules here
     ---------------------------------------
@@ -152,43 +161,38 @@ function mf_buff_change(status,set_gear,event_type,name,gain,buff_table)
     --recomended equip when loss of buff
     --equip(sets[player.status], sets.weapon[weapon_types[player.main_job][weapon_types_count]])
     ----------------------------------------
-    return set_gear
 end
-function mf_midcast(status,set_gear,event_type,spell)
+function mf.midcast(status,current_event,spell)
     ---------------------------------------
     --put your midcast rules here
     --to stop processing of all midcast rules use: return set_gear
     ---------------------------------------
     --add gear to change with
-    --set_gear = set_combine(set_gear, <setname>)
+    --sets.building[current_event] = set_combine(sets.building[current_event], <setname>)
     ----------------------------------------
-    return set_gear
 end
-function mf_pet_midcast(status,set_gear,event_type,spell,)
+function mf.pet_midcast(status,current_event,spell,)
     ---------------------------------------
     --put your pet_midcast rules here
     --to stop processing of all pet_midcast rules use: return set_gear
     ---------------------------------------
     --add gear to change with
-    --set_gear = set_combine(set_gear, <setname>)
+    --sets.building[current_event] = set_combine(sets.building[current_event], <setname>)
     ----------------------------------------
-    return set_gear
 end
-function mf_aftercast(status,set_gear,event_type,spell)
+function mf.aftercast(status,current_event,spell)
     ---------------------------------------
     --put your aftercast rules here
     --to stop processing of all aftercast rules use: return set_gear
     ---------------------------------------
-    return set_gear
 end
-function mf_pet_aftercast(status,set_gear,event_type,spell)
+function mf.pet_aftercast(status,current_event,spell)
     ---------------------------------------
     --put your pet_aftercast rules here
     --to stop processing of all pet_aftercast rules use: return set_gear
     ---------------------------------------
-    return set_gear
 end
-function mf_self_command(status,set_gear,event_type,command)
+function mf.self_command(status,current_event,command)
     ---------------------------------------
     --put your self_command rules here
     ---------------------------------------
@@ -224,46 +228,54 @@ function mf_self_command(status,set_gear,event_type,command)
         -- end
     end
 end
-function mf_sub_job_change(status,set_gear,event_type,new,old)
+function mf.sub_job_change(status,current_event,new,old)
     ---------------------------------------
     --put your sub_job_change rules here
     ---------------------------------------
-    return set_gear
 end
-function mf_indi_change(status,set_gear,event_type,indi_table,gain) -- only needed for Geo main/sub jobs
+function mf.indi_change(status,current_event,indi_table,gain) -- only needed for Geo main/sub jobs
     ---------------------------------------
     --put your indi_change rules here
     ---------------------------------------
-    return set_gear
 end
-function mf_zone_change(new,old) -- only when Registered_Events include is active
+function mf.zone_change(new,old) -- only when Registered_Events include is active
     ---------------------------------------
     --put your zone_change rules here
     --new string name of the new zone
     --old string name of the old zone
     ---------------------------------------
 end
+function mf.treasure_hunter_change(gain,count,mob_name) -- only when Registered_Events include is active
+end
+--These are examples only use if you know what your doing and know how to use io.write--
+-- <var> is the variable you want to save, <start> is the default you want it set at
+-- for boolean types use '\n<var> = '..tostring(<var> or <start>)..
+-- for number types use '\n<var> = '..tostring(<var> or <start>)..
+-- for string types use '\n<var> = "'..tostring(<var> or <start>)..'"'..
+--[[ function mf.save()
+    local save = '\nEnable_auto_pup = '..tostring(Enable_auto_pup or false).. --boolean
+        '\nskill_count = '..tostring(skill_count or 1).. --number
+        '\nUsestaff = "'..tostring(Usestaff or 'Atk')..'"'.. --string
+        '' save
+end]]
 --These are examples only use if you know how to create a text display--
 --[[ function custom_menu_update()
     local custom_rules_table = {}
-    custom_rules_table.stepmt = Stepmaxt and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    custom_rules_table.sstepst = Stopstepst and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
-    return custom_rules_table
+    custom_rules_table.testa = Testa and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    custom_rules_table.testb = Testb and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr' custom_rules_table
 end]]
 --[[ function custom_menu_build()
     local custom_properties = L{}
-    custom_properties:append('-test6-')
-    custom_properties:append('   Max Step ${stepmt}')
-    custom_properties:append('   Stop Steps   ${sstepst}')
-    return custom_properties
+    custom_properties:append('Testa ${testa}')
+    custom_properties:append('Testb ${testb}') custom_properties
 end]]
 --[[ function custom_menu_commands(a))
     if menu_set == 6 then
         print(a)
     end
-    if a == "{stepmt}" then
-        Stepmaxt = not Stepmaxt
-    elseif a == "{sstepst}" then
-        Stopstepst = not Stopstepst
+    if a == "{testa}" then
+        Testa = not Testa
+    elseif a == "{testb}" then
+        Testb = not Testb
     end
 end]]

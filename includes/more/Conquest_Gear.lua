@@ -1,90 +1,92 @@
-Conquest_Gear_areas = {
+conquest_gear = {}
+conquest_gear.areas = {
     regions=S{"San d'Oria","Bastok","Windurst","Jeuno","Ronfaure","Zulkheim","Norvallen","Gustaberg","Derfland","Sarutabaruta","Kolshushu","Aragoneu",
-                    "Fauregandi","Valdeaunia","Qufim","Li'Telor","Kuzotz","Vollbow","Elshimo Lowlands","Elshimo Uplands","Tu'Lia","Dynamis","Movalpolos",
-                    "Tavnazian Marquisate","Tavnazian Archipelago","Promyvion","Lumoria","Limbus"},
+            "Fauregandi","Valdeaunia","Qufim","Li'Telor","Kuzotz","Vollbow","Elshimo Lowlands","Elshimo Uplands","Tu'Lia","Dynamis","Movalpolos",
+            "Tavnazian Marquisate","Tavnazian Archipelago","Promyvion","Lumoria","Limbus"},
     always_ring=S{"San d'Oria","Bastok","Windurst","Jeuno","Dynamis","Lumoria"},
     always_neck=S{"Dynamis","Promyvion","Lumoria","Limbus"},}
+conquest_gear.neck = {}
+conquest_gear.neck['case']={"Mage","Tank","Normal"}
+conquest_gear.neck.Mage="Rep.Gold Medal"
+conquest_gear.neck.Tank="Windurstian Scarf"
+conquest_gear.neck.Normal="Grand T.K. Collar"
+conquest_gear.ring = {}
+conquest_gear.ring['case']={"Mage","Tank","Normal"}
+conquest_gear.ring.Mage="Gnd.Kgt. Ring"
+conquest_gear.ring.Tank="Ptr.Prt. Ring"
+conquest_gear.ring.Normal="Gld.Msk. Ring"
+if not conquest.neck.change then
+    conquest.neck.change = false
+end
+if not conquest.neck.case_id then
+    conquest.neck.case_id = 1
+end
+if not conquest.ring.change then
+    conquest.ring.change = false
+end
+if not conquest.ring.case_id then
+    conquest.ring.case_id = 1
+end
     
-Conquest_neck['case']={"Mage","Tank","Normal"}
-Conquest_neck.Mage={neck="Rep.Gold Medal"}
-Conquest_neck.Tank={neck="Windurstian Scarf"}
-Conquest_neck.Normal={neck="Grand T.K. Collar"}
-Conquest_ring['case']={"Mage","Tank","Normal"}
-Conquest_ring.Mage={left_ring="Gnd.Kgt. Ring"}
-Conquest_ring.Tank={left_ring="Ptr.Prt. Ring"}
-Conquest_ring.Normal={left_ring="Gld.Msk. Ring"}
-        
-if not Conquest_neck.change then
-    Conquest_neck.change = false
-end
-if not Conquest_neck.case_id then
-    Conquest_neck.case_id = 1
-end
-if not Conquest_ring.change then
-    Conquest_ring.change = false
-end
-if not Conquest_ring.case_id then
-    Conquest_ring.case_id = 1
-end
-    
-function Conquest_Gear_code(status,set_gear)
+function conquest_gear.code(status,current_event)
     if has_any_buff_of(S{"Signet","Sanction","Sigil"}) then
-        if world.conquest and Conquest_Gear_areas.regions:contains(world.conquest.region_name) then
-            if Conquest_Gear_areas.always_neck:contains(world.conquest.region_name) and Conquest_neck.change then
-                set_gear = set_combine(set_gear, Conquest_neck[Conquest_neck.case[Conquest_neck.case_id]])
+        if world.conquest and conquest_gear.areas.regions:contains(world.conquest.region_name) then
+            local ring = res.items:with('en', conquest_gear.neck[conquest.neck.case[conquest.neck.case_id]])
+            local neck = res.items:with('en', conquest_gear.ring[conquest.ring.case[conquest.ring.case_id]])
+            if conquest_gear.areas.always_neck:contains(world.conquest.region_name) and conquest_gear.neck.change then
+                sets.building[current_event] = set_combine(sets.building[current_event], {neck=neck[gearswap.language]})
             end
-            if Conquest_Gear_areas.always_ring:contains(world.conquest.region_name) and Conquest_ring.change then
-                set_gear = set_combine(set_gear, Conquest_ring[Conquest_ring.case[Conquest_ring.case_id]])
+            if conquest_gear.areas.always_ring:contains(world.conquest.region_name) and conquest.ring.change then
+                sets.building[current_event] = set_combine(sets.building[current_event], {left_ring=ring[gearswap.language]})
             end
             if world.conquest.nation == player.nation then
-                if Conquest_ring.change then
-                    set_gear = set_combine(set_gear, Conquest_ringg[Conquest_ring.case[Conquest_ring.ring.case_id]])
+                if conquest_gear.ring.change then
+                    sets.building[current_event] = set_combine(sets.building[current_event], {left_ring=ring[gearswap.language]})
                 end
             else
-                if Conquest_neck.change then
-                    set_gear = set_combine(set_gear, Conquest_neck[Conquest_neck.case[Conquest_neck.case_id]])
+                if conquest_gear.neck.change then
+                    sets.building[current_event] = set_combine(sets.building[current_event], {neck=neck[gearswap.language]})
                 end
             end
         end
     end
-    return set_gear
 end
-Conquest_Gear_precast = Conquest_Gear_code
-Conquest_Gear_midcast = Conquest_Gear_code
-Conquest_Gear_pet_midcast = Conquest_Gear_code
-Conquest_Gear_aftercast = Conquest_Gear_code
-Conquest_Gear_pet_aftercast = Conquest_Gear_code
-Conquest_Gear_status_change = Conquest_Gear_code
-Conquest_Gear_pet_status_change = Conquest_Gear_code
-Conquest_Gear_sub_job_change = Conquest_Gear_code
-Conquest_Gear_pet_change = Conquest_Gear_code
-Conquest_Gear_indi_change = Conquest_Gear_code
-function Conquest_Gear_self_command(status,set_gear,command)
+conquest_gear.precast = conquest_gear.code
+conquest_gear.midcast = conquest_gear.code
+conquest_gear.pet_midcast = conquest_gear.code
+conquest_gear.aftercast = conquest_gear.code
+conquest_gear.pet_aftercast = conquest_gear.code
+conquest_gear.status_change = conquest_gear.code
+conquest_gear.pet_status_change = conquest_gear.code
+conquest_gear.sub_job_change = conquest_gear.code
+conquest_gear.pet_change = conquest_gear.code
+conquest_gear.indi_change = conquest_gear.code
+function conquest_gear.self_command(status,current_event,command)
     if type(command) == 'table' then
         if command[1]:lower() == 'set' or command[1]:lower() == 's' then
             if command[2]:lower() == "cqneck" then
-                for i,v in ipairs(Conquest_neck.case) do
+                for i,v in ipairs(conquest_gear.neck.case) do
                     if v:lower() == command[3]:lower() then
-                        Conquest_neck.case_id = i
+                        conquest.neck.case_id = i
                     end
                 end
-            elseif command[2]:lower(Conquest_ring.case) == "cqring" then
-                for i,v in ipairs() do
+            elseif command[2]:lower() == "cqring" then
+                for i,v in ipairs(conquest_gear.ring.case) do
                     if v:lower() == command[3]:lower() then
-                        Conquest_ring.case_id = i
+                        conquest.ring.case_id = i
                     end
                 end
             end
         end
     else
         if command == "cconneck" then
-            Conquest_neck.case_id = (Conquest_neck.case_id % #Conquest_neck.case) + 1
+            conquest.neck.case_id = (conquest.neck.case_id % #conquest.neck.case) + 1
         elseif command == "cconring" then
-            Conquest_ring.case_id = (Conquest_ring.case_id % #Conquest_ring.case) + 1
+            conquest.ring.case_id = (conquest.ring.case_id % #conquest.ring.case) + 1
         elseif command == 'tconneckchange' then
-            Conquest_neck.change = not Conquest_neck.change
+            conquest.neck.change = not conquest.neck.change
         elseif command == 'tconringchange' then
-            Conquest_ring.change = not Conquest_ring.change
+            conquest.ring.change = not conquest.ring.change
         end
     end
 end

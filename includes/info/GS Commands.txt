@@ -14,7 +14,13 @@ Built in commands:
     toggledisplay -- makes invisable/visable include display(only if display include is in use)
         EXAMPLE(in chat): //gs c toggledisplay
     
-  Mage Stave -- only if mage stave include is in use and only on main jobs WHM, BLM, RDM, BRD, SMN, SCH, GEO
+  Magian Stave -- only if MSi include is in use and only on main jobs WHM, BLM, RDM, BRD, SMN, SCH, GEO
+    set staves <type> -- sets Magian to the desired type (Atk or Acc)
+        EXAMPLE(in chat): //gs c set staves Atk -- sets Magian stave to Atk
+        
+    toggle/t staves -- toggles weather to equip mage staves
+        EXAMPLE(in chat): //gs c toggle staves        
+        
     tstavetouse -- toggles between Atk and Acc staves
         EXAMPLE(in chat): //gs c tstavetouse
 
@@ -23,8 +29,8 @@ Built in commands:
     
   Conquest Gear -- only if conquest gear include is in use
     cconneck -- cycles through the conquest neck gear type you want to use [Mage, Tank, Normal] (Mage:Rep.Gold Medal, Tank:Windurstian Scarf, Normal:Grand T.K. Collar)
-
         EXAMPLE(in chat): //gs c cconneck
+
     cconring -- cycles through the conquest ring gear type you want to use [Mage, Tank, Normal] (Mage:Gnd.Kgt. Ring, Tank:Ptr.Prt. Ring, Normal:Gld.Msk. Ring)
         EXAMPLE(in chat): //gs c cconring
 
