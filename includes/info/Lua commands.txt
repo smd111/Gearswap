@@ -14,17 +14,21 @@ To lock a specific gear use the method you would use in a basic gs file
 	
 To stop processing all functions use:
 	status.end_event = true
-	return
 
-To cancle current spell use:
+To cancel current spell use:
 	status.end_spell = true
-	return
 
-To stop processing all functions and cancle current spell use:
+To stop processing all functions and cancel current spell use:
 	status.end_event = true
 	status.end_spell = true
-	return
 
-To check to see if any of a list of buff is active use
+To check to see if any of a list of buff is active use:
 	has_any_buff_of(tbl)
 	example: has_any_buff_of({'Max HP Down','Max MP Down'}) --this will check to see if Max HP Down or Max MP Down is active
+
+To stop auto equip (for use in status_change/precast/midcast/aftercast/pet_change/pet_midcast/pet_aftercast):
+	status.stop_swapping_gear = true
+
+To enable auto equip for use in filtered_action/pretarget/pet_status_change/buff_change/indi_change/sub_job_change/self_command:
+	status.stop_swapping_gear = true
+    

@@ -7,10 +7,10 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
-include('includes/Include.lua')
+include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
-    waltz_stats = {vit=64,chr=77} --these are the stats need to calulate curing waltz hp recovery
+    sets["Curing Waltz"] = {} -- use this set for all Curing Waltz
     Changesumstaff = false --Togle with //gs c tchangeSMNstaff (true for change staves, false for do not change staves)
     Pettype = {}
     Pettype.Summon = {}
@@ -114,5 +114,6 @@ function mf.self_command(command)
     end
 end
 function mf.save()
-    local save = '\nChangesumstaff = '..tostring(Changesumstaff or false)..'' save
+    local save = '\nChangesumstaff = '..tostring(Changesumstaff or false)..''
+    return save
 end

@@ -7,10 +7,10 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
-include('includes/Include.lua')
+include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
-    waltz_stats = {vit=64,chr=77} --these are the stats need to calulate curing waltz hp recovery
+    sets["Curing Waltz"] = {} -- use this set for all Curing Waltz
     sets.weapon['Hand-to-Hand'] = {main="Em. Baghnakhs",sub=empty}
     sets.weapon['None'] = {main=empty,sub=empty}
     sets.range['Other'] = {range="",ammo=""}

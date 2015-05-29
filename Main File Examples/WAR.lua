@@ -7,10 +7,10 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
-include('includes/Include.lua')
+include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
-    waltz_stats = {vit=64,chr=77} --these are the stats need to calulate curing waltz hp recovery
+    sets["Waltz"] = {} -- use this set for Curing Waltz I/II/II/IV/V
     sets.weapon['Axe'] = {main="Eminent Axe",sub="Eminent Scimitar"}
     sets.weapon['Dagger'] = {main="Eminent Dagger",sub="Eminent Scimitar"}
     sets.weapon['Great_Axe'] = {main="Eminent Voulge",sub="Uther's Grip"}
@@ -80,10 +80,9 @@ end
 function mf.filtered_action(status,current_event,spell)
 end
 function mf.pretarget(status,current_event,spell)
-    if spell.type == "WeaponSkill" and aggro_count() >= 2 and spell.name ~= "Fell Cleave" then
-        status.end_event=true
-        status.end_spell=true
-        send_command('input /ws "Fell Cleave" <t>')
+    if spell.en == "Provoke" and not check_recast('ability',spell.recast_id) then
+        status.end_event=true status.end_spell=true
+        send_command('input /ja "Animated Flourish" <t>')
     end
     if spell.en == 'Spectral Jig' then
         send_command('cancel 71')
@@ -108,4 +107,8 @@ end
 function mf.pet_aftercast(status,current_event,spell)
 end
 function mf.self_command(status,current_event,command)
+    if command == "test" then
+    end
+end
+function mf.zone_change(new,old)
 end

@@ -13,10 +13,13 @@ function file_write.write()
         '\nconquest.ring.change = '..tostring(conquest.ring.change or false)..'\nconquest.ring.case_id = '..tostring(conquest.ring.case_id or 1)..
         '\n----Special_Weapons----'..'\nspecial_weapon_ws_count = '..tostring(special_weapon_ws_count or 0)..'\n----Steps Control----'..
         '\nStepmax = '..tostring(Stepmax or 1)..'\nStopsteps = '..tostring(Stopsteps or false)..'\n----Other----'..
+        '\nWatch_midaction = '..tostring(Watch_midaction or false)..'\nWatch_pet_midaction = '..tostring(Watch_pet_midaction or false)..
         '\nweapon_types_count = '..tostring(weapon_types_count or 1)..'\nrange_types_count = '..tostring(range_types_count or 1)..
         '\narmor_types_count = '..tostring(armor_types_count or 1)..'\nauto_use_shards = '..tostring(auto_use_shards or false)..
-        '\nlvlwatch = '..tostring(lvlwatch or false)..'\nskillwatch = '..tostring(skillwatch or false)..'\nskill_count = '..tostring(skill_count or 1)..
-        '\n----Other 2----'..'\nmenu.pos.x = '..tostring(menu.pos.x or 1)..'\nmenu.pos.y = '..tostring(menu.pos.y or 1))
+        '\nEnable_auto_WS_aoe = '..tostring(Enable_auto_WS_aoe or false)..'\nlvlwatch = '..tostring(lvlwatch or false)..
+        '\nskillwatch = '..tostring(skillwatch or false)..'\nskill_count = '..tostring(skill_count or 1)..'\n----Other 2----'..
+        '\nauto_cap_ring = '..tostring(auto_cap_ring or false)..'\nauto_xp_ring = '..tostring(auto_xp_ring or false)..
+        '\nmenu.pos.x = '..tostring(menu.pos.x or 1)..'\nmenu.pos.y = '..tostring(menu.pos.y or 1))
     if mf.save then fileb:write('\n\n-------Player Saved Vars-------'..mf.save()) end
     fileb:close()
 end

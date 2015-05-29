@@ -83,6 +83,6 @@ Built in commands:
         gs c startnin snw
     
   Extra info:
-    for set you can use eather set or s
+    for set you can use aether set or s
 
   --ALL OTHER INCLUDED COMMANDS ARE HANDLED WITH THE DISPLAY INCLUDE--
