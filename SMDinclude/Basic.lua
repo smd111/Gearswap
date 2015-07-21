@@ -78,11 +78,11 @@ function gear_setup()
     --if you want to equip a specific set based
     --on the event create your set like this
     --you only need to put in the gear that is
-    --different from you sets above and they will
+    --different from your sets above and they will
     --be equipped automatically
     --Example: for spell "Fire"
     --sets.precast["Fire"] = {body="Outrider Mail",hands="Outrider Mittens",legs="Outrider Hose",}
-    --if you need to have the sam4e gear in precast and midcast do this
+    --if you need to have the same gear in precast and midcast do this
     --sets.midcast["Fire"] = sets.precast["Fire"]
     ---------------------------------------
 end

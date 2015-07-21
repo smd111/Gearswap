@@ -1,16 +1,15 @@
-packets = require('packets')
-reg_event = {}
-reg_event.skill = {}
-reg_event.atacking_mobs = {player=T{},party=T{},alliance=T{},pet=T{}}
-reg_event.treasure_hunter = {}
-reg_event.skill_type = {'Axe','Club','Dagger','Great Axe','Great Katana','Great Sword','Hand-to-Hand','Katana','Polearm','Scythe','Staff','Sword','Archery','Marksmanship','Throwing','Evasion','Guard','Parrying','Shield','Blue Magic','Dark Magic','Divine Magic','Elemental Magic','Enfeebling Magic','Enhancing Magic','Geomancy','Handbell','Healing Magic','Ninjutsu','Singing','Stringed Instrument','Summoning Magic','Wind Instrument','Automaton Archery','Automaton Magic','Automaton Melee'}
+packets = require('packets') reg_event = {}
+reg_event.skill = {} reg_event.atacking_mobs = {player=T{},party=T{},alliance=T{},pet=T{}} reg_event.treasure_hunter = {}
+reg_event.skill_type = {'Axe','Club','Dagger','Great Axe','Great Katana','Great Sword','Hand-to-Hand','Katana','Polearm','Scythe','Staff','Sword','Archery',
+    'Marksmanship','Throwing','Evasion','Guard','Parrying','Shield','Blue Magic','Dark Magic','Divine Magic','Elemental Magic','Enfeebling Magic','Enhancing Magic',
+    'Geomancy','Handbell','Healing Magic','Ninjutsu','Singing','Stringed Instrument','Summoning Magic','Wind Instrument','Automaton Archery','Automaton Magic',
+    'Automaton Melee'}
 function reg_event.clear_aggro_count() 
     reg_event.atacking_mobs.player:clear() reg_event.atacking_mobs.party:clear() reg_event.atacking_mobs.alliance:clear() reg_event.atacking_mobs.pet:clear()
 end
 function reg_event.party_id_check(id) --checks to see if sent id is a party/alliance member
     for pt_num,pt in ipairs(alliance) do if type(pt) == 'table' then for pos,party_position in ipairs(pt) do if party_position.mob.id == id then return true,pt_num end end end end
-    if pet.isvalid and pet.id == id then return true,4 end
-    return false
+    if pet.isvalid and pet.id == id then return true,4 end return false
 end
 function reg_event.remove_add_agro(id,add_to) --adds/removes mobs from aggro list
     local remove_type = {alliance={'party','player','pet'},party={'alliance','player','pet'},player={'alliance','party','pet'},pet={'alliance','party','player'}}
@@ -34,7 +33,7 @@ function reg_event.zone_change(new_id,old_id) --zone change event
 end
 reg_event.zone_change_id = windower.raw_register_event('zone change', reg_event.zone_change)
 function reg_event.level_change() --updates display when player lvls up/down
-    if updatedisplay then coroutine.schedule(updatedisplay, 3) end
+    if updatedisplay then updatedisplay:schedule(3) end
 end
 reg_event.level_up_id = windower.raw_register_event('level up', reg_event.level_change)
 reg_event.level_down_id = windower.raw_register_event('level down', reg_event.level_change)
@@ -50,10 +49,8 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
             reg_event.treasure_hunter[packet['Target']] = packet['Param 1']
             -- print(packet['Param 1'])
             if mf_treasure_hunter_change then
-                local name = windower.ffxi.get_mob_by_id(packet['Target']).name
-                local gain = (packet['Param 1'] < reasure_hunter[packet['Target']] and false or true)
-                local th_count = packet['Param 1']
-                mf_treasure_hunter_change(gain,th_count,name)
+                local name = windower.ffxi.get_mob_by_id(packet['Target']).name local gain = (packet['Param 1'] < reasure_hunter[packet['Target']] and false or true)
+                local th_count = packet['Param 1'] mf_treasure_hunter_change(gain,th_count,name)
             end
         end
     elseif id == 0x028 then
@@ -93,29 +90,12 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
         Player['INT'] = packet['Base INT'] Player['MND'] = packet['Base MND'] Player['CHR'] = packet['Base CHR'] Player['STR+'] = packet['Added STR']
         Player['DEX+'] = packet['Added DEX'] Player['VIT+'] = packet['Added VIT'] Player['AGI+'] = packet['Added AGI'] Player['INT+'] = packet['Added INT']
         Player['MND+'] = packet['Added MND'] Player['CHR+'] = packet['Added CHR']
-        -- Player['Attack'] = packet['Attack']
-        -- Player['Defence'] = packet['Defence']
-        -- Player['Fire Resistance'] = packet['Fire Resistance']
-        -- Player['Wind Resistance'] = packet['Wind Resistance']
-        -- Player['Lightning Resistance'] = packet['Lightning Resistance']
-        -- Player['Light Resistance'] = packet['Light Resistance']
-        -- Player['Ice Resistance'] = packet['Ice Resistance']
-        -- Player['Earth Resistance'] = packet['Earth Resistance']
-        -- Player['Water Resistance'] = packet['Water Resistance']
-        -- Player['Dark Resistance'] = packet['Dark Resistance']
+        --[[Player['Attack'] = packet['Attack'] Player['Defence'] = packet['Defence'] Player['Fire Resistance'] = packet['Fire Resistance']
+        Player['Wind Resistance'] = packet['Wind Resistance'] Player['Lightning Resistance'] = packet['Lightning Resistance']
+        Player['Light Resistance'] = packet['Light Resistance'] Player['Ice Resistance'] = packet['Ice Resistance']
+        Player['Earth Resistance'] = packet['Earth Resistance'] Player['Water Resistance'] = packet['Water Resistance']
+        Player['Dark Resistance'] = packet['Dark Resistance'] ]]
     end
     if triggered and updatedisplay then updatedisplay() triggered = false end
 end
 reg_event.incoming_chunk_id = windower.raw_register_event('incoming chunk', reg_event.incoming_chunk)
--- reg_event.outgoing_chunk_id = windower.raw_register_event('outgoing chunk', function (id, data, modified, injected, blocked)
-    -- if id == 0x037 then
-        -- local packet = packets.parse('outgoing', data)
-        -- local item = windower.ffxi.get_items(packet['Bag'],packet['Slot'])
-        -- if S{605,1020,1021,6002,6003,6004,6005,6006,6007}:contains(item.id) then
-            -- if buffactive.invisible then
-                -- send_command('cancel Invisible')
-            -- end
-            -- equip(sets.helm)
-        -- end
-    -- end
--- end)

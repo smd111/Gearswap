@@ -17,10 +17,9 @@ function file_write.write()
         '\nweapon_types_count = '..tostring(weapon_types_count or 1)..'\nrange_types_count = '..tostring(range_types_count or 1)..
         '\narmor_types_count = '..tostring(armor_types_count or 1)..'\nauto_use_shards = '..tostring(auto_use_shards or false)..
         '\nEnable_auto_WS_aoe = '..tostring(Enable_auto_WS_aoe or false)..'\nlvlwatch = '..tostring(lvlwatch or false)..
+        '\nauto_ring = '..tostring(auto_ring or false)..'\nrings_count = '..tostring(rings_count or 1)..
         '\nskillwatch = '..tostring(skillwatch or false)..'\nskill_count = '..tostring(skill_count or 1)..'\n----Other 2----'..
-        '\nauto_cap_ring = '..tostring(auto_cap_ring or false)..'\nauto_xp_ring = '..tostring(auto_xp_ring or false)..
-        '\nmenu.pos.x = '..tostring(menu.pos.x or 1)..'\nmenu.pos.y = '..tostring(menu.pos.y or 1)..
-        '\nring_time = '..tostring(ring_time or 0))
+        '\nmenu.pos.x = '..tostring(menu.pos.x or 1)..'\nmenu.pos.y = '..tostring(menu.pos.y or 1))
     if mf.save then fileb:write('\n\n-------Player Saved Vars-------'..mf.save()) end
     fileb:close()
 end

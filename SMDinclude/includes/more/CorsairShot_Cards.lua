@@ -8,7 +8,9 @@ function card.check(name)
 end
 function card.rule(status,current_event,spell)
     if spell.type == "CorsairShot" then
-        local spell_element = (type(spell.element)=='number' and res.elements[spell.element] or res.elements:with('name', spell.element)) local card_short = {Fire="Fire",Ice="Ice",Wind="Wind",Earth="Earth",Thunder="Thnd.",Water="Water",Light="Light",Dark="Dark",} local name = card.check(card_short[spell_element.en])
+        local spell_element = (type(spell.element)=='number' and res.elements[spell.element] or res.elements:with('name', spell.element))
+        local card_short = {Fire="Fire",Ice="Ice",Wind="Wind",Earth="Earth",Thunder="Thnd.",Water="Water",Light="Light",Dark="Dark",}
+        local name = card.check(card_short[spell_element.en])
         if name then card.item_use = name send_command('input /item "'..name..'" <me>') end
         status.end_spell=true status.end_event=true
     end
