@@ -5,6 +5,8 @@ Setup--------------------------------------------------------------
 
 you need to use my basic.lua (I have included several example main files in the Main File Examples folder)
 
+please read SMDinclude/includes/info/Basic Info.txt for how to setup
+
 to use display include requires Segoe UI Symbol font
 this font is native to vista/win7/win8
 you can get this font here http://www.ufonts.com/download/segoe-ui-symbol/77998.html
