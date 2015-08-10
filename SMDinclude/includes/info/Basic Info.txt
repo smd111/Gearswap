@@ -1,4 +1,4 @@
-to use these includes place then in gearswap/common/
+to use these includes place them in gearswap/common/
 and put your main files in eather gearswap/data/ or  gearswap/data/<playername>/
 
 
