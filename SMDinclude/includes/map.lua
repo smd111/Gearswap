@@ -1,6 +1,7 @@
 log_in_time = os.clock() menu = {pos = {x = 100,y = 100}} mf = {} conquest={} conquest.ring={} conquest.neck={} partynames = {} auto_use_shards = false
 weapon_types_count = 1 range_types_count = 1 armor_types_count = 1 sets.pretarget = {} sets.precast = {} sets.midcast = {} sets.aftercast = {} sets.pet_midcast = {}
 sets.pet_aftercast = {} sets.armor = {} sets.range = {} sets.weapon = {} sets.building = {} xpcpcoring = 1 rings_count = 1
+File_Write = true Registered_Events = true
         --WALTZ TABLE (use Waltz.debuff or Waltz.spells)
         --This table is will give the waltz spells and all the debuffs that healing waltz can remove
 Waltz = {debuff=S{'Max HP Down','Max MP Down','Magic Evasion Down','Max TP Down','Magic Atk. Down','Magic Acc. Down','Magic Def. Down','Defense Down','Evasion Down',
@@ -47,3 +48,4 @@ rings = L{"Vocation Ring","Trizek Ring","Capacity Ring","Undecennial Ring","Dece
     --Weapon types             --Range types              --Armor types
 weapon_types = T{"Not Set"} range_types = T{"Not Set"} armor_types = T{"Not Set"}
 sets.range['ThrowLVL.99+'] = {range="Halakaala",ammo=empty}
+cc = {mc=9,r1=11,r2=10,g1=158,g2=6,b1=5,b2=205,y1=36,y2=37}

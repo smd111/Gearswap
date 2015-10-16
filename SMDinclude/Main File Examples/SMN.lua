@@ -7,10 +7,10 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
-include('includes/Include.lua')
+include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
-    waltz_stats = {vit=64,chr=77} --these are the stats need to calulate curing waltz hp recovery
+    sets["Waltz"] = {} -- use this set for all Waltz
     Changesumstaff = false --Togle with //gs c tchangeSMNstaff (true for change staves, false for do not change staves)
     Pettype = {}
     Pettype.Summon = {}
@@ -85,6 +85,13 @@ end
 function mf.status_change(status,current_event,new,old)
 end
 function mf.pet_change(status,current_event,pet,gain)
+    if Changesumstaff then
+		if gain then
+			pet_main.name = Pettype.Summon.weapon[pet.element].name
+		else
+			pet_main.name = Pettype.Summon.weapon["None"].name
+		end
+	end
 end
 function mf.filtered_action(status,current_event,spell)
 end
@@ -109,10 +116,16 @@ end
 function mf.pet_aftercast(status,current_event,spell)
 end
 function mf.self_command(command)
-    if command == "tchangeSMNstaff" and Display then
+    if command == "tchangeSMNstaff" then
         Changesumstaff = not Changesumstaff
+        if Changesumstaff then
+            pet_main.name = Pettype.Summon.weapon[pet.element].name
+        else
+            pet_main.name = Pettype.Summon.weapon["None"].name
+        end
     end
 end
 function mf.save()
-    local save = '\nChangesumstaff = '..tostring(Changesumstaff or false)..'' save
+    local save = '\nChangesumstaff = '..tostring(Changesumstaff or false)..''
+    return save
 end

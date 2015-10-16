@@ -7,10 +7,10 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
-include('includes/Include.lua')
+include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
-    waltz_stats = {vit=64,chr=77} --these are the stats need to calulate curing waltz hp recovery
+    sets["Waltz"] = {} -- use this set for all Waltz
     sets.weapon['Staff'] = {main="Eminent Staff",sub="Danger Grip"}
     sets.weapon['None'] = {main=empty,sub=empty}
     sets.range['Other'] = {range="",ammo=""}
@@ -57,7 +57,6 @@ function gear_setup()
     right_ring="Prouesse Ring",
     back="Jester's Cape",
     }
-    Curenegstat = false
 end
 function mf.file_load()
     if windower.ffxi.get_info().mog_house then
@@ -83,7 +82,7 @@ function mf.precast(status,current_event,spell)
 end
 function mf.buff_change(status,current_event,name,gain,buff_table)
     if Curenegstat then
-        if name == 'blindness' then
+        if name == 'blindness' and gain then
             send_command('@input /ma "Blindna" <me>')
         elseif (name == 'curse' or name == 'bane') and gain then
             send_command('@input /ma "Cursna" <me>')
@@ -115,5 +114,24 @@ function mf.self_command(command)
     if command == 'tcurenegstat' then
         Curenegstat = not Curenegstat
         add_to_chat(123,'----- WILL ' .. (Curenegstat and '' or 'NOT ') .. 'AUTO CURE NEGITAVE STATUS -----')
+    end
+end
+function mf.save()
+    local save = '\nCurenegstat = '..tostring(Curenegstat or false)
+    return save
+end
+function custom_menu_update()
+    local custom_rules_table = {}
+    custom_rules_table.curenegstat = Curenegstat and '\\cs(0,255,0)☑\\cr' or '\\cs(255,255,0)☐\\cr'
+    return custom_rules_table
+end
+function custom_menu_build()
+    local custom_properties = L{}
+    custom_properties:append('Auto cure -Status ${curenegstat}')
+    return custom_properties
+end
+function custom_menu_commands(com)
+    if com == "{curenegstat}" then
+        Curenegstat = not Curenegstat
     end
 end

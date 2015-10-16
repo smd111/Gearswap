@@ -6,11 +6,13 @@ function include_setup()
     Display = true
     --Start with minimized window (Default: false)
     window_hidden = true
+    --WeaponSkill after cast equip delay (Default: 2)
+    WeaponSkill_aftercast_equip_delay = 2
 end
-include('includes/Include.lua')
+include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
-    waltz_stats = {vit=64,chr=77} --these are the stats need to calulate curing waltz hp recovery
+    sets["Waltz"] = {} -- use this set for Waltz
     sets.weapon['Axe'] = {main="Eminent Axe",sub="Eminent Scimitar"}
     sets.weapon['Dagger'] = {main="Eminent Dagger",sub="Eminent Scimitar"}
     sets.weapon['Great_Axe'] = {main="Eminent Voulge",sub="Uther's Grip"}
@@ -64,7 +66,17 @@ function gear_setup()
     right_ring="Vehemence Ring",
     back="Cerberus Mantle",
     }
-    sets.precast['Tomahawk'] = {range=empty,ammo="Thr. Tomahawk"}
+    sets.pretarget["Tomahawk"] = {range=empty,ammo="Thr. Tomahawk"}
+    sets.precast["Mighty Strikes"] = {hands="Agoge Mufflers +1"}
+    sets.precast["Berserk"] = {body="Pumm. Lorica +1",feet="Agoge Calligae +1"}
+    sets.precast["Warcry"] = {head="Agoge Mask +1"}
+    sets.precast["Aggressor"] = {head="Pumm. Mask +1",body="Agoge Lorica +1"}
+    sets.precast["Retaliation"] = {hands="Pumm. Mufflers +1",feet="Boii Calligae +1"}
+    sets.precast["Warrior's Charge"] = {legs="Agoge Cuisses +1"}
+    sets.precast["Tomahawk"] = {range=empty,ammo="Thr. Tomahawk",feet="Agoge Calligae +1"}
+    sets.precast["Restraint"] = {hands="Boii Mufflers +1"}
+    sets.precast["Blood Rage"] = {body="Boii Lorica +1"}
+    echotest = {[0]="UNK",[1]="AMORPH",[2]="AQUAN",[3]="ARCANA",[4]="ARCHAICMACHINE",[5]="AVATAR",[6]="BEAST",[7]="BEASTMEN",[8]="BIRD",[9]="DEMON",[10]="DRAGON",[11]="ELEMENTAL",[12]="EMPTY",[13]="HUMANOID",[14]="LIZARD",[15]="LUMORIAN",[16]="LUMINION",[17]="PLANTOID",[18]="UNCLASSIFIED",[19]="UNDEAD",[20]="VERMIN",[21]="VORAGEAN"}
 end
 function mf.file_load()
     if windower.ffxi.get_info().mog_house then
@@ -75,15 +87,12 @@ function mf.file_unload(new_job)
 end
 function mf.status_change(status,current_event,new,old)
 end
-function mf.pet_change(status,current_event,pet,gain)
-end
 function mf.filtered_action(status,current_event,spell)
 end
 function mf.pretarget(status,current_event,spell)
-    if spell.type == "WeaponSkill" and aggro_count() >= 2 and spell.name ~= "Fell Cleave" then
-        status.end_event=true
-        status.end_spell=true
-        send_command('input /ws "Fell Cleave" <t>')
+    if spell.en == "Provoke" and not check_recast('ability',spell.recast_id) then
+        status.end_event=true status.end_spell=true
+        send_command('input /ja "Animated Flourish" <t>')
     end
     if spell.en == 'Spectral Jig' then
         send_command('cancel 71')
@@ -93,6 +102,7 @@ function mf.precast(status,current_event,spell)
     if spell.action_type == "Ranged Attack" then
         sets.building[current_event] = set_combine(sets.building[current_event], {left_ring="Fistmele Ring",right_ring="Longshot Ring"})
     end
+    local t = windower.ffxi.get_mob_by_target('t')
 end
 function mf.buff_change(status,current_event,name,gain,buff_table)
 end
@@ -101,11 +111,9 @@ function mf.midcast(status,current_event,spell)
         sets.building[current_event] = set_combine(sets.building[current_event], {left_ring="Fistmele Ring",right_ring="Longshot Ring"})
     end
 end
-function mf.pet_midcast(status,current_event,spell)
-end
 function mf.aftercast(status,current_event,spell)
 end
-function mf.pet_aftercast(status,current_event,spell)
-end
 function mf.self_command(status,current_event,command)
+end
+function mf.zone_change(new,old)
 end

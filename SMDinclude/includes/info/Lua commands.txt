@@ -30,5 +30,5 @@ To stop auto equip (for use in status_change/precast/midcast/aftercast/pet_chang
 	status.stop_swapping_gear = true
 
 To enable auto equip for use in filtered_action/pretarget/pet_status_change/buff_change/indi_change/sub_job_change/self_command:
-	status.stop_swapping_gear = true
+	status.stop_swapping_gear = false
     

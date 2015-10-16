@@ -7,10 +7,10 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
-include('includes/Include.lua')
+include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
-    waltz_stats = {vit=64,chr=77} --these are the stats need to calulate curing waltz hp recovery
+    sets["Waltz"] = {} -- use this set for all Waltz
     sets.weapon['Club'] = {main="Eminent Wand",sub="Eminent Dagger"}
     sets.range['Other'] = {range="",ammo=""}
     sets.armor['Basic'] = {}

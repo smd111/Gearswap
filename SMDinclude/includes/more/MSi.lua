@@ -25,14 +25,23 @@ msi.midcast = msi.precast
 function msi.self_command(status,current_event,command)
     if type(command) == 'table' then
         if command[1]:lower() == 'set' or command[1]:lower() == 's' then
-            if command[2]:lower() == "staves" then Usestaff = command[3]:ucfirst() add_to_chat(7, '----- Staves Set To '..Usestaff..' -----') end
+            if command[2]:lower() == "staves" then
+                Usestaff = command[3]:ucfirst()
+                add_to_chat(cc.mc, 'Magian Staves Set To '..(Usestaff):color(cc.y1))
+            end
         elseif command[1]:lower() == 'toggle' or command[1]:lower() == 't' then
-            if command[2]:lower() == "staves" then Changestaff = not Changestaff add_to_chat(7, '----- Staves Will ' .. (Changestaff and '' or 'NOT ') .. 'Change -----')
+            if command[2]:lower() == "staves" then
+                Changestaff = not
+                Changestaff add_to_chat(cc.mc, 'Auto Magian Stave Change '..(Changestaff and ('Enabled'):color(cc.g1) or ('Disabled'):color(cc.r1)))
             end
         end
     else
-        if command == 'tstavetouse' then Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk') add_to_chat(7, '----- Staves Set To '..Usestaff..' -----')
-        elseif command == 'tchangemagestaff' then Changestaff = not Changestaff add_to_chat(7, '----- Staves Will ' .. (Changestaff and '' or 'NOT ') .. 'Change -----')
+        if command == 'tstavetouse' then
+            Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
+            add_to_chat(cc.mc, 'Magian Staves Set To '..(Usestaff):color(cc.y1))
+        elseif command == 'tchangemagestaff' then
+            Changestaff = not
+            Changestaff add_to_chat(cc.mc, 'Auto Magian Stave Change '..(Changestaff and ('Enabled'):color(cc.g1) or ('Disabled'):color(cc.r1)))
         end
     end
 end

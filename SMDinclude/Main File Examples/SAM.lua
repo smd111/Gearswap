@@ -7,10 +7,10 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
-include('includes/Include.lua')
+include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
-    waltz_stats = {vit=64,chr=77} --these are the stats need to calulate curing waltz hp recovery
+    sets["Waltz"] = {} -- use this set for all Waltz
     sets.weapon['Great_Katana'] = {main="Ichimonji-Yofusa",sub="Danger Grip"}
     sets.weapon['None'] = {main=empty,sub=empty}
     sets.range['Archery'] = {range="Shortbow",ammo="Iron Arrow"}
@@ -77,6 +77,7 @@ function mf.precast(status,current_event,spell)
     if spell.en == 'Meditate' and (player.tp >= 2750 or buffactive['Invisible']) then
         status.end_spell=true
         status.end_event=true
+        return set_gear
     end
     if spell.action_type == "Ranged Attack" then
         sets.building[current_event] = set_combine(sets.building[current_event], {left_ring="Fistmele Ring",right_ring="Longshot Ring"})
