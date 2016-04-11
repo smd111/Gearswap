@@ -5,20 +5,20 @@ function ammo.to_bag(ammo)
     local bag_type = 'none'
     local ammo_name = ""
     if ammo == "Bullet" or ammo:contains("ブレット") then 
-        find_bag_type = res.items[5363]
+        find_bag_type = gearswap.res.items[5363]
     elseif ammo == "Antique Bullet" or ammo == "Atq. Bullet +1" or ammo:contains("旧式弾") then
         local number = tonumber(string.match(ammo, '%d')) or 0
-        local id = 5284 + number find_bag_type = res.items[id]
+        local id = 5284 + number find_bag_type = gearswap.res.items[id]
     elseif ammo:contains("Dogbolt") or ammo:contains("ドッグボルト") then
         local number = tonumber(string.match(ammo, '%d')) or 0
-        local id = 5278 + number find_bag_type = res.items[id]
+        local id = 5278 + number find_bag_type = gearswap.res.items[id]
     elseif ammo:contains("Crude Arrow") or ammo:contains("野矢") then
         local number = tonumber(string.match(ammo, '%d')) or 0
-        local id = 5270 + number find_bag_type = res.items[id]
+        local id = 5270 + number find_bag_type = gearswap.res.items[id]
     elseif ammo == "Old Arrow" or ammo:contains("古びた矢") then
-        find_bag_type = res.items[4196]
+        find_bag_type = gearswap.res.items[4196]
     else
-        find_ammo_type = (res.items:with('en', ammo) or res.items:with('ja', ammo))
+        find_ammo_type = (gearswap.res.items:with('en', ammo) or gearswap.res.items:with('ja', ammo))
         ammo_name = (string.match(find_ammo_type.enl, '(.+) bolt') or string.match(find_ammo_type.enl, '(.+) arrow') or string.match(find_ammo_type.enl, '(.+) bullet'))
         if find_ammo_type then
             if find_ammo_type.en:contains('Bolt') then
@@ -29,7 +29,7 @@ function ammo.to_bag(ammo)
                 bag_type = 'bullet pouch'
             end
         end
-        find_bag_type = (res.items:with('enl', ammo_name..' '..bag_type) or res.items:with('enl', ammo_name..' bolt quiver') or res.items:with('enl', ammo_name..' quiver') or res.items:with('enl', ammo_name..' pouch') or res.items:with('enl', "Oberon bullet pouch"))
+        find_bag_type = (gearswap.res.items:with('enl', ammo_name..' '..bag_type) or gearswap.res.items:with('enl', ammo_name..' bolt quiver') or gearswap.res.items:with('enl', ammo_name..' quiver') or gearswap.res.items:with('enl', ammo_name..' pouch') or gearswap.res.items:with('enl', "Oberon bullet pouch"))
     end
     if not find_bag_type then
         return false

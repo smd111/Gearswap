@@ -5,8 +5,8 @@ function nin_tool.open(status,current_event,spell)
                     ['Furusumi']=6266,['Kabenro']=5863,['Jinko']=5864,['Ryuno']=5865,['Mokujin']=5866,["Chonofuda"]=5869,["Inoshishinofuda"]=5867,["Shikanofuda"]=5868}
     local t = gearswap.tool_map[spell.en][gearswap.language]
     local ut = gearswap.universal_tool_map[spell.en][gearswap.language]
-    local tb = res.items[bag_id[t]][gearswap.language]
-    local utb = res.items[bag_id[ut]][gearswap.language]
+    local tb = gearswap.res.items[bag_id[t]][gearswap.language]
+    local utb = gearswap.res.items[bag_id[ut]][gearswap.language]
     if player.inventory[tb] ~= nil then
         return tb
     elseif player.inventory[utb] ~= nil then

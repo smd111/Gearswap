@@ -13,14 +13,14 @@ function spell_stopper(spell) --return true if spell is unable to be cast at thi
     --Stops spell if your in mog house
     if world.in_mog_house or world.mog_house then
         return true
+    elseif spell.type == "Item" then
+        return false
     --Stops spell if pet_midaction/midaction are enabled
     elseif (Watch_pet_midaction and pet_midaction() or false) or (Watch_midaction and midaction() or false) then
         return true
     --Stops spell if you do not have a target
     elseif spell.target.name == nil then
         return true
-    -- elseif not S{"Ranged Attack","Item"}:contains(spell.action_type) and spell_range_check(spell) then
-        -- return true
     --Stops spell if a blocking buff is active
     elseif spell.action_type == 'Ability' and spell.type ~= 'WeaponSkill' and (has_any_buff_of(unusable_buff.ability) 
       or not check_recast('ability',spell.recast_id)) then

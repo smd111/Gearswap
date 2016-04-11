@@ -119,7 +119,7 @@ function WHM.select_cure(pot,rec_pot,target)
     local spellt = {}
     local cure_spells = {1,2,3,4,5,6}
     for _,v in pairs(cure_spells) do
-        local spell = res.spells[v]
+        local spell = gearswap.res.spells[v]
         local hHP = get_base_hp(spell.en)
         local mjob = player.main_job_id
         local sjob = player.sub_job_id

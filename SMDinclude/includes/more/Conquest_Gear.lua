@@ -18,8 +18,8 @@ conq_gear.ring.Normal="Gld.Msk. Ring"
 function conq_gear.code(status,current_event)
     if has_any_buff_of(S{"Signet","Sanction","Sigil"}) then
         if world.conquest and conq_gear.areas.regions:contains(world.conquest.region_name) then
-            local ring = res.items:with('en', conq_gear.neck[conquest.neck.case[conquest.neck.case_id]])
-            local neck = res.items:with('en', conq_gear.ring[conquest.ring.case[conquest.ring.case_id]])
+            local ring = gearswap.res.items:with('en', conq_gear.neck[conquest.neck.case[conquest.neck.case_id]])
+            local neck = gearswap.res.items:with('en', conq_gear.ring[conquest.ring.case[conquest.ring.case_id]])
             if conq_gear.areas.always_neck:contains(world.conquest.region_name) and conq_gear.neck.change then
                 sets.building[current_event] = set_combine(sets.building[current_event], {neck=neck[gearswap.language]})
             end

@@ -17,7 +17,7 @@ function reg_event.party_id_check(id) --checks to see if sent id is a party/alli
     for pt_num,pt in ipairs(alliance) do
         if type(pt) == 'table' then
             for pos,party_position in ipairs(pt) do
-                if party_position.mob.id == id then
+                if party_position.mob and party_position.mob.id == id then
                     return true,pt_num
                 end
             end
@@ -56,7 +56,7 @@ end
 -- added events--
 function reg_event.zone_change(new_id,old_id) --zone change event
     reg_event.clear_aggro_count()
-    local zones = res.zones
+    local zones = gearswap.res.zones
     local new = zones[new_id].name
     local old = zones[old_id].name coroutine.sleep(4)
     if mf.zone_change then
@@ -93,7 +93,7 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
     elseif id == 0x028 then
         local packet = packets.parse('incoming', data)
         local target_in_party,pt_num = reg_event.party_id_check(packet['Target 1 ID'])
-        local actor_in_party = reg_event.party_id_check(packet['Actor'])
+        local actor_in_party,num = reg_event.party_id_check(packet['Actor'])
         if target_in_party and not actor_in_party then --adds mobs to aggro list
             local apply_where
             if S{2,3}:contains(pt_num) then
@@ -155,7 +155,7 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
         Player['INT'] = packet['Base INT'] Player['MND'] = packet['Base MND'] Player['CHR'] = packet['Base CHR'] Player['STR+'] = packet['Added STR']
         Player['DEX+'] = packet['Added DEX'] Player['VIT+'] = packet['Added VIT'] Player['AGI+'] = packet['Added AGI'] Player['INT+'] = packet['Added INT']
         Player['MND+'] = packet['Added MND'] Player['CHR+'] = packet['Added CHR']
-        -- Player['Attack'] = packet['Attack'] Player['Defence'] = packet['Defence'] Player['Fire Resistance'] = packet['Fire Resistance']
+        -- Player['Attack'] = packet['Attack'] Player['Defense'] = packet['Defense'] Player['Fire Resistance'] = packet['Fire Resistance']
         -- Player['Wind Resistance'] = packet['Wind Resistance'] Player['Lightning Resistance'] = packet['Lightning Resistance']
         -- Player['Light Resistance'] = packet['Light Resistance'] Player['Ice Resistance'] = packet['Ice Resistance']
         -- Player['Earth Resistance'] = packet['Earth Resistance'] Player['Water Resistance'] = packet['Water Resistance']
@@ -167,3 +167,28 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
     end
 end
 reg_event.incoming_chunk_id = windower.raw_register_event('incoming chunk', reg_event.incoming_chunk)
+-- function reg_event.outgoing_chunk(id, data, modified, injected, blocked)
+        -- print(id)
+    -- if id == 0x016 then
+        -- local packet = packets.parse('outgoing', data)
+        -- print(packet['Target Index'],player.index)
+    -- end
+-- end
+-- reg_event.outgoing_chunk_id = windower.raw_register_event('outgoing chunk', reg_event.outgoing_chunk)
+function initalize()
+    local data = windower.packets.last_incoming(0x061)
+    if data == nil then
+        return
+    end
+    local packet = packets.parse('incoming', data)
+    Player['STR'] = packet['Base STR'] Player['DEX'] = packet['Base DEX'] Player['VIT'] = packet['Base VIT'] Player['AGI'] = packet['Base AGI']
+    Player['INT'] = packet['Base INT'] Player['MND'] = packet['Base MND'] Player['CHR'] = packet['Base CHR'] Player['STR+'] = packet['Added STR']
+    Player['DEX+'] = packet['Added DEX'] Player['VIT+'] = packet['Added VIT'] Player['AGI+'] = packet['Added AGI'] Player['INT+'] = packet['Added INT']
+    Player['MND+'] = packet['Added MND'] Player['CHR+'] = packet['Added CHR']
+    -- Player['Attack'] = packet['Attack'] Player['Defense'] = packet['Defense'] Player['Fire Resistance'] = packet['Fire Resistance']
+    -- Player['Wind Resistance'] = packet['Wind Resistance'] Player['Lightning Resistance'] = packet['Lightning Resistance']
+    -- Player['Light Resistance'] = packet['Light Resistance'] Player['Ice Resistance'] = packet['Ice Resistance']
+    -- Player['Earth Resistance'] = packet['Earth Resistance'] Player['Water Resistance'] = packet['Water Resistance']
+    -- Player['Dark Resistance'] = packet['Dark Resistance']
+end
+initalize()

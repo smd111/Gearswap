@@ -80,8 +80,7 @@ function initialize(text, settings, name)
             if jobs.magic:contains(player.main_job) then
                 line:append('Mage Stave   ${tmsi}')
             end
-            line:append('Special Weapons   ${tswi}\nConquest Gear   ${tcgi}\nDebug   ${tdebug}\nMain Job   ${tmji}\nSub Job   ${tsji}\n'..
-                        'Registered Events   ${trei}\nFile Write   ${tfwi}')
+            line:append('Special Weapons   ${tswi}\nConquest Gear   ${tcgi}\nDebug   ${tdebug}\nMain Job   ${tmji}\nSub Job   ${tsji}\nRegistered Events   ${trei}\nFile Write   ${tfwi}')
         elseif menu_set == 6 then --custom menu
             line:append('--Custom Menu--')
             for i,v in pairs(custom_menu_build()) do
@@ -104,6 +103,7 @@ function initialize(text, settings, name)
         end
         if #line == 0 then
             line:append('\n > \n ')
+            --line:append('STR:${STR} +${STRb} \n DEX:${DEX} +${DEXb} \n VIT:${VIT} +${VITb} \n AGI:${AGI} +${AGIb} \n INT:${INT} +${INTb} \n MND:${MND} +${MNDb} \n CHR:${CHR} +${CHR}')
         end
     else
         local menu_initialize = get_vars(name,"menu")
@@ -184,6 +184,20 @@ function updatedisplay()
     i.swhp = s_waltz_h_a and c_m or n_c
     i.axpcpring = auto_ring and c_m or n_c
     i.wshead = ws_head and c_m or n_c
+    i.STR = Player['STR']
+    i.STRb = Player['STR+']
+    i.DEX = Player['DEX']
+    i.DEXb = Player['DEX+']
+    i.VIT = Player['VIT']
+    i.VITb = Player['VIT+']
+    i.AGI = Player['AGI']
+    i.AGIb = Player['AGI+']
+    i.INT = Player['INT']
+    i.INTb = Player['INT+']
+    i.MND = Player['MND']
+    i.MNDb = Player['MND+']
+    i.CHR = Player['CHR']
+    i.CHRb = Player['CHR+']
     if weapon_types_count > #weapon_types then
         weapon_types_count = 1
     end

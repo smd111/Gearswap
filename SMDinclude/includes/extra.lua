@@ -1,6 +1,6 @@
 Hwauto = false Contradance_potency = 0 allied_tags = false Rapture = false Divine_seal = false Reive_mark = false Besieged = false s_waltz_h_a = true
-extdata = require("extdata")
-res = require 'resources'
+--extdata = require("extdata")
+--res = require 'resources'
 function load_include(a,b)
     if a and not Disable_All then
         if gearswap.pathsearch({"SMDinclude/includes/"..b}) then
@@ -86,7 +86,7 @@ end
 function extra.buff_change(status,event,name,gain,buff_table)
     if Hwauto and table.contains(Waltz.debuff,name) then
         if gain and player.tp >= 200 and player.sub_job_level > 34 then
-            send_command('input /ja "'..res.job_abilities[194][gearswap.language]..'" <me>')
+            send_command('input /ja "'..gearswap.res.job_abilities[194][gearswap.language]..'" <me>')
         end
     elseif name == "Reive Mark" and not gain then
         if reg_event and reg_event.clear_aggro_count then
@@ -114,18 +114,21 @@ end
 WS_Gear = {}
 function WS_Gear.precast(status,event,spell)--equips correct ws gear
     if spell.type == "WeaponSkill" then
-        local spell_element = (type(spell.element)=='number' and res.elements[spell.element] or res.elements:with('name', spell.element))
-        if player.inventory["Fotia Gorget"] or player.wardrobe["Fotia Gorget"] then
+        local spell_element = (type(spell.element)=='number' and gearswap.res.elements[spell.element] or gearswap.res.elements:with('name', spell.element))
+        if player.inventory["Fotia Gorget"] or player.wardrobe["Fotia Gorget"] or player.wardrobe2["Fotia Belt"] then
             sets.building[event] = set_combine(sets.building[event], {neck="Fotia Gorget"})
-        elseif player.inventory[sets.ws_neck[spell_element.en].neck] or player.wardrobe[sets.ws_neck[spell_element.en].neck] then
+        elseif player.inventory[sets.ws_neck[spell_element.en].neck] or player.wardrobe[sets.ws_neck[spell_element.en].neck] or
+                player.wardrobe2[sets.ws_neck[spell_element.en].neck] then
             sets.building[event] = set_combine(sets.building[event], sets.ws_neck[spell_element.en])
         end
-        if player.inventory["Fotia Belt"] or player.wardrobe["Fotia Belt"] then
+        if player.inventory["Fotia Belt"] or player.wardrobe["Fotia Belt"] or player.wardrobe2["Fotia Belt"] then
             sets.building[event] = set_combine(sets.building[event], {waist="Fotia Belt"})
-        elseif player.inventory[sets.ws_belt[spell_element.en].waist] or player.wardrobe[sets.ws_belt[spell_element.en].waist] then
+        elseif player.inventory[sets.ws_belt[spell_element.en].waist] or player.wardrobe[sets.ws_belt[spell_element.en].waist] or
+                player.wardrobe2[sets.ws_belt[spell_element.en].waist] then
             sets.building[event] = set_combine(sets.building[event], sets.ws_belt[spell_element.en])
         end
-        if ws_head and (player.inventory[sets.WS_types[spell.skill].head] or player.wardrobe[sets.WS_types[spell.skill].head]) then
+        if ws_head and (player.inventory[sets.WS_types[spell.skill].head] or player.wardrobe[sets.WS_types[spell.skill].head] or
+                player.wardrobe2[sets.WS_types[spell.skill].head]) then
             sets.building[event] = set_combine(sets.building[event], sets.WS_types[spell.skill])
         end
     end
@@ -134,11 +137,12 @@ WS_Gear.midcast = WS_Gear.precast
 e_obi = {}
 function e_obi.midcast(status,event,spell)--equips correct obi
     if not Typ.abilitys:contains(spell.prefix) and spell.action_type ~= "Item" then
-        local spell_element = (type(spell.element)=='number' and res.elements[spell.element] or res.elements:with('name', spell.element))
+        local spell_element = (type(spell.element)=='number' and gearswap.res.elements[spell.element] or gearswap.res.elements:with('name', spell.element))
         if spell_element.name == world.weather_element or spell_element.name == world.day_element then
-            if player.inventory["Hachirin-no-Obi"] or player.wardrobe["Hachirin-no-Obi"] then
+            if player.inventory["Hachirin-no-Obi"] or player.wardrobe["Hachirin-no-Obi"]  or player.wardrobe2["Hachirin-no-Obi"]then
                 sets.building[event] = set_combine(sets.building[event], {waist="Hachirin-no-Obi"})
-            elseif player.inventory[sets.spell_obi[spell_element.en].waist] or player.wardrobe[sets.spell_obi[spell_element.en].waist] then
+            elseif player.inventory[sets.spell_obi[spell_element.en].waist] or player.wardrobe[sets.spell_obi[spell_element.en].waist] or
+                    player.wardrobe2[sets.spell_obi[spell_element.en].waist] then
                 sets.building[event] = set_combine(sets.building[event], sets.spell_obi[spell_element.en])
             end
         end
@@ -147,7 +151,7 @@ end
 --Extra Functions---------------------------------------------------------------------------------------------------------------
 function ws_to_aoews(spell)--returs the highest level AOE weaponskill you can use at this time
     for _,v in pairs(table.reverse(windower.ffxi.get_abilities().weapon_skills)) do
-        local ws = res.weapon_skills[v][gearswap.language]
+        local ws = gearswap.res.weapon_skills[v][gearswap.language]
         if aoe_ws:contains(ws) then
             return ws
         end
@@ -161,26 +165,26 @@ function aggro_count(typ)--returns aggro count
         return 0
      end
 end
-function has_any_buff_of(buff_set)--returns true if you have any buffs given
+function has_any_buff_of(buff_set)--returns true if you have any of the buffs given
     for i,v in pairs(buff_set) do
         if buffactive[v] ~= nil then
             return true
         end
     end
 end
-function get_item_next_use(name)--returns time that you can use the item again
-    for _,n in pairs({"inventory","wardrobe"}) do
+function get_item_next_use(name)--returns time that you can use the named item again
+    for _,n in pairs({"inventory","wardrobe","wardrobe2"}) do
         for _,v in pairs(gearswap.items[n]) do
-            if type(v) == "table" and v.id ~= 0 and res.items[v.id].en == name then
-                return extdata.decode(v)
+            if type(v) == "table" and v.id ~= 0 and gearswap.res.items[v.id].en == name then
+                return gearswap.extdata.decode(v)
             end
         end
     end
 end
-function xp_cp_ring_equip(ring)--equips given ring
+function xp_cp_ring_equip(ring)--equips selected ring
      if auto_ring then
          enable("left_ring")
-         gearswap.equip_sets('equip_command',nil,{left_ring=ring})
+         gearswap.equip_sets('xp_cp_ring_auto_equip',nil,{left_ring=ring})
          disable("left_ring")
      end
 end
@@ -191,7 +195,7 @@ function schedule_xpcp_ring()--scheduals equip of selected ring
     end
     xpcpcoring = coroutine.schedule(xp_cp_ring_equip:prepare(rings[rings_count]),(ring_time > 0 and ring_time or 1))
 end
-function check_in_party(name)--returs true if gives name is in allience
+function check_in_party(name)--returs true if given name is in allience
      for pt_num,pt in ipairs(alliance) do
          for pos,party_position in ipairs(pt) do
              if party_position.name == name then
@@ -211,7 +215,7 @@ function check_ring_buff()-- returs true if you do not have the buff from xp cp 
     end
     return false
 end
-function partybuffcheck(name, bufftbl) --return weather party member has any of buff list
+function partybuffcheck(name, bufftbl) --return true if party member has any of buff list else it returns false
     local in_party = check_in_party(name)
     local in_party_bufftbl = partybuffs[name]
     for _,v in pairs(bufftbl) do
@@ -221,20 +225,6 @@ function partybuffcheck(name, bufftbl) --return weather party member has any of 
     end
     return false
 end
-function c_equip(delay, set)--delay equip
-    return gearswap.equip_sets:schedule(delay, 'equip_command', nil, set)
+function c_equip(delay, set, event)--delay equip
+    return gearswap.equip_sets:schedule(delay, event..'_delayed_equip', nil, set)
 end
--- function s_to_t(s)--string to table
-    -- local str = s
-    -- local t = {0}
-    -- local tbl = string.find(str,'%.')
-    -- while tbl do
-        -- t[#t+1]=tbl tbl = string.find(str,'%.',tbl+1)
-    -- end
-    -- t[#t+1]=#str+1
-    -- local g = _G
-    -- for i = 1,#t-1 do
-        -- g = g[string.sub(str,t[i]+1,t[i+1]-1)]
-    -- end
-    -- return g
--- end

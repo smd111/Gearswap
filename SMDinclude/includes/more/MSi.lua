@@ -13,9 +13,9 @@ function msi.precast(status,current_event,spell)
                     sets.building[current_event] = set_combine(sets.building[current_event], cure_gear[lang[gearswap.language]])
                 end
             else
-                local spell_element = (type(spell.element)=='number' and res.elements[spell.element] or res.elements:with('name', spell.element))
-                local spell_stave = res.items:with('enl', msi.staves[spell_element.en]..' '..msi.stype[Usestaff])
-                local spell_grip = res.items:with('enl', msi.grips[spell_element.en].." Grip")
+                local spell_element = (type(spell.element)=='number' and gearswap.res.elements[spell.element] or gearswap.res.elements:with('name', spell.element))
+                local spell_stave = gearswap.res.items:with('enl', msi.staves[spell_element.en]..' '..msi.stype[Usestaff])
+                local spell_grip = gearswap.res.items:with('enl', msi.grips[spell_element.en].." Grip")
                 sets.building[current_event] = set_combine(sets.building[current_event], {main=sspell_stave[gearswap.language],sub=spell_grip[gearswap.language]})
             end
         end
@@ -31,8 +31,8 @@ function msi.self_command(status,current_event,command)
             end
         elseif command[1]:lower() == 'toggle' or command[1]:lower() == 't' then
             if command[2]:lower() == "staves" then
-                Changestaff = not
-                Changestaff add_to_chat(cc.mc, 'Auto Magian Stave Change '..(Changestaff and ('Enabled'):color(cc.g1) or ('Disabled'):color(cc.r1)))
+                Changestaff = not Changestaff
+                add_to_chat(cc.mc, 'Auto Magian Stave Change '..(Changestaff and ('Enabled'):color(cc.g1) or ('Disabled'):color(cc.r1)))
             end
         end
     else
@@ -40,8 +40,8 @@ function msi.self_command(status,current_event,command)
             Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
             add_to_chat(cc.mc, 'Magian Staves Set To '..(Usestaff):color(cc.y1))
         elseif command == 'tchangemagestaff' then
-            Changestaff = not
-            Changestaff add_to_chat(cc.mc, 'Auto Magian Stave Change '..(Changestaff and ('Enabled'):color(cc.g1) or ('Disabled'):color(cc.r1)))
+            Changestaff = not Changestaff
+            add_to_chat(cc.mc, 'Auto Magian Stave Change '..(Changestaff and ('Enabled'):color(cc.g1) or ('Disabled'):color(cc.r1)))
         end
     end
 end

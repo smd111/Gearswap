@@ -23,14 +23,14 @@ function ninja_wheel.aftercast(status,current_event,spell)
     if spell.type == 'Ninjutsu' then
         local name,level = string.match(spell.en, '(%a+): (%a+)')
         if spell.interrupted then
-            local nin_spell = res.items:with('en', name..': '..level)
+            local nin_spell = gearswap.res.items:with('en', name..': '..level)
             send_command('wait 3.0;input /ma "'..nin_spell[gearswap.language]..'" <t>')
             return
         end
         if ninja_wheel.tog then
             ninja_wheel.count = ninja_wheel.count + 1
             if ninja_wheel.count < 7 then
-                local nin_spell = res.items:with('en', ninja_wheel.next[name]..': '..level)
+                local nin_spell = gearswap.res.items:with('en', ninja_wheel.next[name]..': '..level)
                 send_command('wait 3.0;input /ma "'..nin_spell[gearswap.language]..'" <t>')
             else
                 ninja_wheel.count = 0
@@ -39,11 +39,11 @@ function ninja_wheel.aftercast(status,current_event,spell)
         elseif ninja_wheel.super_tog then
             ninja_wheel.count = ninja_wheel.count + 1
             if ninja_wheel.count == 7 and not ninja_wheel.super_cycle == 3 then
-                local nin_spell = res.items:with('en', ninja_wheel.next[name]..': '..ninja_wheel.level[level])
+                local nin_spell = gearswap.res.items:with('en', ninja_wheel.next[name]..': '..ninja_wheel.level[level])
                 send_command('wait 3.0;input /ma "'..nin_spell[gearswap.language]..'" <t>')
                 ninja_wheel.super_cycle = ninja_wheel.super_cycle + 1
             elseif ninja_wheel.count < 7 then
-                local nin_spell = res.items:with('en', ninja_wheel.next[name]..': '..level)
+                local nin_spell = gearswap.res.items:with('en', ninja_wheel.next[name]..': '..level)
                 send_command('wait 3.0;input /ma "'..nin_spell[gearswap.language]..'" <t>')
             else
                 ninja_wheel.count = 0

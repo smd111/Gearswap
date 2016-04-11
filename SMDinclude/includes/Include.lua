@@ -55,9 +55,11 @@ function run_event(status,a,b,c)
     if gearchang_stopper(spell) then
         return
     elseif not status.stop_swapping_gear then
-        local z = (type(a)=="table" and _G[a.type..'_'..event..'_equip_delay'] or nil)
+        if not event == "pet_change" then
+            local z = (type(a)=="table" and _G[a.type..'_'..event..'_equip_delay'] or nil)
+        end
         if z and z >= 0 then
-            c_equip(z, sets.building[event])
+            c_equip(z, sets.building[event], event)
         else
             equip(sets.building[event])
         end
@@ -145,6 +147,12 @@ function status_change(new,old)
     local status = {end_event=false,stop_swapping_gear=false}
     if player.main_job == "THF" and reg_event and not reg_event.treasure_hunter[player.target.id] then
         thief_sub = thieftype['hunter']
+    end
+    if new == "Idle" and reg_event and reg_event.clear_aggro_count then
+        reg_event.clear_aggro_count:schedule(1.5)
+        if updatedisplay then
+            updatedisplay:schedule(1.5)
+        end
     end
     run_event(status,new,old)
 end
@@ -237,23 +245,13 @@ function file_unload(new_job)
     -- end
 end
 --Load includes------------------------------------------------------------------------------------------------------------------
-function load_includes()
-    local includes_have = {['MJi']={[1]=MJi,[2]='mjob/main_job_'..player.main_job..'.lua'},
-                           ['SJi']={[1]=SJi,[2]='sjob/sub_job_'..player.sub_job..'.lua'},
-                           ['MSi']={[1]=(MSi and jobs.magic:contains(player.main_job)),[2]='more/MSi.lua'},
-                           ['Ammo']={[1]=(Ammo and jobs.ammo:contains(player.main_job)),[2]='more/Ammo.lua'},
-                           ['Special_Weapons']={[1]=Special_Weapons,[2]='more/Special_Weapons.lua'},
-                           ['Conquest_Gear']={[1]=Conquest_Gear,[2]='more/Conquest_Gear.lua'},
-                           ['Registered_Events']={[1]=Registered_Events,[2]='more/Registered_Events.lua'},
-                           ['Debug']={[1]=Debug,[2]='more/Debug.lua'},
-                           ['Display']={[1]=Display,[2]='more/Display.lua'},
-                           ['File_Write']={[1]=File_Write,[2]='more/File_Write.lua'},}
-    for i, v in pairs(includes_have) do
-        load_include(v[1], v[2])
-    end
-end
-if Disable_All then
-    return
-else
-    load_includes()
-end
+load_include(MJi, 'mjob/main_job_'..player.main_job..'.lua')
+load_include(SJi, 'sjob/sub_job_'..player.sub_job..'.lua')
+load_include((MSi and jobs.magic:contains(player.main_job)), 'more/MSi.lua')
+load_include((Ammo and jobs.ammo:contains(player.main_job)), 'more/Ammo.lua')
+load_include(Special_Weapons, 'more/Special_Weapons.lua')
+load_include(Conquest_Gear, 'more/Conquest_Gear.lua')
+load_include(Registered_Events, 'more/Registered_Events.lua')
+load_include(Debug, 'more/Debug.lua')
+load_include(Display, 'more/Display.lua')
+load_include(File_Write, 'more/File_Write.lua')
