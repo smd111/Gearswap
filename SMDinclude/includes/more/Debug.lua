@@ -1,7 +1,8 @@
 full_debug = false
 fdebug = {}
 fdebug.count = 1
-fdebug.type = {"Status_Change","Pet_Change","Filtered_Action","Pretarget","Precast","Buff_Change","Midcast","Pet_Midcast","Aftercast","Pet_Aftercast","Indi_Change","Pet_Status_Change","Sub_Job_Change","Self_Command","All"}
+fdebug.type = {"Status_Change","Pet_Change","Filtered_Action","Pretarget","Precast","Buff_Change","Midcast","Pet_Midcast","Aftercast","Pet_Aftercast","Indi_Change",
+               "Pet_Status_Change","Sub_Job_Change","Self_Command","All"}
 function fdebug.code(status,event,spell)
     if full_debug then
         if fdebug.type[fdebug.count]:lower() == event or fdebug.type[fdebug.count] == "All" then
@@ -126,9 +127,7 @@ function fdebug.self_command(status,event,command)
         fdebug.count = (fdebug.count % #fdebug.type) + 1
         add_to_chat(cc.mc, 'Debug Mode Type = ' .. tostring(fdebug.type[fdebug.count]))
     elseif command == 'test' then
-        for i,v in pairs(_G) do
-            print(i,v)
-        end
+        ---
     end
     if updatedisplay then
         updatedisplay()

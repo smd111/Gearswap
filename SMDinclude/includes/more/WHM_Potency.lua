@@ -5,64 +5,19 @@ function WHM.cure_pot(s)--returns sets potency +%, received potency +%, cast tim
     local received_pot = 100
     local rapture_potency = 50
     local cast_time_reduction = 100
-    local received_cure_potency = {["Adamas"]=15,["アダマス"]=15,["Buremte Gloves"]=13,["ブレムテグローブ"]=13,["Medicor Sword"]=10,["メディコルカソード"]=10,
-                                   ["Sanus Ensis"]=10,["サヌスエンシス"]=10,["Shabti Armet +1"]=8,["ＳＨアーメット+1"]=8,["Shabti Armet"]=7,["シャブテアーメット"]=7,
-                                   ["Oneiros Earring"]=5,["オネイロスピアス"]=5,["Chuq'aba Belt"]=5,["チュカバベルト"]=5,["Kunaji Ring"]=5,["クナジリング"]=5,
-                                   ["Phalaina Locket"]=4,["ファライナロケット"]=4,["Asklepian Ring"]=3,["アスクレピアリング"]=3,["Shedir Manteel"]=3,["シェダルマンティル"]=3,
-                                   ["Corybant Pearl"]=(world.zone_id == 183 and 10 or 0),["コリバントパール"]=(world.zone_id == 183 and 10 or 0),}
-    local cure_cast_time_reduction = {["Cure Clogs"]=15,["ケアルクロッグ"]=15,["Nabu's Shalwar"]=15,["ナブーシャルワ"]=15,["Heka's Kalasiris"]=15,["ヘカカラシリス"]=15,
-                                      ["Apaisante +1"]=13,["アペザント+1"]=13,["Piety Cap +1"]=13,["ＰＩキャップ+1"]=13,["Nefer Kalasiris +1"]=12,["ネフェカラシリス+1"]=12,
-                                      ["Piety Cap"]=12,["パエティキャップ"]=12,["Aceso's Choker +1"]=13,["アケソチョーカー+1"]=13,["Aceso's Choker"]=10,["アケソチョーカー"]=10,
-                                      ["Apaisante"]=10,["アペザント"]=10,["Clr. Cap +2"]=10,["ＣＲキャップ+2"]=10,["Litany Clogs"]=10,["リタニークロッグ"]=10,
-                                      ["Nefer Kalasiris"]=10,["ネフェカラシリス"]=10,["Pahtli Cape"]=8,["パートリケープ"]=8,["Nathushne +1"]=7,["ナトフシュネ+1"]=7,
-                                      ["Nathushne"]=6,["ナトフシュネ"]=6,["Medala Cape"]=5,["メダーラケープ"]=5,["Sors Shield"]=5,["ソーズシールド"]=5,
-                                      ["Theo. Cap +1"]=5,["ＴＥキャップ+1"]=5,["Theophany Cap"]=4,["セオフニキャップ"]=4,["Praeco Slacks"]=3,["プラエコパンツ"]=3,
-                                      ["Dominie's Grip"]=2,["ドミニエズグリップ"]=2,["Capricornian Rope"]=(allied_tags and 15 or 1),["カプリコンロープ"]=(allied_tags and 15 or 1),}
-    local cure_potency = {["Arciela's Grace +1"]=(Reive_mark and 25 or 0),["グレースカラー+1"]=(Reive_mark and 25 or 0),["Tamaxchi"]=22,["タマシチ"]=22,
-                          ["Nathushne +1"]=15,["ナトフシュネ+1"]=15,["Heka's Kalasiris"]=15,["ヘカカラシリス"]=15,["Tefnut Wand"]=15,["テフヌトステッキ"]=15,
-                          ["Nathushne"]=14,["ナトフシュネ"]=14,["Bokwus Gloves"]=13,["ボクワスグローブ"]=13,["Sanus Ensis"]=13,["サヌスエンシス"]=13,
-                          ["Aristocrat's Coat"]=12,["アリストチュニック"]=12,["Nefer Kalasiris +1"]=12,["ネフェカラシリス+1"]=12,["Iaso Mitra"]=11,["イアソミトラ"]=11,
-                          ["Marduk's Tiara +1"]=11,["ＭＫティアラ+1"]=11,["Galenus"]=10,["ガレーヌス"]=10,["Gende. Caubeen"]=10,["ゲンデサカウビーン"]=10,
-                          ["Gende. Caubeen +1"]=10,["ＧＥカウビーン+1"]=10,["Piety Duckbills +1"]=10,["ＰＩダックビル+1"]=10,["Theophany Cap"]=10,["セオフニキャップ"]=10,
-                          ["Theo. Cap +1"]=10,["ＴＥキャップ+1"]=10,["Orison Cap +2"]=10,["ＯＲキャップ+2"]=10,["Healing Staff"]=10,["癒しの杖"]=10,
-                          ["Dryad Staff"]=10,["霊木の杖"]=10,["Light Staff"]=10,["ライトスタッフ"]=10,["Apollo's Staff"]=10,["アポロスタッフ"]=10,
-                          ["Atrophy Tights +1"]=10,["ＡＴタイツ+1"]=10,["Iridal Staff"]=10,["イリダルスタッフ"]=10,["Chatoyant Staff"]=10,["チャトヤンスタッフ"]=10,
-                          ["Templar Mace"]=10,["テンプラーメイス"]=10,["Nefer Kalasiris"]=10,["ネフェカラシリス"]=10,["Noble's Tunic"]=10,["ノーブルチュニック"]=10,
-                          ["Medicine Ring"]=((hpp <75 and tp < 100) and 10 or 0),["メディシンリング"]=((hpp <75 and tp < 100) and 10 or 0),
-                          ["Atrophy Tights"]=9,["アトロピタイツ"]=9,["Gendewitha Bliaut"]=8,["ゲンデサブリオー"]=8,["Gende. Bilaut +1"]=8,["ＧＥブリオー+1"]=8,
-                          ["Paean Mitra"]=8,["パエアンミトラ"]=8,["Piety Duckbills"]=8,["パエティダックビル"]=8,["Weather. Cuffs"]=8,["ウェーザーカフス"]=8,
-                          ["Weath. Cuffs +1"]=9,["ウェーザーカフス+1"]=9,["Orison Cap +1"]=7,["ＯＲキャップ+1"]=7,["Nares Trews"]=7,["ナレストルーズ"]=7,
-                          ["Theo. Briault +1"]=7,["ＴＥブリオー+1"]=7,["Ceres' Spica"]=6,["ケレーススピカ"]=6,["Chelona Blazer +1"]=6,["ケロナブレザ+1"]=6,
-                          ["Ghostfyre Cape"]=6,["ゴストファイケープ"]=6,["Theo. Briault"]=6,["セオフニブリオー"]=6,["Chelona Blazer"]=5,["ケロナブレザ"]=5,
-                          ["Hieros Mittens"]=5,["ヒエロスミトン"]=5,["Asklepios"]=5,["アスクレピオス"]=5,["Hospitaler Earring"]=5,["ホスピタラーピアス"]=5,
-                          ["Roundel Earring"]=5,["ラウンデルピアス"]=5,["Tethyan Trews +3"]=5,["テチアントルーズ+3"]=5,["Dagda's Shield"]=5,["ダグダシールド"]=5,
-                          ["Volunteer's Khud"]=(Besieged and 5 or 0),["ボランティアクード"]=(Besieged and 5 or 0),["Augur's Gloves"]=4,["アウグルグローブ"]=4,
-                          ["Praeco Slacks"]=4,["プラエコパンツ"]=4,["Oretania's Cape"]=4,["オレタニアケープ"]=4,["Tempered Cape"]=4,["テンパードケープ"]=4,
-                          ["Iaso Boots"]=4,["イアソブーツ"]=4,["Litany Clogs"]=4,["リタニークロッグ"]=4,["Phalaina Locket"]=4,["ファライナロケット"]=4,
-                          ["Magavan Slops"]=4,["マガバンスロップス"]=4,["Orison Cape"]=3,["オリゾンケープ"]=3,["Fylgja Torque +1"]=3,["フィルギャトルク+1"]=3,
-                          ["Sors Shield"]=3,["ソーズシールド"]=3,["Tethyan Trews +2"]=3,["テチアントルーズ+2"]=3,["Melampus Staff"]=3,["メラムプススタッフ"]=3,
-                          ["Restorer Cloak"]=3,["レストアクローク"]=3,["Fierabras's Mantle"]=2,["フィエラブラマント"]=2,["Medala Cape"]=2,["メダーラケープ"]=2,
-                          ["Fylgja Torque"]=2,["フィルギャトルク"]=2,["Fylgja Torque +1"]=2,["フィルギャトルク+1"]=2,["Orison Earring"]=2,["オリゾンピアス"]=2,
-                          ["Paean Boots"]=1,["パエアンブーツ"]=1,["Dia Wand"]=1,["ディアワンド"]=1,
-                          ["Lambda Sash"]=(S{73,74,75,76}:contains(world.zone_id) and 3 or 0),["ラムダサッシュ"]=(S{73,74,75,76}:contains(world.zone_id) and 3 or 0),}
     local rapture_potency_plus = {["Svnt. Bonnet +2"]=10,["ＳＶボネット+2"]=10,["Svnt. Bonnet +1"]=5,["ＳＶボネット+1"]=5,["Arbatel Bonnet"]=15,["アバテルボネット"]=15,
                                   ["Arbatel Bonnet +1"]=15,["ＡＢボネット+1"]=15,}
     for _,v in pairs(s) do
-        if type(v) == 'table' then
-            potency = potency + (cure_potency[v2.name] or 0)
-            received_pot = received_pot + (received_cure_potency[v2.name] or 0)
-            cast_time_reduction = cast_time_reduction - (cure_cast_time_reduction[v2.name] or 0)
-            rapture_potency = rapture_potency + (rapture_potency_plus[v] or 0)
-            for _,v in ipairs(v2.augments) do
-                potency = potency + tonumber(v:startswith('"Cure" potency') and string.match(v, '%d+') or '0')
-                received_pot = received_pot + tonumber(v:startswith('Potency of "Cure" effect received') and string.match(v, '%d+') or '0')
-                cast_time_reduction = cast_time_reduction - tonumber(v:startswith('"Cure" spellcasting time -') and string.match(v, '%d+') or '0')
+        local lookup = get_item_extdata(v2.name)
+        if lookup.augments then
+            for _,str in pairs(lookup.augments) do
+                potency = potency + (tonumber(str:match('"Cure" potency (.%d+)%%')) or 0)
+                potency = potency + (tonumber(str:match('Potency of "Cure" effect received (.%d+)%%')) or 0)
+                cast_time_reduction = cast_time_reduction + (tonumber(str:match('"Cure" spellcasting time (.%d+)%%')) or 0)
             end
-        else
-            potency = potency + (cure_potency[v2.name] or 0)
-            received_pot = received_pot + (received_cure_potency[v2.name] or 0)
-            cast_time_reduction = cast_time_reduction - (cure_cast_time_reduction[v2.name] or 0)
-            rapture_potency = rapture_potency + (rapture_potency_plus[v] or 0)
+        end
+        if rapture_potency_plus[v2.name] then
+            rapture_potency = rapture_potency + rapture_potency_plus[name]
         end
     end
     if potency > 150 then
@@ -85,7 +40,7 @@ function WHM.select_cure(pot,rec_pot,target)
         w_potency = w_potency + (world.weather_id == 18 and 10 or 25)
     end
     local get_base_hp = function(name)
-        local power = math.floor((Player['MND']+Player['MND+'])/2)+math.floor((Player['VIT']+Player['VIT+'])/4)+reg_event.skill['Healing Magic Level']
+        local power = math.floor(player.mnd/2) + math.floor(player.vit/4) + player.skills.healing_magic
         local cure_map = {['Cure'] = {[0]={rate=1,hp=10},[20]={rate=1.33,hp=15},[40]={rate=8.5,hp=30},[125]={rate=15,hp=40},[200]={rate=20,hp=45},
                                       [600]={rate=1,hp=65,cap=65}},
                           ['Cure II'] = {[40]={rate=1,hp=60},[70]={rate=5.5,hp=90},[125]={rate=7.5,hp=100},[200]={rate=10,hp=110},[400]={rate=20,hp=130},

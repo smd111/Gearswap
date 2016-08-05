@@ -15,6 +15,8 @@ function spell_stopper(spell) --return true if spell is unable to be cast at thi
         return true
     elseif spell.type == "Item" then
         return false
+    elseif ISr and spell.recast_id == 231 then
+        return false
     --Stops spell if pet_midaction/midaction are enabled
     elseif (Watch_pet_midaction and pet_midaction() or false) or (Watch_midaction and midaction() or false) then
         return true

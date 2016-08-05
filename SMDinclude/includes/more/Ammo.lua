@@ -1,4 +1,4 @@
-ammo = {} sets.ammo_empty = {ammo=empty,} ammo.item_use = "none"
+ammo = {item_use = "none"} sets.ammo_empty = {ammo=empty,}
 function ammo.to_bag(ammo)
     local find_bag_type = {}
     local find_ammo_type = {}

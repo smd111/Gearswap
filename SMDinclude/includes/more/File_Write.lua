@@ -41,6 +41,7 @@ function file_write.write()
                     '\nrings_count = '..tostring(rings_count or 1)..
                     '\nskillwatch = '..tostring(skillwatch or false)..
                     '\nskill_count = '..tostring(skill_count or 1)..
+                    '\nISr = '..tostring(ISr or false)..
                 '\n----Other 2----'..
                     '\nmenu.pos.x = '..tostring(menu.pos.x or 1)..
                     '\nmenu.pos.y = '..tostring(menu.pos.y or 1))

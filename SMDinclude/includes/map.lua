@@ -1,7 +1,10 @@
-log_in_time = os.clock() menu = {pos = {x = 100,y = 100}} mf = {} conquest={} conquest.ring={} conquest.neck={} partynames = {} auto_use_shards = false
-weapon_types_count = 1 range_types_count = 1 armor_types_count = 1 sets.pretarget = {} sets.precast = {} sets.midcast = {} sets.aftercast = {} sets.pet_midcast = {}
-sets.pet_aftercast = {} sets.armor = {} sets.range = {} sets.weapon = {} sets.building = {} xpcpcoring = 1 rings_count = 1
-File_Write = true Registered_Events = true
+menu,auto_use_shards,File_Write,Registered_Events,ISr = {pos = {x = 100,y = 100}},false,true,true,true
+weapon_types_count,range_types_count,armor_types_count,xpcpcoring,rings_count = 1,1,1,1,1 conquest = {ring={},neck={}}
+sets.armor,sets.pet_aftercast,sets.weapon,mf,partynames,sets.pretarget,sets.precast,sets.midcast,sets.aftercast = {},{},{},{},{},{},{},{},{}
+sets.range,sets.building,sets.pet_midcast,cc = {['ThrowLVL.99+'] = {range="Halakaala",ammo=empty}},{},{},{mc=9,r1=11,r2=10,g1=158,g2=6,b1=5,b2=205,y1=36,y2=37}
+equip_from_bags = {"inventory","wardrobe","wardrobe2","wardrobe3","wardrobe4"}
+        --Weapon types--Range types--Armor types
+weapon_types,range_types,armor_types = T{"Not Set"},T{"Not Set"},T{"Not Set"}
         --WALTZ TABLE (use Waltz.debuff or Waltz.spells)
         --This table is will give the waltz spells and all the debuffs that healing waltz can remove
 Waltz = {debuff=S{'Max HP Down','Max MP Down','Magic Evasion Down','Max TP Down','Magic Atk. Down','Magic Acc. Down','Magic Def. Down','Defense Down','Evasion Down',
@@ -33,19 +36,15 @@ sets.ws_neck={Dark={neck="Shadow Gorget"},Water={neck="Aqua Gorget"},Earth={neck
     Wind={neck="Breeze Gorget"},Lightning={neck="Thunder Gorget"},Light={neck="Light Gorget"},}
 sets.spell_obi={Fire={waist="Karin Obi"},Earth={waist="Dorin Obi"},Water={waist="Suirin Obi"},Wind={waist="Furin Obi"},Ice={waist="Hyorin Obi"},
     Lightning={waist="Rairin Obi"},Light={waist="Korin Obi"},Dark={waist="Anrin Obi"},}
-      -- unusable_buff.spell  unusable_buff.ability these contain buff the bloc the specific types
+        -- unusable_buff.spell  unusable_buff.ability these contain buff the bloc the specific types
 unusable_buff = {spell={'Charm','Mute','Omerta','Petrification','Silence','Sleep','Stun','Terror'},
     ability={'Amnesia','Charm','Impairment','Petrification','Sleep','Stun','Terror'}}
         --Job type table 
 jobs = {ammo=S{"WAR","RDM","THF","PLD","DRK","BST","RNG","SAM","NIN","COR"},magic=S{"WHM","BLM","RDM","BRD","SMN","SCH","GEO"},pet=S{"SMN","PUP","GEO","BST","DRG"},}
-Player = {}--used for player stats
 cure_gear = {en={main="Arka IV",sub="Dominie's Grip",body="Heka's Kalasiris",hands="Bokwus Gloves",neck="Phalaina Locket",left_ear="Roundel Earring",},
              ja={main="アーカIV",sub="ドミニエズグリップ",body="ヘカカラシリス",hands="ボクワスグローブ",neck="ファライナロケット",left_ear="ラウンデルピアス",}}
 lang = {english="en",japenese="ja"}
-    --XP CP Rings
+        --XP CP Rings
 rings = L{"Vocation Ring","Trizek Ring","Capacity Ring","Undecennial Ring","Decennial Ring","Allied Ring","Novennial Ring","Kupofried's Ring","Anniversary Ring",
     "Emperor Band","Empress Band","Chariot Band","Duodec. Ring","Expertise Ring"}
-    --Weapon types             --Range types              --Armor types
-weapon_types = T{"Not Set"} range_types = T{"Not Set"} armor_types = T{"Not Set"}
-sets.range['ThrowLVL.99+'] = {range="Halakaala",ammo=empty}
-cc = {mc=9,r1=11,r2=10,g1=158,g2=6,b1=5,b2=205,y1=36,y2=37}
+    

@@ -1,6 +1,4 @@
-Hwauto = false Contradance_potency = 0 allied_tags = false Rapture = false Divine_seal = false Reive_mark = false Besieged = false s_waltz_h_a = true
---extdata = require("extdata")
---res = require 'resources'
+Hwauto,allied_tags,Rapture,Divine_seal,Reive_mark,Besieged,s_waltz_h_a,Contradance_potency = false,false,false,false,false,false,true,0
 function load_include(a,b)
     if a and not Disable_All then
         if gearswap.pathsearch({"SMDinclude/includes/"..b}) then
@@ -115,20 +113,17 @@ WS_Gear = {}
 function WS_Gear.precast(status,event,spell)--equips correct ws gear
     if spell.type == "WeaponSkill" then
         local spell_element = (type(spell.element)=='number' and gearswap.res.elements[spell.element] or gearswap.res.elements:with('name', spell.element))
-        if player.inventory["Fotia Gorget"] or player.wardrobe["Fotia Gorget"] or player.wardrobe2["Fotia Belt"] then
+        if item_to_bag("Fotia Gorget") then
             sets.building[event] = set_combine(sets.building[event], {neck="Fotia Gorget"})
-        elseif player.inventory[sets.ws_neck[spell_element.en].neck] or player.wardrobe[sets.ws_neck[spell_element.en].neck] or
-                player.wardrobe2[sets.ws_neck[spell_element.en].neck] then
+        elseif item_to_bag(sets.ws_neck[spell_element.en].neck) then
             sets.building[event] = set_combine(sets.building[event], sets.ws_neck[spell_element.en])
         end
-        if player.inventory["Fotia Belt"] or player.wardrobe["Fotia Belt"] or player.wardrobe2["Fotia Belt"] then
+        if item_to_bag("Fotia Belt") then
             sets.building[event] = set_combine(sets.building[event], {waist="Fotia Belt"})
-        elseif player.inventory[sets.ws_belt[spell_element.en].waist] or player.wardrobe[sets.ws_belt[spell_element.en].waist] or
-                player.wardrobe2[sets.ws_belt[spell_element.en].waist] then
+        elseif item_to_bag(sets.ws_belt[spell_element.en].waist) then
             sets.building[event] = set_combine(sets.building[event], sets.ws_belt[spell_element.en])
         end
-        if ws_head and (player.inventory[sets.WS_types[spell.skill].head] or player.wardrobe[sets.WS_types[spell.skill].head] or
-                player.wardrobe2[sets.WS_types[spell.skill].head]) then
+        if ws_head and item_to_bag(sets.WS_types[spell.skill].head) then
             sets.building[event] = set_combine(sets.building[event], sets.WS_types[spell.skill])
         end
     end
@@ -139,10 +134,9 @@ function e_obi.midcast(status,event,spell)--equips correct obi
     if not Typ.abilitys:contains(spell.prefix) and spell.action_type ~= "Item" then
         local spell_element = (type(spell.element)=='number' and gearswap.res.elements[spell.element] or gearswap.res.elements:with('name', spell.element))
         if spell_element.name == world.weather_element or spell_element.name == world.day_element then
-            if player.inventory["Hachirin-no-Obi"] or player.wardrobe["Hachirin-no-Obi"]  or player.wardrobe2["Hachirin-no-Obi"]then
+            if item_to_bag("Hachirin-no-Obi") then
                 sets.building[event] = set_combine(sets.building[event], {waist="Hachirin-no-Obi"})
-            elseif player.inventory[sets.spell_obi[spell_element.en].waist] or player.wardrobe[sets.spell_obi[spell_element.en].waist] or
-                    player.wardrobe2[sets.spell_obi[spell_element.en].waist] then
+            elseif item_to_bag(sets.spell_obi[spell_element.en].waist) then
                 sets.building[event] = set_combine(sets.building[event], sets.spell_obi[spell_element.en])
             end
         end
@@ -172,24 +166,34 @@ function has_any_buff_of(buff_set)--returns true if you have any of the buffs gi
         end
     end
 end
-function get_item_next_use(name)--returns time that you can use the named item again
-    for _,n in pairs({"inventory","wardrobe","wardrobe2"}) do
-        for _,v in pairs(gearswap.items[n]) do
-            if type(v) == "table" and v.id ~= 0 and gearswap.res.items[v.id].en == name then
-                return gearswap.extdata.decode(v)
-            end
+function item_to_bag(name)
+    for _,bag in ipairs(equip_from_bags) do
+        local item = player[bag][name]
+        if item then
+            return bag
+        end
+    end
+end
+function get_item_extdata(name)--decodes extdata for given item name
+    local bag = item_to_bag(name)
+    if bag then
+        local item = player[bag][name]
+        if item then
+            return gearswap.extdata.decode(item)
         end
     end
 end
 function xp_cp_ring_equip(ring)--equips selected ring
-     if auto_ring then
-         enable("left_ring")
-         gearswap.equip_sets('xp_cp_ring_auto_equip',nil,{left_ring=ring})
-         disable("left_ring")
-     end
+    if auto_ring then
+        enable("left_ring")
+        gearswap.equip_sets('equip_command',nil,{left_ring=rings[rings_count],})
+        disable("left_ring")
+    end
 end
 function schedule_xpcp_ring()--scheduals equip of selected ring
-    local ring_time = os.time(os.date("!*t", get_item_next_use(rings[rings_count]).next_use_time))-os.time()
+    local a = get_item_extdata(rings[rings_count])--get_item_extdata(rings[rings_count])
+    if not a then return end
+    local ring_time = os.time(os.date("!*t", a.next_use_time))-os.time()
     if type(xpcpcoring) == "thread" then
         coroutine.close(xpcpcoring)
     end
@@ -215,16 +219,20 @@ function check_ring_buff()-- returs true if you do not have the buff from xp cp 
     end
     return false
 end
-function partybuffcheck(name, bufftbl) --return true if party member has any of buff list else it returns false
+function partybuffcheck(name, buff) --return true if party member has any of buff list else it returns false
     local in_party = check_in_party(name)
-    local in_party_bufftbl = partybuffs[name]
-    for _,v in pairs(bufftbl) do
-        if in_party and in_party_bufftbl:contains(v) then
-            return true
-        end
-    end
-    return false
+     for pt_num,pt in ipairs(alliance) do
+         for pos,party_position in ipairs(pt) do
+             if party_position.name == name and party_position.buffactive[buff] then
+                return true
+             end
+         end
+     end
 end
 function c_equip(delay, set, event)--delay equip
     return gearswap.equip_sets:schedule(delay, event..'_delayed_equip', nil, set)
+end
+send_command("input /heal")
+if auto_ring and check_ring_buff() then
+    schedule_xpcp_ring()
 end

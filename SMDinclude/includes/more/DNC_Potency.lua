@@ -1,7 +1,8 @@
 --Dancer Waltz Potency Claculator
 DNC = {}
 function DNC.set_drain_samba() -- returns the highest lvl Drain Samba you can use
-    local abilitys = gearswap.res.job_abilities local dnc_type
+    local abilitys = gearswap.res.job_abilities
+    local dnc_type
     if player.main_job == "DNC" then
         dnc_type = 'main_job'
     elseif player.sub_job == "DNC" then
@@ -48,7 +49,7 @@ function DNC.select_waltz(bpotency,received_pot,tpreduction) -- returns the most
     local potency = (bpotency  + (player.main_job == "DNC" and (player.job_points.dnc.waltz_potency*2) or 0) + Contradance_potency)
     local hp_dif = (player.max_hp - player.hp)
     local abilitys = gearswap.res.job_abilities
-    local base = (Player['VIT'] + Player['VIT+']) + (Player['CHR'] + Player['CHR+'])
+    local base = player.vit + player.chr
     local dnc_type
     local h_waltz
     local h_hp

@@ -1,4 +1,4 @@
-
+--this contains all the self created functions to make my display work
 function c_w(a,b,x,y)
     return (_G[a] and _G[b] and _G[b]:hover(x, y) and _G[b]:visible()) or (_G[b] and _G[b]:hover(x, y) and _G[b]:visible()) or
             (type(_G[a]) == "table" and _G[a]:hover(x, y) and _G[a]:visible())
@@ -50,7 +50,7 @@ function get_vars(men,mode,x,y)
     end
     return a
 end
-function grab_switches(name,tab)
+function grab_switches(name,tab)--pulls switches from the display
     local tabl = L{}
     for _,v in ipairs(tab) do
         for _,v2 in ipairs(string.split(v,'\n')) do
@@ -88,7 +88,7 @@ function get_window_pos(x,y,check)
     end
     return my, mx, button_lines, hx, hy
 end
-function set_prim_loc(loc,name,tab,x,y)
+function set_prim_loc(loc,name,tab,x,y)--gets location to highlight curenly selected option
     local hide_button = S{'{mjob}','{mjob_lvl}','{skill_lvl|Updating}','{pagro|0}','{pragro|0}','{aagro|0},{ptgro|0}'}
     for i, v in ipairs(loc) do
         if (y > v.ya and y < v.yb) then
@@ -130,12 +130,12 @@ function set_loc(loc,hy,name,tab)
         end
     end
 end
-function kill_window(w)
+function kill_window(w)--closes/destroys window
     _G[w]:hide()
     _G[w]:destroy()
     _G[w] = nil
 end
-function remove_functions(name,iname)
+function remove_functions(name,iname)--cleans current gearswap memory of disabled addon
     if _G[name] then
         for i, v in pairs(_G[name]) do
             if i:endswith('id') then

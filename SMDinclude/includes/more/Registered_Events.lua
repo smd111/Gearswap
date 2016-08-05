@@ -1,8 +1,5 @@
 packets = require('packets')
-reg_event = {}
-reg_event.skill = {}
-reg_event.atacking_mobs = {player=T{},party=T{},alliance=T{},pet=T{}}
-reg_event.treasure_hunter = {}
+reg_event = {skill = {},atacking_mobs = {player=T{},party=T{},alliance=T{},pet=T{}},treasure_hunter = {},mb_timer = 1}
 reg_event.skill_type = {'Axe','Club','Dagger','Great Axe','Great Katana','Great Sword','Hand-to-Hand','Katana','Polearm','Scythe','Staff','Sword','Archery',
                         'Marksmanship','Throwing','Evasion','Guard','Parrying','Shield','Blue Magic','Dark Magic','Divine Magic','Elemental Magic','Enfeebling Magic',
                         'Enhancing Magic','Geomancy','Handbell','Healing Magic','Ninjutsu','Singing','Stringed Instrument','Summoning Magic','Wind Instrument',
@@ -140,26 +137,6 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
             end
             triggered = true
         end
-    elseif id == 0x00A then
-        local packet = packets.parse('incoming', data)
-        if packet['Player'] == player.id then
-            Player['STR'] = packet['STR'] Player['DEX'] = packet['DEX'] Player['VIT'] = packet['VIT'] Player['AGI'] = packet['AGI'] Player['INT'] = packet['INT']
-            Player['MND'] = packet['MND'] Player['CHR'] = packet['CHR'] Player['STR+'] = packet['STR Bonus'] Player['DEX+'] = packet['DEX Bonus']
-            Player['VIT+'] = packet['VIT Bonus'] Player['AGI+'] = packet['AGI Bonus'] Player['INT+'] = packet['INT Bonus'] Player['MND+'] = packet['MND Bonus']
-            Player['CHR+'] = packet['CHR Bonus']
-        end
-    --0x061--
-    elseif id == 0x061 then
-        local packet = packets.parse('incoming', data)
-        Player['STR'] = packet['Base STR'] Player['DEX'] = packet['Base DEX'] Player['VIT'] = packet['Base VIT'] Player['AGI'] = packet['Base AGI']
-        Player['INT'] = packet['Base INT'] Player['MND'] = packet['Base MND'] Player['CHR'] = packet['Base CHR'] Player['STR+'] = packet['Added STR']
-        Player['DEX+'] = packet['Added DEX'] Player['VIT+'] = packet['Added VIT'] Player['AGI+'] = packet['Added AGI'] Player['INT+'] = packet['Added INT']
-        Player['MND+'] = packet['Added MND'] Player['CHR+'] = packet['Added CHR']
-        -- Player['Attack'] = packet['Attack'] Player['Defense'] = packet['Defense'] Player['Fire Resistance'] = packet['Fire Resistance']
-        -- Player['Wind Resistance'] = packet['Wind Resistance'] Player['Lightning Resistance'] = packet['Lightning Resistance']
-        -- Player['Light Resistance'] = packet['Light Resistance'] Player['Ice Resistance'] = packet['Ice Resistance']
-        -- Player['Earth Resistance'] = packet['Earth Resistance'] Player['Water Resistance'] = packet['Water Resistance']
-        -- Player['Dark Resistance'] = packet['Dark Resistance']
     end
     if triggered and updatedisplay then
         updatedisplay()
@@ -167,28 +144,3 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
     end
 end
 reg_event.incoming_chunk_id = windower.raw_register_event('incoming chunk', reg_event.incoming_chunk)
--- function reg_event.outgoing_chunk(id, data, modified, injected, blocked)
-        -- print(id)
-    -- if id == 0x016 then
-        -- local packet = packets.parse('outgoing', data)
-        -- print(packet['Target Index'],player.index)
-    -- end
--- end
--- reg_event.outgoing_chunk_id = windower.raw_register_event('outgoing chunk', reg_event.outgoing_chunk)
-function initalize()
-    local data = windower.packets.last_incoming(0x061)
-    if data == nil then
-        return
-    end
-    local packet = packets.parse('incoming', data)
-    Player['STR'] = packet['Base STR'] Player['DEX'] = packet['Base DEX'] Player['VIT'] = packet['Base VIT'] Player['AGI'] = packet['Base AGI']
-    Player['INT'] = packet['Base INT'] Player['MND'] = packet['Base MND'] Player['CHR'] = packet['Base CHR'] Player['STR+'] = packet['Added STR']
-    Player['DEX+'] = packet['Added DEX'] Player['VIT+'] = packet['Added VIT'] Player['AGI+'] = packet['Added AGI'] Player['INT+'] = packet['Added INT']
-    Player['MND+'] = packet['Added MND'] Player['CHR+'] = packet['Added CHR']
-    -- Player['Attack'] = packet['Attack'] Player['Defense'] = packet['Defense'] Player['Fire Resistance'] = packet['Fire Resistance']
-    -- Player['Wind Resistance'] = packet['Wind Resistance'] Player['Lightning Resistance'] = packet['Lightning Resistance']
-    -- Player['Light Resistance'] = packet['Light Resistance'] Player['Ice Resistance'] = packet['Ice Resistance']
-    -- Player['Earth Resistance'] = packet['Earth Resistance'] Player['Water Resistance'] = packet['Water Resistance']
-    -- Player['Dark Resistance'] = packet['Dark Resistance']
-end
-initalize()

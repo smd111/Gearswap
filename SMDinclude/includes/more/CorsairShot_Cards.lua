@@ -1,5 +1,4 @@
-card = {}
-card.item_use = 'none'
+card = {item_use = 'none'}
 function card.check(name)
     local card_case = gearswap.res.items:with('en', name.." Card Case")
     if player.inventory[card_case[gearswap.language]] ~= nil then

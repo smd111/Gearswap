@@ -27,6 +27,9 @@ function initialize(text, settings, name)
             if (player.main_job == 'NIN' or player.sub_job == 'NIN') and Ninw then
                 line:append('Nin Wheel\n Start LVL = ${ninstartlvl}\n Start ELE = ${ninstartele}\n Start Type = ${ninstarttype}\n ${ninstart|Stoped}')
             end
+            if (player.main_job == 'SCH' or player.sub_job == 'SCH') then
+                line:append('-Stratagem-\n   Ignore Recast ${istratre}')
+            end
             if show_aggro then
             line:append('-Aggro Count-\n   Player = ${pagro|0}\n   Party = ${pragro|0}\n   Alliance = ${aagro|0}')
                 if jobs.pet:contains(player.main_job) or jobs.pet:contains(player.sub_job) then
@@ -53,7 +56,8 @@ function initialize(text, settings, name)
             end
             line:append('CP XP ring = ${axpcpring}')
             if auto_ring then
-                line:append('Ring = ${xpcpring}')
+                line:append(' Ring = ${xpcpring}')
+                line:append(' ${resetring}')
             end
             line:append('Auto Shard Use   ${ashard}')
             if Registered_Events then
@@ -103,7 +107,6 @@ function initialize(text, settings, name)
         end
         if #line == 0 then
             line:append('\n > \n ')
-            --line:append('STR:${STR} +${STRb} \n DEX:${DEX} +${DEXb} \n VIT:${VIT} +${VITb} \n AGI:${AGI} +${AGIb} \n INT:${INT} +${INTb} \n MND:${MND} +${MNDb} \n CHR:${CHR} +${CHR}')
         end
     else
         local menu_initialize = get_vars(name,"menu")
@@ -157,6 +160,7 @@ function updatedisplay()
         i.ninstart = (ninja_wheel.super_tog or ninja_wheel.tog) and '\\cs(0,255,0)Started\\cr' or '\\cs(255,255,0)Stoped\\cr'
         i.ninstarttype = ninja_wheel.start_type and 'Super' or 'Normal'
     end
+    i.istratre = ISr and c_m or n_c
     i.stepm = Stepmax
     i.ssteps = Stopsteps and c_m or n_c
     i.listm = menu_list[menu_set]
@@ -184,20 +188,6 @@ function updatedisplay()
     i.swhp = s_waltz_h_a and c_m or n_c
     i.axpcpring = auto_ring and c_m or n_c
     i.wshead = ws_head and c_m or n_c
-    i.STR = Player['STR']
-    i.STRb = Player['STR+']
-    i.DEX = Player['DEX']
-    i.DEXb = Player['DEX+']
-    i.VIT = Player['VIT']
-    i.VITb = Player['VIT+']
-    i.AGI = Player['AGI']
-    i.AGIb = Player['AGI+']
-    i.INT = Player['INT']
-    i.INTb = Player['INT+']
-    i.MND = Player['MND']
-    i.MNDb = Player['MND+']
-    i.CHR = Player['CHR']
-    i.CHRb = Player['CHR+']
     if weapon_types_count > #weapon_types then
         weapon_types_count = 1
     end
@@ -214,6 +204,7 @@ function updatedisplay()
         rings_count = 1
     end
     i.xpcpring = string.gsub(rings[rings_count], "_", " ")
+    i.resetring = "Reset Timer"
     i.mjob = player.main_job_full
     i.mjob_lvl = player.main_job_level
     if menu_set == 6 then
@@ -246,6 +237,11 @@ function extra_display(x,y,loc,hy,check)
             windower.prim.set_visibility('window_button', false)
             if file_write and file_write.write then
                 file_write.write()
+            end
+            if v[2] == "weapon_select_window" then
+                gearswap.equip_sets('equip_command',nil,sets.weapon[weapon_types[weapon_types_count]])
+            elseif v[2] == "range_select_window" then
+                gearswap.equip_sets('equip_command',nil,sets.range[range_types[range_types_count]])
             end
         end
     end
@@ -381,12 +377,17 @@ function menu_commands(com)
     elseif com == "{debugm}" then
         debug_mode((not _settings.debug_mode))
     elseif com == "{regs|Reload Gearswap}" then
-        send_command("lua reload gearswap")--gearswap.refresh_user_env()
+        send_command("gs reload")
     elseif com == "{gsex1|Gearswap Export}" then
         gearswap.export_set({'mainjob','overwrite'})
+    elseif com == "{istratre}" then
+        ISr = not ISr
     else
+        if com == "{xpcpring}" or com == "{resetring}" then
+            schedule_xpcp_ring()
+        end
         ----Window Open/Close Rules----
-        if S{"{amode}","{listm}","{skill}","{wept}","{rwept}","{debugtype}","{xpcpring}"}:contains(com) then
+        if S{"{amode}","{listm}","{skill}","{wept}","{rwept}","{debugtype}","{xpcpring}","{resetring}"}:contains(com) then
             local ctext = {text = {font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=(menu.pos.x - 120),y=(menu.pos.y)}}
             local menu_open = get_vars(com,"command")
             for i,v in pairs(menu_open) do
@@ -399,9 +400,6 @@ function menu_commands(com)
                         _G[v[1]]:show()
                     else
                         kill_window(v[1])
-                    end
-                    if com == "{xpcpring}" then
-                        schedule_xpcp_ring()
                     end
                 elseif _G[v[1]] then
                     kill_window(v[1])

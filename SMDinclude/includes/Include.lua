@@ -1,3 +1,22 @@
+--modded gearswap functions
+function gearswap.refresh_item_list(itemlist)
+    retarr = gearswap.make_user_table()
+    for i,v in pairs(itemlist) do
+        if type(v) == 'table' and v.id and v.id ~= 0 then
+            if gearswap.res.items[v.id] and gearswap.res.items[v.id][language] and not retarr[gearswap.res.items[v.id][language]] then
+                retarr[gearswap.res.items[v.id][language]] = v
+                retarr[gearswap.res.items[v.id][language]].shortname=gearswap.res.items[v.id][language]:lower()
+                if gearswap.res.items[v.id][language..'_log'] and gearswap.res.items[v.id][language..'_log']:lower() ~= gearswap.res.items[v.id][language]:lower() then
+                    retarr[gearswap.res.items[v.id][language]].longname = gearswap.res.items[v.id][language..'_log']:lower()
+                    retarr[gearswap.res.items[v.id][language..'_log']] = retarr[gearswap.res.items[v.id][language]]
+                end
+            elseif gearswap.res.items[v.id] and gearswap.res.items[v.id][language] then
+                retarr[gearswap.res.items[v.id][language]].count = retarr[gearswap.res.items[v.id][language]].count + v.count
+            end
+        end
+    end
+    return retarr
+end
 include_setup()
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
 if gearswap.pathsearch({'SMDinclude/includes/map.lua'}) and gearswap.pathsearch({'SMDinclude/includes/extra.lua'}) then
@@ -211,10 +230,7 @@ function indi_change(indi_table,gain)
     end
 end
 function sub_job_change(new,old)
-    -- gearswap.refresh_user_env()
-    -- local status = {end_event=false,stop_swapping_gear=true}
-    -- run_event(status,new,old)
-    menu_commands("{regs|Reload Gearswap}")
+    send_command("gs reload")
 end
 function self_command(com)
     local status = {end_event=false,stop_swapping_gear=true}
@@ -235,14 +251,6 @@ function file_unload(new_job)
     if file_write and file_write.write then
         file_write.write()
     end
-    -- if button then
-        -- button:hide()
-        -- button:destroy()
-    -- end
-    -- if window then
-        -- window:hide()
-        -- window:destroy()
-    -- end
 end
 --Load includes------------------------------------------------------------------------------------------------------------------
 load_include(MJi, 'mjob/main_job_'..player.main_job..'.lua')
