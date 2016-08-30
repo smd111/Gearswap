@@ -59,7 +59,7 @@ function initialize(text, settings, name)
                 line:append(' Ring = ${xpcpring}')
                 line:append(' ${resetring}')
             end
-            line:append('Auto Shard Use   ${ashard}')
+            line:append('Auto Shard Use   ${ashard}\nNo Spells in Town${sstown}')
             if Registered_Events then
                 line:append('-Show-\n  MJob and LVL   ${tmjl}\n  Skill Level   ${tskill}\n  Aggro Count  ${aggroenable}')
             end
@@ -188,6 +188,7 @@ function updatedisplay()
     i.swhp = s_waltz_h_a and c_m or n_c
     i.axpcpring = auto_ring and c_m or n_c
     i.wshead = ws_head and c_m or n_c
+    i.sstown = tsstown and c_m or n_c
     if weapon_types_count > #weapon_types then
         weapon_types_count = 1
     end
@@ -347,6 +348,8 @@ function menu_commands(com)
         show_aggro = not show_aggro
     elseif com == '{ashard}' then
         auto_use_shards = not auto_use_shards
+    elseif com == '{sstown}' then
+        tsstown = not tsstown
     elseif com == "{swhp}" then
         s_waltz_h_a = not s_waltz_h_a
     elseif com == "{hid|HIDE}" then

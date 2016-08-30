@@ -9,7 +9,6 @@ function include_setup()
     --WeaponSkill after cast equip delay (Default: 2)
     WeaponSkill_aftercast_equip_delay = 2
 end
-include('organizer-lib')
 include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
@@ -22,53 +21,51 @@ function gear_setup()
     sets.weapon['Scythe'] = {main="Eminent Sickle",sub="Uther's Grip"}
     sets.weapon['Sword'] = {main="Eminent Scimitar",sub="Eminent Dagger"}
     sets.weapon['None'] = {main=empty,sub=empty}
-    sets.weapon['Great_Axe2'] = {main="Blurred Cleaver",sub="Uther's Grip"}
     sets.range['Marksmanship'] = {range="Lion Crossbow",ammo="Crossbow Bolt"}
     sets.range['Throwing'] = {range="Snakeeye",ammo=empty}
     sets.armor['Basic'] = {}
-    sets.armor['Capacity_Points'] = {back="Aptitude Mantle +1",}
     sets.Engaged = {
-        head="Gefechtschaller",
-        body="Gefechtbrust",
-        hands="Gefechthentzes",
-        legs="Gefechtdiechlings",
-        feet="Gefechtschuhs",
-        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-        waist="Marid Belt",
-        left_ear="Impreg. Earring",
-        right_ear="Upsurge Earring",
-        left_ring="Enlivened Ring",
-        right_ring="Vehemence Ring",
-        back="Cerberus Mantle",
-        }
+    head="Outrider Mask",
+    body="Outrider Mail",
+    hands="Outrider Mittens",
+    legs="Outrider Hose",
+    feet="Outrider Greaves",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Marid Belt",
+    left_ear="Impreg. Earring",
+    right_ear="Upsurge Earring",
+    left_ring="Enlivened Ring",
+    right_ring="Vehemence Ring",
+    back="Cerberus Mantle",
+    }
     sets.Idle = {
-        head="Gefechtschaller",
-        body="Gefechtbrust",
-        hands="Gefechthentzes",
-        legs="Gefechtdiechlings",
-        feet="Gefechtschuhs",
-        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-        waist="Marid Belt",
-        left_ear="Impreg. Earring",
-        right_ear="Upsurge Earring",
-        left_ring="Enlivened Ring",
-        right_ring="Vehemence Ring",
-        back="Cerberus Mantle",
-        }
+    head="Outrider Mask",
+    body="Outrider Mail",
+    hands="Outrider Mittens",
+    legs="Outrider Hose",
+    feet="Outrider Greaves",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Marid Belt",
+    left_ear="Impreg. Earring",
+    right_ear="Upsurge Earring",
+    left_ring="Enlivened Ring",
+    right_ring="Vehemence Ring",
+    back="Cerberus Mantle",
+    }
     sets.Resting = {
-        head="Gefechtschaller",
-        body="Gefechtbrust",
-        hands="Gefechthentzes",
-        legs="Gefechtdiechlings",
-        feet="Gefechtschuhs",
-        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-        waist="Marid Belt",
-        left_ear="Sanative Earring",
-        right_ear="Upsurge Earring",
-        left_ring="Enlivened Ring",
-        right_ring="Vehemence Ring",
-        back="Cerberus Mantle",
-        }
+    head="Outrider Mask",
+    body="Outrider Mail",
+    hands="Outrider Mittens",
+    legs="Outrider Hose",
+    feet="Outrider Greaves",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Marid Belt",
+    left_ear="Sanative Earring",
+    right_ear="Upsurge Earring",
+    left_ring="Enlivened Ring",
+    right_ring="Vehemence Ring",
+    back="Cerberus Mantle",
+    }
     sets.pretarget["Tomahawk"] = {range=empty,ammo="Thr. Tomahawk"}
     sets.precast["Mighty Strikes"] = {hands="Agoge Mufflers +1"}
     sets.precast["Berserk"] = {body="Pumm. Lorica +1",feet="Agoge Calligae +1"}
@@ -79,11 +76,11 @@ function gear_setup()
     sets.precast["Tomahawk"] = {range=empty,ammo="Thr. Tomahawk",feet="Agoge Calligae +1"}
     sets.precast["Restraint"] = {hands="Boii Mufflers +1"}
     sets.precast["Blood Rage"] = {body="Boii Lorica +1"}
-    -- organizer_items = {}
+    echotest = {[0]="UNK",[1]="AMORPH",[2]="AQUAN",[3]="ARCANA",[4]="ARCHAICMACHINE",[5]="AVATAR",[6]="BEAST",[7]="BEASTMEN",[8]="BIRD",[9]="DEMON",[10]="DRAGON",[11]="ELEMENTAL",[12]="EMPTY",[13]="HUMANOID",[14]="LIZARD",[15]="LUMORIAN",[16]="LUMINION",[17]="PLANTOID",[18]="UNCLASSIFIED",[19]="UNDEAD",[20]="VERMIN",[21]="VORAGEAN"}
 end
 function mf.file_load()
     if windower.ffxi.get_info().mog_house then
-        send_command('gs org')
+        send_command('org organize')
     end
 end
 function mf.file_unload(new_job)
@@ -93,7 +90,7 @@ end
 function mf.filtered_action(status,current_event,spell)
 end
 function mf.pretarget(status,current_event,spell)
-    if spell.en == "Provoke" and player.sub_job == "DNC" and not check_recast('ability',spell.recast_id) then
+    if spell.en == "Provoke" and not check_recast('ability',spell.recast_id) then
         status.end_event=true status.end_spell=true
         send_command('input /ja "Animated Flourish" <t>')
     end

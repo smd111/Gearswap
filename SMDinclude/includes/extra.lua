@@ -185,6 +185,8 @@ function get_item_extdata(name)--decodes extdata for given item name
 end
 function xp_cp_ring_equip(ring)--equips selected ring
     if auto_ring then
+        --sets.xpcpring ={left_ring=rings[rings_count],}
+        --send_command("gs enable left_ring;wait 1.0;gs equip xpcpring;wait 1.0;gs disable left_ring")
         enable("left_ring")
         gearswap.equip_sets('equip_command',nil,{left_ring=rings[rings_count],})
         disable("left_ring")

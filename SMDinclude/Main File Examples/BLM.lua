@@ -7,7 +7,6 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
-include('organizer-lib')
 include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
@@ -15,53 +14,52 @@ function gear_setup()
     sets.weapon['Club'] = {main="Eminent Wand",sub="Eminent Dagger"}
     sets.range['Other'] = {range="",ammo=""}
     sets.armor['Basic'] = {}
-    sets.armor['Capacity_Points'] = {back="Aptitude Mantle +1",}
     sets.Engaged = {
-        head="Tema. Headband",
-        body="Temachtiani Shirt",
-        hands="Temachtiani Gloves",
-        legs="Temachtiani Pants",
-        feet="Temachtiani Boots",
-        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-        waist="Mrc.Cpt. Belt",
-        left_ear="Ardent Earring",
-        right_ear="Liminus Earring",
-        left_ring="Rajas Ring",
-        right_ring="Prouesse Ring",
-        back="Jester's Cape",
-        }
+    head="Tema. Headband",
+    body="Temachtiani Shirt",
+    hands="Temachtiani Gloves",
+    legs="Temachtiani Pants",
+    feet="Temachtiani Boots",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Mrc.Cpt. Belt",
+    left_ear="Ardent Earring",
+    right_ear="Liminus Earring",
+    left_ring="Rajas Ring",
+    right_ring="Prouesse Ring",
+    back="Jester's Cape",
+    }
     sets.Idle = {
-        head="Tema. Headband",
-        body="Temachtiani Shirt",
-        hands="Temachtiani Gloves",
-        legs="Temachtiani Pants",
-        feet="Temachtiani Boots",
-        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-        waist="Mrc.Cpt. Belt",
-        left_ear="Ardent Earring",
-        right_ear="Liminus Earring",
-        left_ring="Rajas Ring",
-        right_ring="Prouesse Ring",
-        back="Jester's Cape",
-        }
+    head="Tema. Headband",
+    body="Temachtiani Shirt",
+    hands="Temachtiani Gloves",
+    legs="Temachtiani Pants",
+    feet="Temachtiani Boots",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Mrc.Cpt. Belt",
+    left_ear="Ardent Earring",
+    right_ear="Liminus Earring",
+    left_ring="Rajas Ring",
+    right_ring="Prouesse Ring",
+    back="Jester's Cape",
+    }
     sets.Resting = {
-        head="Tema. Headband",
-        body="Temachtiani Shirt",
-        hands="Temachtiani Gloves",
-        legs="Temachtiani Pants",
-        feet="Temachtiani Boots",
-        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-        waist="Mrc.Cpt. Belt",
-        left_ear="Relaxing Earring",
-        right_ear="Liminus Earring",
-        left_ring="Rajas Ring",
-        right_ring="Prouesse Ring",
-        back="Jester's Cape",
-        }
+    head="Tema. Headband",
+    body="Temachtiani Shirt",
+    hands="Temachtiani Gloves",
+    legs="Temachtiani Pants",
+    feet="Temachtiani Boots",
+    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+    waist="Mrc.Cpt. Belt",
+    left_ear="Relaxing Earring",
+    right_ear="Liminus Earring",
+    left_ring="Rajas Ring",
+    right_ring="Prouesse Ring",
+    back="Jester's Cape",
+    }
 end
 function mf.file_load()
     if windower.ffxi.get_info().mog_house then
-        send_command('gs org')
+        send_command('org organize')
     end
 end
 function mf.file_unload(new_job)

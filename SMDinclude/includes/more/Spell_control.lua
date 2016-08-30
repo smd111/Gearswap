@@ -21,7 +21,7 @@ function spell_stopper(spell) --return true if spell is unable to be cast at thi
     elseif (Watch_pet_midaction and pet_midaction() or false) or (Watch_midaction and midaction() or false) then
         return true
     --Stops spell if you do not have a target
-    elseif spell.target.name == nil then
+    elseif spell.target.name == nil and not spell.target.raw:contains("st") then
         return true
     --Stops spell if a blocking buff is active
     elseif spell.action_type == 'Ability' and spell.type ~= 'WeaponSkill' and (has_any_buff_of(unusable_buff.ability) 
@@ -37,7 +37,7 @@ function spell_stopper(spell) --return true if spell is unable to be cast at thi
     elseif player.tp < 1000 and spell.type == 'WeaponSkill' then
         return true
     --Stops all spells but teleport spells in cities
-    elseif not transportation_spells:contains(spell.en) and cities:contains(world.area) then
+    elseif tsstown and not transportation_spells:contains(spell.en) and cities:contains(world.area) then
         return true
     --Stops Trust spells from being cast if you already have the same trust active
     elseif spell.type == "Trust" and party.count > 1 then
