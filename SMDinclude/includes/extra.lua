@@ -191,9 +191,16 @@ function xp_cp_ring_equip(ring)--equips selected ring
     end
 end
 function schedule_xpcp_ring()--scheduals equip of selected ring
-    local a = get_item_extdata(rings[rings_count])--get_item_extdata(rings[rings_count])
+    local a = get_item_extdata(rings[rings_count])
     if not a then return end
     local ring_time = os.time(os.date("!*t", a.next_use_time))-os.time()
+    
+    -- local ring_time
+    -- if a and a.next_use_time > 0 then
+        -- ring_time = os.time(os.date("!*t", a.next_use_time))-os.time()
+    -- else
+        -- return
+    -- end
     if type(xpcpcoring) == "thread" then
         coroutine.close(xpcpcoring)
     end

@@ -7,6 +7,7 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
+include('organizer-lib')
 include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
@@ -14,49 +15,50 @@ function gear_setup()
     sets.weapon['Dagger'] = {main="Eminent Dagger",sub=""}
     sets.range['Wind Instruments'] = {range="Cornette",ammo=empty}
     sets.armor['Basic'] = {}
+    sets.armor['Capacity_Points'] = {back="Aptitude Mantle +1",}
     sets.Engaged = {
-    head="Tema. Headband",
-    body="Temachtiani Shirt",
-    hands="Temachtiani Gloves",
-    legs="Temachtiani Pants",
-    feet="Temachtiani Boots",
-    waist="Mrc.Cpt. Belt",
-    left_ear="Relaxing Earring",
-    right_ear="Liminus Earring",
-    left_ring="Bastokan Ring",
-    right_ring="Rajas Ring",
-    back="Invisible Mantle",
-    }
+        head="Tema. Headband",
+        body="Temachtiani Shirt",
+        hands="Temachtiani Gloves",
+        legs="Temachtiani Pants",
+        feet="Temachtiani Boots",
+        waist="Mrc.Cpt. Belt",
+        left_ear="Relaxing Earring",
+        right_ear="Liminus Earring",
+        left_ring="Bastokan Ring",
+        right_ring="Rajas Ring",
+        back="Invisible Mantle",
+        }
     sets.Idle = {
-    head="Tema. Headband",
-    body="Temachtiani Shirt",
-    hands="Temachtiani Gloves",
-    legs="Temachtiani Pants",
-    feet="Temachtiani Boots",
-    waist="Mrc.Cpt. Belt",
-    left_ear="Relaxing Earring",
-    right_ear="Liminus Earring",
-    left_ring="Bastokan Ring",
-    right_ring="Rajas Ring",
-    back="Invisible Mantle",
-    }
+        head="Tema. Headband",
+        body="Temachtiani Shirt",
+        hands="Temachtiani Gloves",
+        legs="Temachtiani Pants",
+        feet="Temachtiani Boots",
+        waist="Mrc.Cpt. Belt",
+        left_ear="Relaxing Earring",
+        right_ear="Liminus Earring",
+        left_ring="Bastokan Ring",
+        right_ring="Rajas Ring",
+        back="Invisible Mantle",
+        }
     sets.Resting = {
-    head="Tema. Headband",
-    body="Temachtiani Shirt",
-    hands="Temachtiani Gloves",
-    legs="Temachtiani Pants",
-    feet="Temachtiani Boots",
-    waist="Mrc.Cpt. Belt",
-    left_ear="Relaxing Earring",
-    right_ear="Liminus Earring",
-    left_ring="Bastokan Ring",
-    right_ring="Rajas Ring",
-    back="Invisible Mantle",
-    }
+        head="Tema. Headband",
+        body="Temachtiani Shirt",
+        hands="Temachtiani Gloves",
+        legs="Temachtiani Pants",
+        feet="Temachtiani Boots",
+        waist="Mrc.Cpt. Belt",
+        left_ear="Relaxing Earring",
+        right_ear="Liminus Earring",
+        left_ring="Bastokan Ring",
+        right_ring="Rajas Ring",
+        back="Invisible Mantle",
+        }
 end
 function mf.file_load()
     if windower.ffxi.get_info().mog_house then
-        send_command('org organize')
+        send_command('gs org')
     end
 end
 function mf.file_unload(new_job)

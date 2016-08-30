@@ -7,6 +7,7 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
+include('organizer-lib')
 include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
@@ -16,6 +17,7 @@ function gear_setup()
     sets.range['Throwing'] = {range="Chakram",ammo=empty}
     sets.range['Arrow'] = {range="Shortbow",ammo="Iron Arrow",}
     sets.armor['Basic'] = {}
+    sets.armor['Capacity_Points'] = {back="Aptitude Mantle +1",}
     sets.Engaged = {
         head="Aurore Beret",
         body="Aurore Doublet",
@@ -61,7 +63,7 @@ function gear_setup()
 end
 function mf.file_load()
     if windower.ffxi.get_info().mog_house then
-        send_command('org organize')
+        send_command('gs org')
     end
 end
 function mf.file_unload(new_job)

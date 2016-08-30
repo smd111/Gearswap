@@ -7,6 +7,7 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
+include('organizer-lib')
 include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
@@ -15,51 +16,52 @@ function gear_setup()
     sets.weapon['None'] = {main=empty,sub=empty}
     sets.range['Other'] = {range="Em. Animator",ammo=empty}
     sets.armor['Basic'] = {}
+    sets.armor['Capacity_Points'] = {back="Aptitude Mantle +1",}
     sets.Engaged = {
-    head="Tema. Headband",
-    body="Temachtiani Shirt",
-    hands="Temachtiani Gloves",
-    legs="Temachtiani Pants",
-    feet="Temachtiani Boots",
-    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-    waist="Mrc.Cpt. Belt",
-    left_ear="Upsurge Earring",
-    right_ear="Impreg. Earring",
-    left_ring="Enlivened Ring",
-    right_ring="Vehemence Ring",
-    back="Rainbow Cape",
-    }
+        head="Tema. Headband",
+        body="Temachtiani Shirt",
+        hands="Temachtiani Gloves",
+        legs="Temachtiani Pants",
+        feet="Temachtiani Boots",
+        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+        waist="Mrc.Cpt. Belt",
+        left_ear="Upsurge Earring",
+        right_ear="Impreg. Earring",
+        left_ring="Enlivened Ring",
+        right_ring="Vehemence Ring",
+        back="Rainbow Cape",
+        }
     sets.Idle = {
-    head="Tema. Headband",
-    body="Temachtiani Shirt",
-    hands="Temachtiani Gloves",
-    legs="Temachtiani Pants",
-    feet="Temachtiani Boots",
-    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-    waist="Mrc.Cpt. Belt",
-    left_ear="Upsurge Earring",
-    right_ear="Impreg. Earring",
-    left_ring="Enlivened Ring",
-    right_ring="Vehemence Ring",
-    back="Rainbow Cape",
-    }
+        head="Tema. Headband",
+        body="Temachtiani Shirt",
+        hands="Temachtiani Gloves",
+        legs="Temachtiani Pants",
+        feet="Temachtiani Boots",
+        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+        waist="Mrc.Cpt. Belt",
+        left_ear="Upsurge Earring",
+        right_ear="Impreg. Earring",
+        left_ring="Enlivened Ring",
+        right_ring="Vehemence Ring",
+        back="Rainbow Cape",
+        }
     sets.Resting = {
-    head="Tema. Headband",
-    body="Temachtiani Shirt",
-    hands="Temachtiani Gloves",
-    legs="Temachtiani Pants",
-    feet="Temachtiani Boots",
-    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-    waist="Mrc.Cpt. Belt",
-    left_ear="Upsurge Earring",
-    right_ear="Sanative Earring",
-    left_ring="Enlivened Ring",
-    right_ring="Vehemence Ring",
-    back="Rainbow Cape",
-    }
+        head="Tema. Headband",
+        body="Temachtiani Shirt",
+        hands="Temachtiani Gloves",
+        legs="Temachtiani Pants",
+        feet="Temachtiani Boots",
+        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+        waist="Mrc.Cpt. Belt",
+        left_ear="Upsurge Earring",
+        right_ear="Sanative Earring",
+        left_ring="Enlivened Ring",
+        right_ring="Vehemence Ring",
+        back="Rainbow Cape",
+        }
 end
 function mf.file_load()
-    send_command('lua load PetTP') if windower.ffxi.get_info().mog_house then send_command('org organize') end
+    send_command('lua load PetTP') if windower.ffxi.get_info().mog_house then send_command('gs org') end
 end
 function mf.file_unload(new_job)
     if not S{'BST','PUP','GEO','DRG','SMN'}:contains(new_job) then send_command('lua unload PetTP') end
@@ -118,7 +120,6 @@ function custom_menu_commands(a)
     elseif a == "{esku}" then Enable_pup_skill_up = not Enable_pup_skill_up
     end
 end
-function
 windower.raw_register_event('prerender', function()
     if Enable_auto_pup and (os.clock()-log_in_time) >= 10 then
         if check_recast('ability',205) and not pet.isvalid then send_command('input /ja "Activate" <me>')
@@ -138,3 +139,4 @@ windower.raw_register_event('prerender', function()
         end
     end
 end)
+
