@@ -7,6 +7,7 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
+include('organizer-lib')
 include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
@@ -15,46 +16,47 @@ function gear_setup()
     sets.weapon['None'] = {main=empty,sub=empty}
     sets.range['Other'] = {range="",ammo=""}
     sets.armor['Basic'] = {}
+    sets.armor['Capacity_Points'] = {back="Aptitude Mantle +1",}
     sets.Engaged = {
-    body="Cmb.Cst. Cloak",
-    hands="Cmb.Cst. Mitts",
-    legs="Cmb.Cst. Slacks",
-    feet="Cmb.Cst. Shoes",
-    neck="Scholar's Torque",
-    waist="Mrc.Cpt. Belt",
-    left_ear="Ardent Earring",
-    left_ring="Bastokan Ring",
-    right_ring="Rajas Ring",
-    back="White Cape",
-    }
+        body="Cmb.Cst. Cloak",
+        hands="Cmb.Cst. Mitts",
+        legs="Cmb.Cst. Slacks",
+        feet="Cmb.Cst. Shoes",
+        neck="Scholar's Torque",
+        waist="Mrc.Cpt. Belt",
+        left_ear="Ardent Earring",
+        left_ring="Bastokan Ring",
+        right_ring="Rajas Ring",
+        back="White Cape",
+        }
     sets.Idle = {
-    body="Cmb.Cst. Cloak",
-    hands="Cmb.Cst. Mitts",
-    legs="Cmb.Cst. Slacks",
-    feet="Cmb.Cst. Shoes",
-    neck="Scholar's Torque",
-    waist="Mrc.Cpt. Belt",
-    left_ear="Ardent Earring",
-    left_ring="Bastokan Ring",
-    right_ring="Rajas Ring",
-    back="White Cape",
-    }
+        body="Cmb.Cst. Cloak",
+        hands="Cmb.Cst. Mitts",
+        legs="Cmb.Cst. Slacks",
+        feet="Cmb.Cst. Shoes",
+        neck="Scholar's Torque",
+        waist="Mrc.Cpt. Belt",
+        left_ear="Ardent Earring",
+        left_ring="Bastokan Ring",
+        right_ring="Rajas Ring",
+        back="White Cape",
+        }
     sets.Resting = {
-    body="Cmb.Cst. Cloak",
-    hands="Cmb.Cst. Mitts",
-    legs="Cmb.Cst. Slacks",
-    feet="Cmb.Cst. Shoes",
-    neck="Scholar's Torque",
-    waist="Mrc.Cpt. Belt",
-    left_ear="Ardent Earring",
-    left_ring="Bastokan Ring",
-    right_ring="Rajas Ring",
-    back="White Cape",
-    }
+        body="Cmb.Cst. Cloak",
+        hands="Cmb.Cst. Mitts",
+        legs="Cmb.Cst. Slacks",
+        feet="Cmb.Cst. Shoes",
+        neck="Scholar's Torque",
+        waist="Mrc.Cpt. Belt",
+        left_ear="Ardent Earring",
+        left_ring="Bastokan Ring",
+        right_ring="Rajas Ring",
+        back="White Cape",
+        }
 end
 function mf.file_load()
     if windower.ffxi.get_info().mog_house then
-        send_command('org organize')
+        send_command('gs org')
     end
 end
 function mf.file_unload(new_job)

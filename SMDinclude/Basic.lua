@@ -7,7 +7,7 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = false
 end
-include('includes/Include.lua')
+include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
     sets["Waltz"] = {} -- use this set for Curing Waltz I/II/II/IV/V
@@ -171,7 +171,7 @@ function mf.midcast(status,current_event,spell)
     --sets.building[current_event] = set_combine(sets.building[current_event], <setname>)
     ---------------------------------------
 end
-function mf.pet_midcast(status,current_event,spell,)
+function mf.pet_midcast(status,current_event,spell)
     ---------------------------------------
     --put your pet_midcast rules here
     ---------------------------------------

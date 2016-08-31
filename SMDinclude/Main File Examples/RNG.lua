@@ -7,6 +7,7 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
+include('organizer-lib')
 include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
@@ -16,53 +17,54 @@ function gear_setup()
     sets.range = {}
     sets.range['Archery'] = {range="Eminent Bow",ammo="Iron Arrow"}
     sets.armor['Basic'] = {}
+    sets.armor['Capacity_Points'] = {back="Aptitude Mantle +1",}
     sets.Engaged = {
-    head="Wayfarer Circlet",
-    body="Wayfarer Robe",
-    hands="Wayfarer Cuffs",
-    legs="Wayfarer Slops",
-    feet="Wayfarer Clogs",
-    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-    waist="Marid Belt",
-    left_ear="Suppanomimi",
-    right_ear="Terminus Earring",
-    left_ring="Vehemence Ring",
-    right_ring="Enlivened Ring",
-    back="Cerberus Mantle",
-    }
+        head="Wayfarer Circlet",
+        body="Wayfarer Robe",
+        hands="Wayfarer Cuffs",
+        legs="Wayfarer Slops",
+        feet="Wayfarer Clogs",
+        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+        waist="Marid Belt",
+        left_ear="Suppanomimi",
+        right_ear="Terminus Earring",
+        left_ring="Vehemence Ring",
+        right_ring="Enlivened Ring",
+        back="Cerberus Mantle",
+        }
     sets.Idle = {
-    head="Wayfarer Circlet",
-    body="Wayfarer Robe",
-    hands="Wayfarer Cuffs",
-    legs="Wayfarer Slops",
-    feet="Wayfarer Clogs",
-    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-    waist="Marid Belt",
-    left_ear="Suppanomimi",
-    right_ear="Terminus Earring",
-    left_ring="Vehemence Ring",
-    right_ring="Enlivened Ring",
-    back="Cerberus Mantle",
-    }
+        head="Wayfarer Circlet",
+        body="Wayfarer Robe",
+        hands="Wayfarer Cuffs",
+        legs="Wayfarer Slops",
+        feet="Wayfarer Clogs",
+        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+        waist="Marid Belt",
+        left_ear="Suppanomimi",
+        right_ear="Terminus Earring",
+        left_ring="Vehemence Ring",
+        right_ring="Enlivened Ring",
+        back="Cerberus Mantle",
+        }
     sets.Resting = {
-    head="Wayfarer Circlet",
-    body="Wayfarer Robe",
-    hands="Wayfarer Cuffs",
-    legs="Wayfarer Slops",
-    feet="Wayfarer Clogs",
-    neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
-    waist="Marid Belt",
-    left_ear="Sanative Earring",
-    right_ear="Terminus Earring",
-    left_ring="Vehemence Ring",
-    right_ring="Enlivened Ring",
-    back="Cerberus Mantle",
-    }
+        head="Wayfarer Circlet",
+        body="Wayfarer Robe",
+        hands="Wayfarer Cuffs",
+        legs="Wayfarer Slops",
+        feet="Wayfarer Clogs",
+        neck={ name="Wivre Gorget", augments={'"Subtle Blow"+4','MP+3',}},
+        waist="Marid Belt",
+        left_ear="Sanative Earring",
+        right_ear="Terminus Earring",
+        left_ring="Vehemence Ring",
+        right_ring="Enlivened Ring",
+        back="Cerberus Mantle",
+        }
     --send_command('lua load AutoRA')
 end
 function mf.file_load()
     if windower.ffxi.get_info().mog_house then
-        send_command('org organize')
+        send_command('gs org')
     end
 end
 function mf.file_unload(new_job)

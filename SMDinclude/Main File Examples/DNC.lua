@@ -7,6 +7,7 @@ function include_setup()
     --Start with minimized window (Default: false)
     window_hidden = true
 end
+include('organizer-lib')
 include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
@@ -15,6 +16,7 @@ function gear_setup()
     sets.weapon['None'] = {main=empty,sub=empty}
     sets.range['Throwing'] = {range="Chakram",ammo=empty}
     sets.armor['Basic'] = {}
+    sets.armor['Capacity_Points'] = {back="Aptitude Mantle +1",}
     sets.Engaged = {
         head="Tema. Headband",
         body="Temachtiani Shirt",
@@ -57,11 +59,10 @@ function gear_setup()
         right_ring="Prouesse Ring",
         back="Cerberus Mantle",
     }
-    sets["Curing Waltz"] = {}
 end
 function mf.file_load()
     if windower.ffxi.get_info().mog_house then
-        send_command('org organize')
+        send_command('gs org')
     end
 end
 function mf.file_unload(new_job)

@@ -2,6 +2,7 @@ menu,auto_use_shards,File_Write,Registered_Events,ISr,tsstown = {pos = {x = 100,
 weapon_types_count,range_types_count,armor_types_count,xpcpcoring,rings_count = 1,1,1,1,1 conquest = {ring={},neck={}}
 sets.armor,sets.pet_aftercast,sets.weapon,mf,partynames,sets.pretarget,sets.precast,sets.midcast,sets.aftercast = {},{},{},{},{},{},{},{},{}
 sets.range,sets.building,sets.pet_midcast,cc = {['ThrowLVL.99+'] = {range="Halakaala",ammo=empty}},{},{},{mc=9,r1=11,r2=10,g1=158,g2=6,b1=5,b2=205,y1=36,y2=37}
+log_in_time = os.clock()
 equip_from_bags = {"inventory","wardrobe","wardrobe2","wardrobe3","wardrobe4"}
         --Weapon types--Range types--Armor types
 weapon_types,range_types,armor_types = T{"Not Set"},T{"Not Set"},T{"Not Set"}
