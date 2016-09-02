@@ -174,39 +174,26 @@ function item_to_bag(name)
         end
     end
 end
-function get_item_extdata(name)--decodes extdata for given item name
-    local bag = item_to_bag(name)
-    if bag then
-        local item = player[bag][name]
-        if item then
-            return gearswap.extdata.decode(item)
-        end
-    end
-end
 function xp_cp_ring_equip(ring)--equips selected ring
     if auto_ring then
-        --sets.xpcpring ={left_ring=rings[rings_count],}
-        --send_command("gs enable left_ring;wait 1.0;gs equip xpcpring;wait 1.0;gs disable left_ring")
         enable("left_ring")
-        gearswap.equip_sets('equip_command',nil,{left_ring=rings[rings_count],})
+        gearswap.equip_sets('equip_command',nil,{left_ring=ring,})
         disable("left_ring")
     end
 end
 function schedule_xpcp_ring()--scheduals equip of selected ring
-    local a = get_item_extdata(rings[rings_count])
-    if not a then return end
-    local ring_time = os.time(os.date("!*t", a.next_use_time))-os.time()
-    
-    -- local ring_time
-    -- if a and a.next_use_time > 0 then
-        -- ring_time = os.time(os.date("!*t", a.next_use_time))-os.time()
-    -- else
-        -- return
-    -- end
+    local ring = rings[rings_count]
+    local ex = player[item_to_bag(ring)][ring].extdata
+    local ring_time
+    if ex and ex.charges_remaining >= 1 then
+        ring_time = os.time(os.date("!*t", ex.next_use_time))-os.time()
+    else
+        return
+    end
     if type(xpcpcoring) == "thread" then
         coroutine.close(xpcpcoring)
     end
-    xpcpcoring = coroutine.schedule(xp_cp_ring_equip:prepare(rings[rings_count]),(ring_time > 0 and ring_time or 1))
+    xpcpcoring = coroutine.schedule(xp_cp_ring_equip:prepare(ring),(ring_time > 0 and ring_time or 1))
 end
 function check_in_party(name)--returs true if given name is in allience
      for pt_num,pt in ipairs(alliance) do
@@ -242,6 +229,15 @@ function c_equip(delay, set, event)--delay equip
     return gearswap.equip_sets:schedule(delay, event..'_delayed_equip', nil, set)
 end
 send_command("input /heal")
+for _,ring in ipairs({"none","Vocation Ring","Trizek Ring","Capacity Ring","Undecennial Ring","Decennial Ring","Allied Ring","Novennial Ring","Kupofried's Ring",
+                     "Anniversary Ring","Emperor Band","Empress Band","Chariot Band","Duodec. Ring","Expertise Ring"}) do
+    local item = item_to_bag(ring)
+    if item and not rings:contains(ring) then
+       rings:append(ring)
+    elseif not item and rings:contains(ring) then
+       rings:delete(ring)
+    end
+end
 if auto_ring and check_ring_buff() then
     schedule_xpcp_ring()
 end

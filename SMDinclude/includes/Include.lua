@@ -4,8 +4,7 @@ function gearswap.refresh_item_list(itemlist)
     for i,v in pairs(itemlist) do
         if type(v) == 'table' and v.id and v.id ~= 0 then
             if gearswap.res.items[v.id] and gearswap.res.items[v.id][language] and not retarr[gearswap.res.items[v.id][language]] then
-                retarr[gearswap.res.items[v.id][language]] = v
-                retarr[gearswap.res.items[v.id][language]].shortname=gearswap.res.items[v.id][language]:lower()
+                retarr[gearswap.res.items[v.id][language]] = {id=v.id,count=v.count,shortname=gearswap.res.items[v.id][language]:lower(),extdata = gearswap.extdata.decode(v)}
                 if gearswap.res.items[v.id][language..'_log'] and gearswap.res.items[v.id][language..'_log']:lower() ~= gearswap.res.items[v.id][language]:lower() then
                     retarr[gearswap.res.items[v.id][language]].longname = gearswap.res.items[v.id][language..'_log']:lower()
                     retarr[gearswap.res.items[v.id][language..'_log']] = retarr[gearswap.res.items[v.id][language]]

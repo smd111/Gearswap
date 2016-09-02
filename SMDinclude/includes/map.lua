@@ -46,7 +46,5 @@ cure_gear = {en={main="Arka IV",sub="Dominie's Grip",body="Heka's Kalasiris",han
              ja={main="アーカIV",sub="ドミニエズグリップ",body="ヘカカラシリス",hands="ボクワスグローブ",neck="ファライナロケット",left_ear="ラウンデルピアス",}}
 lang = {english="en",japenese="ja"}
         --XP CP Rings
-rings = L{"Vocation Ring","Trizek Ring","Capacity Ring","Undecennial Ring","Decennial Ring","Allied Ring","Novennial Ring","Kupofried's Ring","Anniversary Ring",
-    "Emperor Band","Empress Band","Chariot Band","Duodec. Ring","Expertise Ring"}
-sets.xpcpring = {}
+rings = T{"none"}
     

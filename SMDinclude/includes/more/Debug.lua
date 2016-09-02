@@ -127,20 +127,7 @@ function fdebug.self_command(status,event,command)
         fdebug.count = (fdebug.count % #fdebug.type) + 1
         add_to_chat(cc.mc, 'Debug Mode Type = ' .. tostring(fdebug.type[fdebug.count]))
     elseif command == 'test' then
-        ---)
-        send_command("console_log 1")
-        for _,bag in ipairs(equip_from_bags) do
-            for name,info in ipairs(player[bag]) do
-                if info then
-                    local a = get_item_extdata(info)
-                    local ring_time
-                    if a and a.next_use_time then
-                        print("Item Name: "..name," Next Use Time: "..a.next_use_time," Current Time: "..os.time())
-                    end
-                end
-            end
-        end
-        send_command("console_log 0")
+        ---
     end
     if updatedisplay then
         updatedisplay()
