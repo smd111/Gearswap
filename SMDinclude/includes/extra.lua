@@ -228,8 +228,7 @@ end
 function c_equip(delay, set, event)--delay equip
     return gearswap.equip_sets:schedule(delay, event..'_delayed_equip', nil, set)
 end
-send_command("input /heal")
-for _,ring in ipairs({"none","Vocation Ring","Trizek Ring","Capacity Ring","Undecennial Ring","Decennial Ring","Allied Ring","Novennial Ring","Kupofried's Ring",
+for _,ring in ipairs({"None","Vocation Ring","Trizek Ring","Capacity Ring","Undecennial Ring","Decennial Ring","Allied Ring","Novennial Ring","Kupofried's Ring",
                      "Anniversary Ring","Emperor Band","Empress Band","Chariot Band","Duodec. Ring","Expertise Ring"}) do
     local item = item_to_bag(ring)
     if item and not rings:contains(ring) then
@@ -237,7 +236,4 @@ for _,ring in ipairs({"none","Vocation Ring","Trizek Ring","Capacity Ring","Unde
     elseif not item and rings:contains(ring) then
        rings:delete(ring)
     end
-end
-if auto_ring and check_ring_buff() then
-    schedule_xpcp_ring()
 end

@@ -203,8 +203,9 @@ function updatedisplay()
     i.amode = string.gsub(armor_types[armor_types_count], "_", " ")
     if rings_count > #rings then
         rings_count = 1
+        auto_ring = false
     end
-    i.xpcpring = string.gsub(rings[rings_count], "_", " ")
+    i.xpcpring = string.gsub(rings[rings_count] or "None", "_", " ")
     i.resetring = "Reset Timer"
     i.mjob = player.main_job_full
     i.mjob_lvl = player.main_job_level
@@ -386,9 +387,6 @@ function menu_commands(com)
     elseif com == "{istratre}" then
         ISr = not ISr
     else
-        if com == "{xpcpring}" or com == "{resetring}" then
-            schedule_xpcp_ring()
-        end
         ----Window Open/Close Rules----
         if S{"{amode}","{listm}","{skill}","{wept}","{rwept}","{debugtype}","{xpcpring}","{resetring}"}:contains(com) then
             local ctext = {text = {font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=(menu.pos.x - 120),y=(menu.pos.y)}}
@@ -403,6 +401,9 @@ function menu_commands(com)
                         _G[v[1]]:show()
                     else
                         kill_window(v[1])
+                        if com == "{xpcpring}" or com == "{resetring}" then
+                            schedule_xpcp_ring()
+                        end
                     end
                 elseif _G[v[1]] then
                     kill_window(v[1])

@@ -16,6 +16,17 @@ function gearswap.refresh_item_list(itemlist)
     end
     return retarr
 end
+gearswap.parse.i[0x01D] = function (data)
+    gearswap.refresh_globals()
+    if not initialload then
+        send_command("gs reload")
+        add_to_chat(cc.mc,"Smd111's Gearswap Include is ready for this zone.")
+        initialload = true
+    end
+    if auto_ring and check_ring_buff() then
+        schedule_xpcp_ring()
+    end
+end
 include_setup()
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
 if gearswap.pathsearch({'SMDinclude/includes/map.lua'}) and gearswap.pathsearch({'SMDinclude/includes/extra.lua'}) then
@@ -104,9 +115,6 @@ function get_sets()
     if file_write and file_write.write then
         file_write.write()
     end
-    -- if auto_ring and type(xpcpcoring) ~= "thread" and check_ring_buff() then
-        -- schedule_xpcp_ring:schedule(8)
-    -- end
 end
 function filtered_action(spell)
     local status = {end_event=false,end_spell=false,stop_swapping_gear=true}

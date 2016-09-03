@@ -55,6 +55,12 @@ What the Display can do for you-------------------------------------
 5. you can build your own display in to the display for info you want to show or setting you want access to(advanced users only)
 
 --------------------------------------------------------------------
+On loading-----------------------------------------------------
+
+If you do not wait for the chat line "Smd111's Gearswap Include is ready for this zone." on Zone or Load
+this include will not function correctly
+
+--------------------------------------------------------------------
 Reporting bug's-----------------------------------------------------
 
 Please report bug's HERE: https://github.com/smd111/Gearswap/issues
