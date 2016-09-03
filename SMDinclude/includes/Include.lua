@@ -18,10 +18,10 @@ function gearswap.refresh_item_list(itemlist)
 end
 gearswap.parse.i[0x01D] = function (data)
     gearswap.refresh_globals()
-    if not initialload then
+    if not loaded and not (world.in_mog_house or world.mog_house) then
         send_command("gs reload")
-        add_to_chat(cc.mc,"Smd111's Gearswap Include is ready for this zone.")
-        initialload = true
+        add_to_chat(cc.mc,"Smd111's Gearswap Include is ready for use.")
+        loaded = true
     end
     if auto_ring and check_ring_buff() then
         schedule_xpcp_ring()

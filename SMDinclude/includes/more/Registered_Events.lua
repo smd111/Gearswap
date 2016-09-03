@@ -1,5 +1,5 @@
 packets = require('packets')
-reg_event = {skill = {},atacking_mobs = {player=T{},party=T{},alliance=T{},pet=T{}},treasure_hunter = {},mb_timer = 1}
+reg_event = {atacking_mobs = {player=T{},party=T{},alliance=T{},pet=T{}},treasure_hunter = {},mb_timer = 1}
 reg_event.skill_type = {'Axe','Club','Dagger','Great Axe','Great Katana','Great Sword','Hand-to-Hand','Katana','Polearm','Scythe','Staff','Sword','Archery',
                         'Marksmanship','Throwing','Evasion','Guard','Parrying','Shield','Blue Magic','Dark Magic','Divine Magic','Elemental Magic','Enfeebling Magic',
                         'Enhancing Magic','Geomancy','Handbell','Healing Magic','Ninjutsu','Singing','Stringed Instrument','Summoning Magic','Wind Instrument',
@@ -55,12 +55,17 @@ function reg_event.zone_change(new_id,old_id) --zone change event
     reg_event.clear_aggro_count()
     local zones = gearswap.res.zones
     local new = zones[new_id].name
-    local old = zones[old_id].name coroutine.sleep(4)
+    local old = zones[old_id].name
     if mf.zone_change then
         mf.zone_change(new,old)
     end
+    if new_id == old_id and not (world.in_mog_house or world.mog_house) then
+        loaded = false
+    else
+        loaded = true
+    end
 end
---reg_event.zone_change_id = windower.raw_register_event('zone change', reg_event.zone_change)
+reg_event.zone_change_id = windower.raw_register_event('zone change', reg_event.zone_change)
 function reg_event.level_change() --updates display when player lvls up/down
     if updatedisplay then
         updatedisplay:schedule(3)
@@ -114,6 +119,9 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
             triggered = true
         end
     elseif id == 0x062 then --grabs data for skillup watch
+        if not reg_event.skill then
+            reg_event.skill = {}
+        end
         local packet = packets.parse('incoming', data)
         for i,v in pairs(packet) do
             if not i:wmatch('_*|Unknown*|(N/A)*|Automaton*') then
@@ -138,7 +146,7 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
             triggered = true
         end
     end
-    if triggered and updatedisplay then
+    if triggered and updatedisplay and loaded then
         updatedisplay()
         triggered = false
     end

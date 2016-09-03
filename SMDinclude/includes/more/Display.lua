@@ -201,11 +201,11 @@ function updatedisplay()
         armor_types_count = 1
     end
     i.amode = string.gsub(armor_types[armor_types_count], "_", " ")
-    if rings_count > #rings then
-        rings_count = 1
-        auto_ring = false
+    if rings_count <= #rings then
+        i.xpcpring = string.gsub(rings[rings_count] or "None", "_", " ")
+    else
+        i.xpcpring = "None"
     end
-    i.xpcpring = string.gsub(rings[rings_count] or "None", "_", " ")
     i.resetring = "Reset Timer"
     i.mjob = player.main_job_full
     i.mjob_lvl = player.main_job_level

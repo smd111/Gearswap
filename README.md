@@ -57,7 +57,8 @@ What the Display can do for you-------------------------------------
 --------------------------------------------------------------------
 On loading-----------------------------------------------------
 
-If you do not wait for the chat line "Smd111's Gearswap Include is ready for this zone." on Zone or Load
+If you do not wait for the chat line "Smd111's Gearswap Include is ready for usee."
+on Load or (if you load with your char in the mog house) when you Zone
 this include will not function correctly
 
 --------------------------------------------------------------------
