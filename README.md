@@ -53,6 +53,10 @@ What the Display can do for you-------------------------------------
 4. you can just use a mouse click to adjust settings no need to type in any commands
 
 5. you can build your own display in to the display for info you want to show or setting you want access to(advanced users only)
+--------------------------------------------------------------------
+Reporting bug's-----------------------------------------------------
+
+Please report bug's HERE: https://github.com/smd111/Gearswap/issues
 
 --------------------------------------------------------------------
 To do---------------------------------------------------------------
