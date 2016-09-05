@@ -228,12 +228,23 @@ end
 function c_equip(delay, set, event)--delay equip
     return gearswap.equip_sets:schedule(delay, event..'_delayed_equip', nil, set)
 end
-for _,ring in ipairs({"None","Vocation Ring","Trizek Ring","Capacity Ring","Undecennial Ring","Decennial Ring","Allied Ring","Novennial Ring","Kupofried's Ring",
-                     "Anniversary Ring","Emperor Band","Empress Band","Chariot Band","Duodec. Ring","Expertise Ring"}) do
-    local item = item_to_bag(ring)
-    if item and not rings:contains(ring) then
-       rings:append(ring)
-    elseif not item and rings:contains(ring) then
-       rings:delete(ring)
+function dwsj()
+    if player.sub_job == "NIN" and player.sub_job_level >= 10 then
+        return true
+    elseif player.sub_job == "DNC" and player.sub_job_level >= 20 then
+        return true
+    end
+    return false
+end
+function load_rings()
+    for _,ring in ipairs({"None","Vocation Ring","Trizek Ring","Capacity Ring","Undecennial Ring","Decennial Ring","Allied Ring","Novennial Ring","Kupofried's Ring",
+                         "Anniversary Ring","Emperor Band","Empress Band","Chariot Band","Duodec. Ring","Expertise Ring"}) do
+        local item = item_to_bag(ring)
+        if item and not rings:contains(ring) then
+           rings:append(ring)
+        elseif not item and rings:contains(ring) then
+           rings:delete(ring)
+        end
     end
 end
+load_rings()

@@ -113,6 +113,11 @@ function custom_menu_build()
     local custom_properties = L{}
     custom_properties:append('Enable Auto Pup ${eap}')
     if Enable_auto_pup then custom_properties:append('Auto Skill Up Maneuver\'s ${esku}') end
+    if player.sub_job == "DNC" then
+        custom_properties:append('DNC sub')
+    elseif player.sub_job == "COR" then
+        custom_properties:append('COR sub')
+    end
     return custom_properties
 end
 function custom_menu_commands(a)

@@ -18,14 +18,18 @@ function gearswap.refresh_item_list(itemlist)
 end
 gearswap.parse.i[0x01D] = function (data)
     gearswap.refresh_globals()
-    if not loaded and not (world.in_mog_house or world.mog_house) then
-        send_command("gs reload")
-        add_to_chat(cc.mc,"Smd111's Gearswap Include is ready for use.")
+    if not loaded then
+        -- add_to_chat(cc.mc,"Smd111's Gearswap Include is ready for use.")
         loaded = true
+        include("SMDinclude/includes/Include.lua")
     end
     if auto_ring and check_ring_buff() then
         schedule_xpcp_ring()
     end
+end
+if not loaded then
+    mf = {}
+    return
 end
 include_setup()
 --Saved Variable Recovery ---------------------------------------------------------------------------------------------------------
@@ -107,10 +111,10 @@ function get_sets()
     add_gear_modes(sets.range,'range_types')
     add_gear_modes(sets.armor,'armor_types')
     if update_display then
-        update_display:schedule(1.5)
+        update_display()
     end
     if mf.file_load then
-        mf.file_load:schedule(1.5)
+        mf.file_load()
     end
     if file_write and file_write.write then
         file_write.write()
@@ -237,7 +241,17 @@ function indi_change(indi_table,gain)
     end
 end
 function sub_job_change(new,old)
-    send_command("gs reload")
+    if file_write and file_write.write then
+        file_write.write()
+    end
+    windower.prim.delete('window_button')
+    include('SMDinclude/includes/map.lua')
+    include('SMDinclude/includes/extra')
+    if gearswap.pathsearch({'Saves/job_'..player.main_job..'var.lua'}) then
+        include('Saves/job_'..player.main_job..'var.lua')
+    end
+    load_rings()
+    get_sets()
 end
 function self_command(com)
     local status = {end_event=false,stop_swapping_gear=true}
@@ -254,7 +268,9 @@ function self_command(com)
     end
 end
 function file_unload(new_job)
-    mf.file_unload(new_job)
+    if mf.file_unload then
+        mf.file_unload(new_job)
+    end
     if file_write and file_write.write then
         file_write.write()
     end
@@ -270,3 +286,4 @@ load_include(Registered_Events, 'more/Registered_Events.lua')
 load_include(Debug, 'more/Debug.lua')
 load_include(Display, 'more/Display.lua')
 load_include(File_Write, 'more/File_Write.lua')
+get_sets()

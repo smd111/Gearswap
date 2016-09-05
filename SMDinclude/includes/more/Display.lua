@@ -50,21 +50,21 @@ function initialize(text, settings, name)
                             '  Change Ring   ${cringc}\n  Ring Type = \\cs(255,255,0)${cring}\\cr')
             end
         elseif menu_set == 4 then
-            line:append('--System Settings--\nWatch midaction()  ${watchmid}')
+            line:append('--System Settings--\nWatch midaction()   ${watchmid}')
             if jobs.pet:contains(player.main_job) or jobs.pet:contains(player.sub_job) then
                 line:append('Watch pet_midaction()   ${watchpetmid}')
             end
-            line:append('CP XP ring = ${axpcpring}')
+            line:append('CP XP ring   ${axpcpring}')
             if auto_ring then
                 line:append(' Ring = ${xpcpring}')
                 line:append(' ${resetring}')
             end
-            line:append('Auto Shard Use   ${ashard}\nNo Spells in Town${sstown}')
+            line:append('Auto Shard Use   ${ashard}\nNo Spells in Town   ${sstown}')
             if Registered_Events then
-                line:append('-Show-\n  MJob and LVL   ${tmjl}\n  Skill Level   ${tskill}\n  Aggro Count  ${aggroenable}')
+                line:append('-Show-\n  MJob and LVL   ${tmjl}\n  Skill Level   ${tskill}\n  Aggro Count   ${aggroenable}')
             end
             if Debug then
-                line:append('Show Debug  ${dbenable}')
+                line:append('Show Debug   ${dbenable}')
                 if full_debug then
                     line:append('  in = ${debugtype}')
                 end

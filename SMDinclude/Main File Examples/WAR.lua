@@ -14,15 +14,17 @@ include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
     sets["Waltz"] = {} -- use this set for Waltz
-    sets.weapon['Axe'] = {main="Eminent Axe",sub="Eminent Scimitar"}
-    sets.weapon['Dagger'] = {main="Eminent Dagger",sub="Eminent Scimitar"}
+    if dwsj() then
+        sets.weapon['Axe'] = {main="Eminent Axe",sub="Eminent Scimitar"}
+        sets.weapon['Dagger'] = {main="Eminent Dagger",sub="Eminent Scimitar"}
+        sets.weapon['Sword'] = {main="Eminent Scimitar",sub="Eminent Dagger"}
+    end
     sets.weapon['Great_Axe'] = {main="Eminent Voulge",sub="Uther's Grip"}
     sets.weapon['Great_Sword'] = {main="Eminent Sword",sub="Uther's Grip"}
     sets.weapon['Hand-to-Hand'] = {main="Em. Baghnakhs",ammo=empty}
     sets.weapon['Scythe'] = {main="Eminent Sickle",sub="Uther's Grip"}
-    sets.weapon['Sword'] = {main="Eminent Scimitar",sub="Eminent Dagger"}
     sets.weapon['None'] = {main=empty,sub=empty}
-    sets.weapon['Great_Axe2'] = {main="Blurred Cleaver",sub="Uther's Grip"}
+    sets.weapon['Great_Axe Su2'] = {main="Blurred Cleaver",sub="Uther's Grip"}
     sets.range['Marksmanship'] = {range="Lion Crossbow",ammo="Crossbow Bolt"}
     sets.range['Throwing'] = {range="Snakeeye",ammo=empty}
     sets.armor['Basic'] = {}

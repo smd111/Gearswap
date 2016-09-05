@@ -59,11 +59,6 @@ function reg_event.zone_change(new_id,old_id) --zone change event
     if mf.zone_change then
         mf.zone_change(new,old)
     end
-    if new_id == old_id and not (world.in_mog_house or world.mog_house) then
-        loaded = false
-    else
-        loaded = true
-    end
 end
 reg_event.zone_change_id = windower.raw_register_event('zone change', reg_event.zone_change)
 function reg_event.level_change() --updates display when player lvls up/down

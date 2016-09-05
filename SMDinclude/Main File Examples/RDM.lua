@@ -12,7 +12,9 @@ include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
     sets["Waltz"] = {} -- use this set for all Waltz
-    sets.weapon['Sword'] = {main="Eminent Scimitar",sub="Eminent Dagger"}
+    if dwsj() then
+        sets.weapon['Sword'] = {main="Eminent Scimitar",sub="Eminent Dagger"}
+    end
     sets.weapon['None'] = {main=empty,sub=empty}
     sets.range['Other'] = {range="",ammo=""}
     sets.armor['Basic'] = {}
