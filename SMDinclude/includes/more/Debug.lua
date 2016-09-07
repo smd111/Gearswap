@@ -128,7 +128,6 @@ function fdebug.self_command(status,event,command)
         add_to_chat(cc.mc, 'Debug Mode Type = ' .. tostring(fdebug.type[fdebug.count]))
     elseif command == 'test' then
         ---
-        print(loaded)
     end
     if updatedisplay then
         updatedisplay()

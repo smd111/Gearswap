@@ -43,6 +43,9 @@ function initialize(text, settings, name)
             if jobs.magic:contains(player.main_job) and WSi then
                 line:append('-Mage Staves-\n   Auto Change   ${cstaff}\n   Type \\cs(255,255,0)${ustaff}\\cr')
             end
+            if player.main_job == 'THF' and player.main_job_level >= 70 then
+                line:append("Thief's Knife Auto Sub   ${tkas}")
+            end
         elseif menu_set == 3 then
             line:append('--Armor Settings--\nMode = \\cs(255,255,0)${amode}\\cr')
             if Conquest_Gear then
@@ -189,6 +192,7 @@ function updatedisplay()
     i.axpcpring = auto_ring and c_m or n_c
     i.wshead = ws_head and c_m or n_c
     i.sstown = tsstown and c_m or n_c
+    i.tkas = thfsub and c_m or n_c
     if weapon_types_count > #weapon_types then
         weapon_types_count = 1
     end
@@ -315,6 +319,8 @@ function menu_commands(com)
         Changestaff = not Changestaff
     elseif com == "{ustaff}" then
         Usestaff = (Usestaff=='Atk' and 'Acc' or 'Atk')
+    elseif com == "{tkas}" then
+        thfsub = not thfsub
     elseif com == "{cneckc}" then
         conquest.neck.change = not conquest.neck.change
     elseif com == "{cringc}" then

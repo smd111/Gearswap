@@ -81,10 +81,10 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
         elseif S{603,608}:contains(packet['Message']) and player.id == packet['Actor'] then --treasure hunter counter
             reg_event.treasure_hunter[packet['Target']] = packet['Param 1']
             -- print(packet['Param 1'])
-            if mf_treasure_hunter_change then
+            if mf.treasure_hunter_change then
                 local name = windower.ffxi.get_mob_by_id(packet['Target']).name
                 local gain = (packet['Param 1'] < reasure_hunter[packet['Target']] and false or true)
-                local th_count = packet['Param 1'] mf_treasure_hunter_change(gain,th_count,name)
+                local th_count = packet['Param 1'] mf.treasure_hunter_change(gain,th_count,name)
             end
         end
     elseif id == 0x028 then

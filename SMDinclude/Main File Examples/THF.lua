@@ -103,7 +103,7 @@ end
 function mf.self_command(command)
 end
 function mf.treasure_hunter_change(gain,count,mob_name)
-    if gain and mob_name == player.target.name then
+    if thfsub and gain and mob_name == player.target.name then
         if thieftype[weapon_types[weapon_types_count]] then
             thief_sub = thieftype[weapon_types[weapon_types_count]]
         end

@@ -19,12 +19,11 @@ end
 gearswap.parse.i[0x01D] = function (data)
     gearswap.refresh_globals()
     if not loaded then
-        -- add_to_chat(cc.mc,"Smd111's Gearswap Include is ready for use.")
         loaded = true
         include("SMDinclude/includes/Include.lua")
-    end
-    if auto_ring and check_ring_buff() then
-        schedule_xpcp_ring()
+        if auto_ring and check_ring_buff() then
+            schedule_xpcp_ring()
+        end
     end
 end
 if not loaded then
@@ -175,7 +174,7 @@ function aftercast(spell)
 end
 function status_change(new,old)
     local status = {end_event=false,stop_swapping_gear=false}
-    if player.main_job == "THF" and reg_event and not reg_event.treasure_hunter[player.target.id] then
+    if thfsub and player.main_job == "THF" and reg_event and not reg_event.treasure_hunter[player.target.id] then
         thief_sub = thieftype['hunter']
     end
     if new == "Idle" and reg_event and reg_event.clear_aggro_count then
