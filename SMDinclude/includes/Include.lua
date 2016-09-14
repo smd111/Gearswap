@@ -16,8 +16,19 @@ function gearswap.refresh_item_list(itemlist)
     end
     return retarr
 end
+gearswap.parse.i[0x044] = function (data)
+    if data:unpack('C',0x05) == 0x12 then
+        gearswap.player.skills.automaton_melee_level = data:unpack('H',0x71)
+        gearswap.player.skills.automaton_archery_level = data:unpack('H',0x75)
+        gearswap.player.skills.automaton_magic_level = data:unpack('H',0x79)
+    end
+end
 gearswap.parse.i[0x01D] = function (data)
-    gearswap.refresh_globals()
+    --gearswap.refresh_globals()
+    for i,bag in pairs(gearswap.res.bags) do
+        local bag_name = gearswap.to_windower_bag_api(bag.en)
+        if gearswap.items[bag_name] then gearswap.player[bag_name] = gearswap.refresh_item_list(gearswap.items[bag_name]) end
+    end
     if not loaded then
         loaded = true
         include("SMDinclude/includes/Include.lua")
@@ -109,6 +120,19 @@ function get_sets()
     add_gear_modes(sets.weapon,'weapon_types')
     add_gear_modes(sets.range,'range_types')
     add_gear_modes(sets.armor,'armor_types')
+    for _,l in ipairs({"weapon_types","range_types","armor_types","rings","skill"}) do
+        local name = (l == "skill" and reg_event.skill_type or _G[l])
+        if _G[l.."_save"] and name:contains(_G[l.."_save"]) then
+            for c,n in ipairs(name) do
+                if n == _G[l.."_save"] then
+                    _G[l.."_count"] = c
+                    break
+                else
+                    _G[l.."_count"] = 1
+                end
+            end
+        end
+    end
     if update_display then
         update_display()
     end

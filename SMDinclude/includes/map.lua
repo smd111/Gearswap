@@ -1,11 +1,12 @@
 menu,auto_use_shards,File_Write,Registered_Events,ISr,tsstown,thfsub = {pos = {x = 100,y = 100}},false,true,true,true,true,false
-weapon_types_count,range_types_count,armor_types_count,xpcpcoring,rings_count = 1,1,1,1,1 conquest = {ring={},neck={}}
+weapon_types_count,range_types_count,armor_types_count,xpcpcoring,rings_count,skill_count = 1,1,1,1,1,1 conquest = {ring={},neck={}}
 sets.armor,sets.pet_aftercast,sets.weapon,partynames,sets.pretarget,sets.precast,sets.midcast,sets.aftercast = {},{},{},{},{},{},{},{}
 sets.range,sets.building,sets.pet_midcast,cc = {['ThrowLVL.99+'] = {range="Halakaala",ammo=empty}},{},{},{mc=9,r1=11,r2=10,g1=158,g2=6,b1=5,b2=205,y1=36,y2=37}
 log_in_time = os.clock()
+towaltz,tosamba,towaltzc = false,false,false
 equip_from_bags = {"inventory","wardrobe","wardrobe2","wardrobe3","wardrobe4"}
         --Weapon types--Range types--Armor types
-weapon_types,range_types,armor_types = T{"Not Set"},T{"Not Set"},T{"Not Set"}
+weapon_types,range_types,armor_types,rings = T{"Not Set"},T{"Not Set"},T{"Not Set"},T{"Not Set"}
         --WALTZ TABLE (use Waltz.debuff or Waltz.spells)
         --This table is will give the waltz spells and all the debuffs that healing waltz can remove
 Waltz = {debuff=S{'Max HP Down','Max MP Down','Magic Evasion Down','Max TP Down','Magic Atk. Down','Magic Acc. Down','Magic Def. Down','Defense Down','Evasion Down',
@@ -45,6 +46,4 @@ jobs = {ammo=S{"WAR","RDM","THF","PLD","DRK","BST","RNG","SAM","NIN","COR"},magi
 cure_gear = {en={main="Arka IV",sub="Dominie's Grip",body="Heka's Kalasiris",hands="Bokwus Gloves",neck="Phalaina Locket",left_ear="Roundel Earring",},
              ja={main="アーカIV",sub="ドミニエズグリップ",body="ヘカカラシリス",hands="ボクワスグローブ",neck="ファライナロケット",left_ear="ラウンデルピアス",}}
 lang = {english="en",japenese="ja"}
-        --XP CP Rings
-rings = T{"None"}
     

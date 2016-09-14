@@ -39,7 +39,7 @@ function extra.pretarget(status,event,spell)
     end
 end
 function extra.precast(status,event,spell)
-    if DNC and spell.type == 'Waltz' then
+    if DNC and towaltz and spell.type == 'Waltz' then
         if spell.target.type == "SELF" and spell.en:startswith('Curing Waltz') then
             local set,potency,received_pot,tpreduction = DNC.waltz_potency(sets["Waltz"])
             local new_waltz,h_total = DNC.select_waltz(potency,received_pot,tpreduction)
@@ -54,7 +54,7 @@ function extra.precast(status,event,spell)
                 status.end_spell=true
                 return
             else
-                if s_waltz_h_a and not showed then
+                if s_waltz_h_a and towaltzc then
                     add_to_chat(cc.mc, 'Waltz Set To '..(new_waltz):color(cc.y1,cc.mc)..' for '..(tostring(h_total)):color(cc.g1))
                 end
             end
@@ -69,7 +69,7 @@ function extra.precast(status,event,spell)
             status.end_spell=true
         end
         sets.building[event] = set_combine(sets.building[event], set)
-    elseif DNC and spell.type == "Samba" and spell.en:startswith('Drain Samba') then
+    elseif DNC and tosamba and spell.type == "Samba" and spell.en:startswith('Drain Samba') then
         local new_Samba = (DNC.set_drain_samba() or false)
         if new_Samba and spell.en ~= new_Samba then
             send_command('input /ja "'..new_Samba..'" <me>')

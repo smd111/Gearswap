@@ -17,7 +17,18 @@ function initialize(text, settings, name)
             line:append('--Job Settings--')
             if player.main_job == 'DNC' or player.sub_job == 'DNC' then
                 line:append('-Steps-\n   Max Step = ${stepm}\n   Stop Steps   ${ssteps}')
+                line:append('-Waltz (SELF)-\n   Auto Optimal   ${owaltz}')
+                if towaltz then
+                    line:append('   Show Chat   ${owaltzc}')
+                end
+                line:append('-Samba-\n   Auto Optimal   ${osamba}')
             end
+            -- if player.main_job == 'WHM' or player.sub_job == 'WHM' then
+                -- line:append('-Cure-\n   Auto Optimal = ${ocure}')
+                -- if towaltz then
+                    -- line:append('   Show Chat   ${ocurec}')
+                -- end
+            -- end
             if lvlwatch then
                 line:append('${mjob}\n   lvl = ${mjob_lvl}')
             end
@@ -117,10 +128,10 @@ function initialize(text, settings, name)
         for i, v in ipairs(loadstring('return user_env.'..menu_initialize[name][2])()) do
             if menu_initialize[name][4] then
                 if sets[menu_initialize[name][4]][v] then
-                    line:append('${'..menu_initialize[name][3]..''..i..'|'..string.gsub(v, "_", " ")..'}')
+                    line:append('${'..menu_initialize[name][3]..''..i..'|'..string.gsub(v, "_", " "):capitalize()..'}')
                 end
             else
-                line:append('${'..menu_initialize[name][3]..''..i..'|'..string.gsub(v, "_", " ")..'}')
+                line:append('${'..menu_initialize[name][3]..''..i..'|'..string.gsub(v, "_", " "):capitalize()..'}')
             end
         end
         if custom_menu_update and custom_menu_build and custom_menu_commands and name == 'tab_select_window' then
@@ -150,9 +161,18 @@ function updatedisplay()
         i.ptgro = aggro_count('pet')
         i.totalagro = aggro_count()
     end
-    if reg_event and reg_event.skill and Registered_Events then
-        i.skill = reg_event.skill_type[skill_count]
-        i.skill_lvl = (reg_event.skill[reg_event.skill_type[skill_count]..' Capped'] and "Capped" or reg_event.skill[reg_event.skill_type[skill_count]..' Level'])
+    if reg_event and Registered_Events then
+        if skill_count > #reg_event.skill_type then
+            skill_count = 1
+        end
+        local skill = reg_event.skill_type[skill_count]
+        i.skill = skill:gsub('_', ' '):capitalize()
+        if S{"alchemy","bonecraft","clothcraft","cooking","fishing","goldsmithing","leathercraft","smithing","synergy","woodworking"}:contains(skill) then
+            local mult = 10 ^ 2
+            i.skill_lvl = math.floor((player.skills[skill]/32)*mult + 0.5) / mult
+        else
+            i.skill_lvl = player.skills[skill]
+        end
     end
     if Debug and fdebug then
         i.debugtype = string.gsub(fdebug.type[fdebug.count], "_", " ")
@@ -193,6 +213,11 @@ function updatedisplay()
     i.wshead = ws_head and c_m or n_c
     i.sstown = tsstown and c_m or n_c
     i.tkas = thfsub and c_m or n_c
+    i.owaltz = towaltz and c_m or n_c
+    i.owaltzc = towaltzc and c_m or n_c
+    i.osamba = tosamba and c_m or n_c
+    -- i.owaltzc = towaltzc and c_m or n_c
+    -- i.osamba = tosamba and c_m or n_c
     if weapon_types_count > #weapon_types then
         weapon_types_count = 1
     end
@@ -293,7 +318,7 @@ function mouse(mtype, x, y, delta, blocked)
                 if (hy > v.ya and hy < v.yb) then
                     if type(switch['window'][i]) == 'table' then
                         if switch['window'][i][1] then
-                            menu_commands(switch['window'][i][1])
+                            menu_commands(switch['window'][i][1])--menu_commands(switch['window'][i][1] :stripchars("{}"))
                             updatedisplay()
                         end
                     end
@@ -381,6 +406,12 @@ function menu_commands(com)
         auto_ring = not auto_ring
     elseif com == "{wshead}" then
         ws_head = not ws_head
+    elseif com == "{owaltz}" then
+        towaltz = not towaltz
+    elseif com == "{owaltzc}" then
+        towaltzc = not towaltzc
+    elseif com == "{osamba}" then
+        tosamba = not tosamba
     ----Gearswap Controls----
     elseif com == "{tswap}" then
         show_swaps((not _settings.show_swaps))
@@ -402,8 +433,7 @@ function menu_commands(com)
                     if not _G[v[1]] then
                         _G[v[2]] = v[3]
                         _G[v[1]] = texts.new(_G[v[2]])
-                        initialize(_G[v[1]],
-                        _G[v[2]], v[1])
+                        initialize(_G[v[1]],_G[v[2]], v[1])
                         _G[v[1]]:show()
                     else
                         kill_window(v[1])

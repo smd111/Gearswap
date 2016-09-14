@@ -112,6 +112,8 @@ function set_count(tab,switch)
                     schedule_xpcp_ring()
                 end
                 return i
+            elseif string.gsub(w, "_", " ") == string.gsub(v, "_", " "):capitalize() then
+                return i
             elseif "Custom Menu" == w then
                 return 6
             end

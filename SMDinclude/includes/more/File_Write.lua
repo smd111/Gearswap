@@ -28,20 +28,23 @@ function file_write.write()
                 '\n----Steps Control----'..
                     '\nStepmax = '..tostring(Stepmax or 1)..
                     '\nStopsteps = '..tostring(Stopsteps or false)..
+                '\n----Gear Settings----'..
+                    '\nweapon_types_save = "'..weapon_types[weapon_types_count]..'"'..
+                    '\nrange_types_save = "'..range_types[range_types_count]..'"'..
+                    '\narmor_types_save = "'..armor_types[armor_types_count]..'"'..
+                    '\nrings_save = "'..rings[rings_count]..'"'..
+                    '\nskill_save = "'..reg_event.skill_type[skill_count]..'"'..
                 '\n----Other----'..
                     '\nWatch_midaction = '..tostring(Watch_midaction or false)..
                     '\nWatch_pet_midaction = '..tostring(Watch_pet_midaction or false)..
-                    '\nweapon_types_count = '..tostring(weapon_types_count or 1)..
-                    '\nrange_types_count = '..tostring(range_types_count or 1)..
-                    '\narmor_types_count = '..tostring(armor_types_count or 1)..
                     '\nauto_use_shards = '..tostring(auto_use_shards or false)..
                     '\nEnable_auto_WS_aoe = '..tostring(Enable_auto_WS_aoe or false)..
                     '\nlvlwatch = '..tostring(lvlwatch or false)..
                     '\nauto_ring = '..tostring(auto_ring or false)..
-                    '\nrings_count = '..tostring(rings_count or 1)..
                     '\nskillwatch = '..tostring(skillwatch or false)..
-                    '\nskill_count = '..tostring(skill_count or 1)..
                     '\nISr = '..tostring(ISr or false)..
+                    '\ntowaltz = '..tostring(towaltz or false)..
+                    '\ntosamba = '..tostring(tosamba or false)..
                 '\n----Other 2----'..
                     '\nmenu.pos.x = '..tostring(menu.pos.x or 1)..
                     '\nmenu.pos.y = '..tostring(menu.pos.y or 1))
