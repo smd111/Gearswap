@@ -42,12 +42,12 @@ function initialize(text, settings, name)
                 line:append('-Stratagem-\n   Ignore Recast ${istratre}')
             end
             if show_aggro then
-            line:append('-Aggro Count-\n   Player = ${pagro|0}\n   Party = ${pragro|0}\n   Alliance = ${aagro|0}')
+                line:append('-Aggro Count-\n   Player = ${pagro|0}\n   Party = ${pragro|0}\n   Alliance = ${aagro|0}')
                 if jobs.pet:contains(player.main_job) or jobs.pet:contains(player.sub_job) then
                     line:append('   Pet = ${ptgro|0}')
                 end
             end
-            line:append('Reset Aggro #${reagro}')
+            line:append('   Reset Aggro #${reagro}')
         elseif menu_set == 2 then
             line:append('--Weapon Settings--')
             line:append('Weapon Type = \\cs(255,255,0)${wept}\\cr\nRange Type = \\cs(255,255,0)${rwept}\\cr\nChange WS Head   ${wshead}\nAuto WS AOE ${wsaoe}')
@@ -128,10 +128,10 @@ function initialize(text, settings, name)
         for i, v in ipairs(loadstring('return user_env.'..menu_initialize[name][2])()) do
             if menu_initialize[name][4] then
                 if sets[menu_initialize[name][4]][v] then
-                    line:append('${'..menu_initialize[name][3]..''..i..'|'..string.gsub(v, "_", " "):capitalize()..'}')
+                    line:append('${'..menu_initialize[name][3]..''..i..'|'..string.gsub(v, "_", " ")..'}')
                 end
             else
-                line:append('${'..menu_initialize[name][3]..''..i..'|'..string.gsub(v, "_", " "):capitalize()..'}')
+                line:append('${'..menu_initialize[name][3]..''..i..'|'..string.gsub(v, "_", " ")..'}')
             end
         end
         if custom_menu_update and custom_menu_build and custom_menu_commands and name == 'tab_select_window' then
@@ -165,13 +165,13 @@ function updatedisplay()
         if skill_count > #reg_event.skill_type then
             skill_count = 1
         end
-        local skill = reg_event.skill_type[skill_count]
-        i.skill = skill:gsub('_', ' '):capitalize()
-        if S{"alchemy","bonecraft","clothcraft","cooking","fishing","goldsmithing","leathercraft","smithing","synergy","woodworking"}:contains(skill) then
+        local SWskill = reg_event.skill_type[skill_count]
+        i.skill = SWskill
+        if S{"Alchemy","Bonecraft","Clothcraft","Cooking","Fishing","Goldsmithing","Leathercraft","Smithing","Synergy","Woodworking"}:contains(SWskill) then
             local mult = 10 ^ 2
-            i.skill_lvl = math.floor((player.skills[skill]/32)*mult + 0.5) / mult
+            i.skill_lvl = math.floor((player.skills[SWskill:gsub(" ", "_"):lower()]/32)*mult + 0.5) / mult
         else
-            i.skill_lvl = player.skills[skill]
+            i.skill_lvl = player.skills[SWskill:gsub(" ", "_"):lower()]
         end
     end
     if Debug and fdebug then

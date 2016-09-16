@@ -18,13 +18,12 @@ function gearswap.refresh_item_list(itemlist)
 end
 gearswap.parse.i[0x044] = function (data)
     if data:unpack('C',0x05) == 0x12 then
-        gearswap.player.skills.automaton_melee_level = data:unpack('H',0x71)
-        gearswap.player.skills.automaton_archery_level = data:unpack('H',0x75)
-        gearswap.player.skills.automaton_magic_level = data:unpack('H',0x79)
+        gearswap.player.skills.automaton_melee = data:unpack('H',0x71)
+        gearswap.player.skills.automaton_archery = data:unpack('H',0x75)
+        gearswap.player.skills.automaton_magic = data:unpack('H',0x79)
     end
 end
 gearswap.parse.i[0x01D] = function (data)
-    --gearswap.refresh_globals()
     for i,bag in pairs(gearswap.res.bags) do
         local bag_name = gearswap.to_windower_bag_api(bag.en)
         if gearswap.items[bag_name] then gearswap.player[bag_name] = gearswap.refresh_item_list(gearswap.items[bag_name]) end
@@ -117,6 +116,13 @@ end
 ----Gearswap basic functions------------------------------------------------------------------------------------------------------
 function get_sets()
     gear_setup()
+    if #reg_event.skill_type >= 1 then reg_event.skill_type:clear() end
+    for i=1,57,1 do
+        local tab = reg_event.job_skills[i]
+        if tab and (tab:contains(player.main_job_id) or tab:contains(player.sub_job_id) or tab:contains("All")) then
+            reg_event.skill_type:append(gearswap.res.skills[i].en)
+        end
+    end
     add_gear_modes(sets.weapon,'weapon_types')
     add_gear_modes(sets.range,'range_types')
     add_gear_modes(sets.armor,'armor_types')

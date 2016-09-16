@@ -15,7 +15,7 @@ function get_vars(men,mode,x,y)
         [4]={name="xpcpring_select_window",command='{xpcpring}',title="Select Xp Cp Ring",var="ring_select",varc="rings_count",vard="rings",text=ctext,
              menu_slot="ring"},
         [5]={name="skill_select_window",command='{skill}',title="Select Skill",var="skill_select",varb="skillwatch",varc="skill_count", vard="reg_event.skill_type",
-             text={text={font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=(menu.pos.x - 120),y=(menu.pos.y - 300)}},
+             text={text={font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=(menu.pos.x - 120),y=(menu.pos.y - 150)}},
              menu_slot="reg_event.skill"},
         [6]={name="tab_select_window",command='{listm}',title="Select Menu Tab",var="tab_select",varc="menu_set",vard="tab_type",text=ctext,menu_slot="tab"},
         [7]={name="gear_select_window",command='{amode}',title="Select Armor",var="ger_select",vara="armor",varc="armor_types_count",vard="armor_types",text=ctext,
@@ -111,8 +111,6 @@ function set_count(tab,switch)
                 if tostring(string.gmatch(switch, '{(.-)|')):startswith("ring") and get_item_next_use(rings[rings_count]) then
                     schedule_xpcp_ring()
                 end
-                return i
-            elseif string.gsub(w, "_", " ") == string.gsub(v, "_", " "):capitalize() then
                 return i
             elseif "Custom Menu" == w then
                 return 6
