@@ -86,7 +86,7 @@ function initialize(text, settings, name)
             if File_Write then
                 line:append('${filew|Force File Write}')
             end
-            line:append('Show Swaps   ${tswap}\nDebug Mode   ${debugm}\n${gsex1|Gearswap Export}\n${regs|Reload Gearswap}')
+            line:append('Show Swaps   ${tswap}\nDebug Mode   ${debugm}\n${gsex1|Gearswap Export}\n${ruf|Reload User File}\n${regs|Reload Gearswap}')
         elseif menu_set == 5 then
             line:append('--Include Settings--')
             if player.main_job == "NIN" or player.sub_job == "NIN" then
@@ -245,10 +245,16 @@ function updatedisplay()
     end
     window:update(i)
     button:update(i)
-    if not window_hidden then
+    if extra_menu then
+        window:hide()
+    elseif not window_hidden then
         window:show()
     else
         button:show()
+    end
+    if Display_change then
+        windower.prim.set_visibility('window_button', false)
+        Display_change = false
     end
 end
 function extra_display(x,y,loc,hy,check)
@@ -263,6 +269,8 @@ function extra_display(x,y,loc,hy,check)
             else
                 _G[tab[1]][tab[2]] = set_loc(loc,hy,v[2],get_vars(v[2],"code")) or 1
             end
+            extra_menu = false
+            Display_change = true
             kill_window(v[2])
             switch[v[2]] = nil
             windower.prim.set_visibility('window_button', false)
@@ -314,12 +322,14 @@ function mouse(mtype, x, y, delta, blocked)
         end
     elseif mtype == 2 then
         if window:hover(x, y) and window:visible() then
-            for i, v in ipairs(location) do
-                if (hy > v.ya and hy < v.yb) then
-                    if type(switch['window'][i]) == 'table' then
-                        if switch['window'][i][1] then
-                            menu_commands(switch['window'][i][1])--menu_commands(switch['window'][i][1] :stripchars("{}"))
-                            updatedisplay()
+            if not (table.length(gearswap.__raw.text.registry) > 2) then
+                for i, v in ipairs(location) do
+                    if (hy > v.ya and hy < v.yb) then
+                        if type(switch['window'][i]) == 'table' then
+                            if switch['window'][i][1] then
+                                menu_commands(switch['window'][i][1])--menu_commands(switch['window'][i][1] :stripchars("{}"))
+                                updatedisplay()
+                            end
                         end
                     end
                 end
@@ -417,6 +427,21 @@ function menu_commands(com)
         show_swaps((not _settings.show_swaps))
     elseif com == "{debugm}" then
         debug_mode((not _settings.debug_mode))
+    elseif com == "{ruf|Reload User File}" then
+        kill_window("window")
+        kill_window("button")
+        windower.prim.delete('window_button')
+        windower.unregister_event(mouse_id)
+        remove_functions("reg_event")
+        remove_functions("mf")
+        local long_job = gearswap.res.jobs[player.main_job_id].english
+        local short_job = gearswap.res.jobs[player.main_job_id].english_short
+        local tab = {player.name..'_'..short_job..'.lua',player.name..'-'..short_job..'.lua',
+            player.name..'_'..long_job..'.lua',player.name..'-'..long_job..'.lua',
+            player.name..'.lua',short_job..'.lua',long_job..'.lua','default.lua'}
+        local _,_,filename = gearswap.pathsearch(tab)
+        include(filename)
+        get_sets()
     elseif com == "{regs|Reload Gearswap}" then
         send_command("gs reload")
     elseif com == "{gsex1|Gearswap Export}" then
@@ -435,8 +460,10 @@ function menu_commands(com)
                         _G[v[1]] = texts.new(_G[v[2]])
                         initialize(_G[v[1]],_G[v[2]], v[1])
                         _G[v[1]]:show()
+                        extra_menu = true
+                        Display_change = true
                     else
-                        kill_window(v[1])
+                    kill_window(v[1])
                         if com == "{xpcpring}" or com == "{resetring}" then
                             schedule_xpcp_ring()
                         end

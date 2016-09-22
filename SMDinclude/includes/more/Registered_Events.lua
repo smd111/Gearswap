@@ -55,21 +55,19 @@ end
 -- added events--
 function reg_event.zone_change(new_id,old_id) --zone change event
     reg_event.clear_aggro_count()
-    local zones = gearswap.res.zones
-    local new = zones[new_id].name
-    local old = zones[old_id].name
     if mf.zone_change then
-        mf.zone_change(new,old)
+        local zones = gearswap.res.zones
+        mf.zone_change(zones[new_id].name,zones[old_id].name)
     end
 end
 reg_event.zone_change_id = windower.raw_register_event('zone change', reg_event.zone_change)
-function reg_event.level_change() --updates display when player lvls up/down
-    if updatedisplay then
-        updatedisplay:schedule(3)
-    end
-end
-reg_event.level_up_id = windower.raw_register_event('level up', reg_event.level_change)
-reg_event.level_down_id = windower.raw_register_event('level down', reg_event.level_change)
+-- function reg_event.level_change() --updates display when player lvls up/down
+    -- if updatedisplay then
+        -- updatedisplay:schedule(3)
+    -- end
+-- end
+-- reg_event.level_up_id = windower.raw_register_event('level up', reg_event.level_change)
+-- reg_event.level_down_id = windower.raw_register_event('level down', reg_event.level_change)
 function reg_event.incoming_chunk(id, data, modified, injected, blocked)
     local triggered = false
     if id == 0x029 then
@@ -81,11 +79,12 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
             end
             triggered = true
         elseif S{603,608}:contains(message) and player.id == data:unpack('I',0x05) then --treasure hunter counter
-            reg_event.treasure_hunter[target] = param
             if mf.treasure_hunter_change then
                 local name = windower.ffxi.get_mob_by_id(target).name
-                local gain = (param < reasure_hunter[target] and false or true)
-                local th_count = param mf.treasure_hunter_change(gain,th_count,name)
+                local gain = (reg_event.treasure_hunter[target] and false or true)
+                local th_count = param
+                reg_event.treasure_hunter[target] = param
+                mf.treasure_hunter_change(gain,th_count,name)
             end
         end
     elseif id == 0x028 then

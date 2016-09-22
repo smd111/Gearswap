@@ -71,7 +71,9 @@ function grab_switches(name,tab)--pulls switches from the display
     end
 end
 function update_display()
-    windower.prim.create('window_button')
+    if not gearswap.__raw.prim.registry.window_button then
+        windower.prim.create('window_button')
+    end
     windower.prim.set_visibility('window_button', false)
     windower.prim.set_color('window_button', 200, 255, 255, 255)
     updatedisplay()

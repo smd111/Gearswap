@@ -110,13 +110,15 @@ end
 function add_gear_modes(tbl,tbl_append)
     local sorted = T(tbl):keyset():sort()
     for i = 1,#sorted do
-        _G[tbl_append]:append(sorted[i])
+        if not _G[tbl_append]:contains(sorted[i]) then
+            _G[tbl_append]:append(sorted[i])
+        end
     end
 end
 ----Gearswap basic functions------------------------------------------------------------------------------------------------------
 function get_sets()
     gear_setup()
-    if #reg_event.skill_type >= 1 then reg_event.skill_type:clear() end
+    if reg_event.skill_type:length() >= 1 then reg_event.skill_type:clear() end
     for i=1,57,1 do
         local tab = reg_event.job_skills[i]
         if tab and (tab:contains(player.main_job_id) or tab:contains(player.sub_job_id) or tab:contains("All")) then
@@ -204,9 +206,6 @@ function aftercast(spell)
 end
 function status_change(new,old)
     local status = {end_event=false,stop_swapping_gear=false}
-    if thfsub and player.main_job == "THF" and reg_event and not reg_event.treasure_hunter[player.target.id] then
-        thief_sub = thieftype['hunter']
-    end
     if new == "Idle" and reg_event and reg_event.clear_aggro_count then
         reg_event.clear_aggro_count:schedule(1.5)
         if updatedisplay then
