@@ -13,7 +13,6 @@ function file_write.write()
                     '\nSpecial_Weapons = '..tostring(Special_Weapons or false)..
                     '\nConquest_Gear = '..tostring(Conquest_Gear or false)..
                     '\nFile_Write = '..tostring(File_Write or false)..
-                    '\nRegistered_Events = '..tostring(Registered_Events or false)..
                     '\nDebug = '..tostring(Debug or false)..
                 '\n----MSi----'..
                     '\nChangestaff = '..tostring(Changestaff or false)..
@@ -42,7 +41,7 @@ function file_write.write()
                     '\nlvlwatch = '..tostring(lvlwatch or false)..
                     '\nauto_ring = '..tostring(auto_ring or false)..
                     '\nskillwatch = '..tostring(skillwatch or false)..
-                    '\nISr = '..tostring(ISr or false)..
+                    '\nISr = '..tostring(istratre or false)..
                     '\ntowaltz = '..tostring(towaltz or false)..
                     '\ntosamba = '..tostring(tosamba or false)..
                 '\n----Other 2----'..

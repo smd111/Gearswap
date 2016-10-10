@@ -1,4 +1,4 @@
-reg_event = {atacking_mobs = {player=T{},party=T{},alliance=T{},pet=T{}},treasure_hunter = {},mb_timer = 1}
+reg_event = {atacking_mobs = {player=T{},party=T{},alliance=T{},pet=T{}},treasure_hunter={},mb_timer=1}
 reg_event.skill_type = T{}
 reg_event.job_skills=T{[1]=S{1,2,6,13,18,19},[2]=S{1,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21},[3]=S{1,5,6,7,8,9,10,11,12,13,14,17,19,22},[4]=S{1,7,8,22},
     [5]=S{1,8,9,11,22},[6]=S{1,8,22},[7]=S{1,4,8,9},[8]=S{1,7,12,14},[9]=S{13},[10]=S{12,13},[11]=S{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,20,21,22},
@@ -29,17 +29,19 @@ function reg_event.party_id_check(id) --checks to see if sent id is a party/alli
 end
 function reg_event.remove_add_agro(id,add_to) --adds/removes mobs from aggro list
     local remove_type = {alliance={'party','player','pet'},party={'alliance','player','pet'},player={'alliance','party','pet'},pet={'alliance','party','player'}}
-    if add_to and reg_event.atacking_mobs[add_to] then
-        reg_event.atacking_mobs[add_to][id] = true
+    if add_to and remove_type[add_to] then
+        reg_event.atacking_mobs[add_to]:append(id)
         for i,v in ipairs(remove_type[add_to]) do
-            if reg_event.atacking_mobs[v][id] then
-                reg_event.atacking_mobs[v][id] = nil
+            if reg_event.atacking_mobs[v]:contains(id) then
+                reg_event.atacking_mobs[v]:delete(id)
+                return true
             end
         end
     else
         for i,v in pairs(reg_event.atacking_mobs) do
-            if reg_event.atacking_mobs[i][id] then
-                reg_event.atacking_mobs[i][id] = nil
+            if reg_event.atacking_mobs[i]:contains(id) then
+                reg_event.atacking_mobs[i]:delete(id)
+                return true
             end
         end
     end
@@ -55,37 +57,35 @@ end
 -- added events--
 function reg_event.zone_change(new_id,old_id) --zone change event
     reg_event.clear_aggro_count()
-    if mf.zone_change then
-        local zones = gearswap.res.zones
-        mf.zone_change(zones[new_id].name,zones[old_id].name)
-    end
+    local zones = gearswap.res.zones
+    local new_zone = zones[new_id].name
+    coroutine.schedule(gearswap.equip_sets:prepare('zone_change',nil,new_zone,zones[old_id].name,cities:contains(new_zone)),(Zone_change_delay or 5))
 end
 reg_event.zone_change_id = windower.raw_register_event('zone change', reg_event.zone_change)
--- function reg_event.level_change() --updates display when player lvls up/down
-    -- if updatedisplay then
-        -- updatedisplay:schedule(3)
-    -- end
--- end
--- reg_event.level_up_id = windower.raw_register_event('level up', reg_event.level_change)
--- reg_event.level_down_id = windower.raw_register_event('level down', reg_event.level_change)
 function reg_event.incoming_chunk(id, data, modified, injected, blocked)
     local triggered = false
     if id == 0x029 then
         local message,target,param = data:unpack('H',0x19),data:unpack('I',0x09),data:unpack('I',0x0D)
         if S{6,20,97,113,406,605,646}:contains(message) then --removes mobs/th in aggro/th list
-            reg_event.remove_add_agro(target)
+            local removed = reg_event.remove_add_agro(target)
             if reg_event.treasure_hunter[target] then
                 reg_event.treasure_hunter[target] = nil
             end
             triggered = true
-        elseif S{603,608}:contains(message) and player.id == data:unpack('I',0x05) then --treasure hunter counter
-            if mf.treasure_hunter_change then
-                local name = windower.ffxi.get_mob_by_id(target).name
-                local gain = (reg_event.treasure_hunter[target] and false or true)
-                local th_count = param
-                reg_event.treasure_hunter[target] = param
-                mf.treasure_hunter_change(gain,th_count,name)
+            if triggered and removed then
+                local player = reg_event.atacking_mobs.player:length()
+                local party = reg_event.atacking_mobs.party:length()
+                local alliance = reg_event.atacking_mobs.alliance:length()
+                local pet = reg_event.atacking_mobs.pet:length()
+                local total = reg_event.attacker_count()
+                gearswap.equip_sets('aggro_change',nil,player,party,alliance,pet,total)
             end
+        elseif S{603,608}:contains(message) and player.id == data:unpack('I',0x05) then --treasure hunter counter
+            local target_tbl = windower.ffxi.get_mob_by_id(target)
+            local gain = (reg_event.treasure_hunter[target] and false or true)
+            local th_count = param
+            reg_event.treasure_hunter[target] = param
+            gearswap.equip_sets('treasure_hunter_change',nil,gain,th_count,target_tbl.name,target_tbl)
         end
     elseif id == 0x028 then
         local a,target = data:unpack('b6b32', 19)
@@ -105,14 +105,28 @@ function reg_event.incoming_chunk(id, data, modified, injected, blocked)
             elseif pt_num == 4 then
                 apply_where = 'pet'
             end
-            reg_event.remove_add_agro(actor,apply_where)
-            triggered = true
+            if not reg_event.atacking_mobs[apply_where]:contains(actor) then
+                reg_event.remove_add_agro(actor,apply_where)
+                triggered = true
+            end
         elseif player.id == actor and player.target.id == target and not target_in_party then --adds mobs that player attacks
-            reg_event.remove_add_agro(player.target.id,'player')
-            triggered = true
+            if not reg_event.atacking_mobs['player']:contains(player.target.id) then
+                reg_event.remove_add_agro(player.target.id,'player')
+                triggered = true
+            end
         elseif not (target_in_party or actor_in_party) then --removes mobs that attack a target out of party/alliance
-            reg_event.remove_add_agro(actor)
-            triggered = true
+            local removed = reg_event.remove_add_agro(actor)
+            if removed then
+                triggered = true
+            end
+        end
+        if triggered then
+            local player = reg_event.atacking_mobs.player:length()
+            local party = reg_event.atacking_mobs.party:length()
+            local alliance = reg_event.atacking_mobs.alliance:length()
+            local pet = reg_event.atacking_mobs.pet:length()
+            local total = reg_event.attacker_count()
+            gearswap.equip_sets('aggro_change',nil,player,party,alliance,pet,total)
         end
     elseif id == 0x062 and skillwatch then --updates display for skillup watch
         triggered = true

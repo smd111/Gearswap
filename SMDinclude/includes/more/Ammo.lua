@@ -43,7 +43,7 @@ function ammo.precast(status,current_event,spell)
         if ammo_bag and player.inventory[ammo_bag] then
             equip(sets.ammo_empty) ammo.item_use = ammo_bag send_command('input /item "'..ammo_bag..'" <me>')
         else
-            add_to_chat(cc.mc,"No Ammo Bag Found For "..sets.range[range_types[range_types_count]].ammo)
+            add_to_chat(8,"No Ammo Bag Found For "..sets.range[range_types[range_types_count]].ammo)
         end
         status.end_event = true
         status.end_spell = true

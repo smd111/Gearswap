@@ -6,14 +6,14 @@ fdebug.type = {"Status_Change","Pet_Change","Filtered_Action","Pretarget","Preca
 function fdebug.code(status,event,spell)
     if full_debug then
         if fdebug.type[fdebug.count]:lower() == event or fdebug.type[fdebug.count] == "All" then
-            add_to_chat(cc.mc, "Event = "..event)
+            add_to_chat(8, "event = "..event)
             for i,v in pairs(spell) do
                 if type(v) == "table" and not S{"levels","flags"}:contains(i) then
                     for i2,v2 in pairs(v) do
-                        add_to_chat(cc.mc, "spell."..i.."."..i2.." = "..tostring(v2))
+                        add_to_chat(8, "spell."..i.."."..i2.." = "..tostring(v2))
                     end
                 else
-                    add_to_chat(cc.mc, "spell."..i.." = "..tostring(v))
+                    add_to_chat(8, "spell."..i.." = "..tostring(v))
                 end
             end
         end
@@ -29,42 +29,42 @@ fdebug.pet_aftercast = fdebug.code
 function fdebug.status_change(status,event,new,old)
     if full_debug then
         if fdebug.type[fdebug.count]:lower() == event or fdebug.type[fdebug.count] == "All" then
-            add_to_chat(cc.mc, "Event = "..event) add_to_chat(cc.mc, "Status New = "..tostring(new)) add_to_chat(cc.mc, "Status Old = "..tostring(old))
+            add_to_chat(8, "event = "..event) add_to_chat(8, "new = "..tostring(new)) add_to_chat(8, "old = "..tostring(old))
         end
     end
 end
 fdebug.pet_status_change = fdebug.status_change
-function fdebug.sub_job_change(status,event,new,old)
-    if full_debug then
-        if fdebug.type[fdebug.count]:lower() == event or fdebug.type[fdebug.count] == "All" then
-            add_to_chat(cc.mc, "Event = "..event) add_to_chat(cc.mc, "New Sub Job= "..tostring(new)) add_to_chat(cc.mc, "Old Sub Job = "..tostring(old))
-        end
-    end
-end
+fdebug.sub_job_change = fdebug.status_change
 function fdebug.pet_change(status,event,pet,gain)
     if full_debug then
         if fdebug.type[fdebug.count]:lower() == event or fdebug.type[fdebug.count] == "All" then
-            add_to_chat(cc.mc, "Event = "..event)
+            add_to_chat(8, "event = "..event)
             for i,v in pairs(pet) do
                 if type(v) == "table" then
                     for i2,v2 in pairs(v) do
-                        add_to_chat(cc.mc, "pet."..i.."."..i2.." = "..v2)
+                        add_to_chat(8, "pet."..i.."."..i2.." = "..v2)
                     end
                 else
-                    add_to_chat(cc.mc, "pet."..i.." = "..v)
+                    add_to_chat(8, "pet."..i.." = "..v)
                 end
             end
-            add_to_chat(cc.mc, "gain = "..tostring(gain))
+            add_to_chat(8, "gain = "..tostring(gain))
         end
     end
 end
 function fdebug.buff_change(status,event,name,gain,buff_table)
     if full_debug then
         if fdebug.type[fdebug.count]:lower() == event or fdebug.type[fdebug.count] == "All" then
-            add_to_chat(cc.mc, "Event = "..event)
-            add_to_chat(cc.mc, "buff = "..tostring(name)..', gain = '..tostring(gain))
+            add_to_chat(8, "event = "..event)
+            add_to_chat(8, "buff = "..tostring(name)..', gain = '..tostring(gain))
             for i,v in pairs(buff_table) do
-                add_to_chat(cc.mc, "buff_table."..i.." = "..v)
+                if type(v) == "table" then
+                    for i2,v2 in pairs(v) do
+                        add_to_chat(8, "buff_table."..i.."."..i2.." = "..tostring(v2))
+                    end
+                else
+                    add_to_chat(8, "buff_table."..i.." = "..tostring(v))
+                end
             end
         end
     end
@@ -72,24 +72,24 @@ end
 function fdebug.indi_change(status,event,indi_table,gain)
     if full_debug then
         if fdebug.type[fdebug.count]:lower() == event or fdebug.type[fdebug.count] == "All" then
-            add_to_chat(cc.mc, "Event = "..event)
+            add_to_chat(8, "event = "..event)
             for i,v in pairs(indi_table) do
-                add_to_chat(cc.mc, "indi_table."..i.." = "..v)
+                add_to_chat(8, "indi_table."..i.." = "..v)
             end
-            add_to_chat(cc.mc, "gain = "..tostring(gain))
+            add_to_chat(8, "gain = "..tostring(gain))
         end
     end
 end
 function fdebug.self_command(status,event,command)
     if full_debug then
         if fdebug.type[fdebug.count]:lower() == event or fdebug.type[fdebug.count] == "All" then
-        add_to_chat(cc.mc, "Event = "..event)
+        add_to_chat(8, "event = "..event)
             if type(command) == "table" then
                 for i,v in pairs(command) do
-                    add_to_chat(cc.mc, 'Command['..i..'] = '..v)
+                    add_to_chat(8, 'Command['..i..'] = '..v)
                 end
             else
-                add_to_chat(cc.mc, 'Command = '..command)
+                add_to_chat(8, 'Command = '..command)
             end
         end
     end
@@ -122,10 +122,10 @@ function fdebug.self_command(status,event,command)
         full_debug = not full_debug
         send_command('clear log')
         send_command('gs fdebug.mode;wait 0.3;gs show_swaps')
-        add_to_chat(cc.mc, 'Debug Mode = ' .. (full_debug and 'ON' or 'OFF'))
+        add_to_chat(8, 'Debug Mode = ' .. (full_debug and 'ON' or 'OFF'))
     elseif command == 'cDebugtype' then
         fdebug.count = (fdebug.count % #fdebug.type) + 1
-        add_to_chat(cc.mc, 'Debug Mode Type = ' .. tostring(fdebug.type[fdebug.count]))
+        add_to_chat(8, 'Debug Mode Type = ' .. tostring(fdebug.type[fdebug.count]))
     elseif command == 'test' then
         ---
     end

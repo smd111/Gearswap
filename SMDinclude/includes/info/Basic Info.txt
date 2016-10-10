@@ -52,3 +52,20 @@ All Includes can be enabled/disabled on the fly but only when the Display includ
     File_Write -- saves user setting and other data so it can be recovered the next time you use the same job
     Ninja_Wheel -- auto nin elemntal wheel
     Registered_Events -- add events not included with gearswap(i.e. level watch, skill lvl watch,etc.)
+    
+Added User Functions
+    zone_change(new,old,city)
+        new     string    The name of the new zone
+        old     string    The name of the old zone
+        city    boolean   true if new zone is a city
+    aggro_change(player,party,alliance,pet,total)
+        player      number  The aggro on the player
+        party       number  The aggro on the party
+        alliance    number  The aggro on the alliance
+        pet         number  The aggro on the pet
+        total       number  The total aggro on the player,party,alliance,pet
+    treasure_hunter_change(gain,th_count,name,target_table)
+        gain            boolean     true for if the effected target has gained a threasure hunter count, false if it had threasure hunter count before this
+        th_count        number      The threasure hunter count on the effected target
+        name            string      The effected targets name
+        target_table    table       A table containing the effected targets data

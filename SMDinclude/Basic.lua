@@ -2,10 +2,14 @@
 function include_setup()
     --Disable All Includes (Default: false)
     Disable_All = false
-    --Use Display Include (Default: true)
-    Display = true
     --Start with minimized window (Default: false)
     window_hidden = false
+    --Use organizer-lib (Default: false)
+    UseOrganizer = true
+    --WeaponSkill after cast equip delay (Default: 2)
+    WeaponSkill_aftercast_equip_delay = 2
+    --Zone change delay (Default: 5)
+    Zone_change_delay = 5
 end
 include('SMDinclude/includes/Include.lua')
 --Job functions
@@ -249,28 +253,40 @@ function mf.indi_change(status,current_event,indi_table,gain) -- only needed for
     --only if status.stop_swapping_gear = false
     ---------------------------------------
 end
-function mf.zone_change(new,old) -- only when Registered_Events include is active
+function zone_change(new,old,city)
     ---------------------------------------
-    --put your zone_change rules here
-    --new string name of the new zone
-    --old string name of the old zone
+    --new     string    The name of the new zone
+    --old     string    The name of the old zone
+    --city    boolean   true if new zone is a city
     ---------------------------------------
     --change gear with
     --equip(<setname>)
     ---------------------------------------
     --example: rule (change gear on entering city)
-    --if cities:contains(new) then
+    --if city then
     --  equip(sets.city)
     --end
     ---------------------------------------
     
 end
-function mf.treasure_hunter_change(gain,count,mob_name) -- only when Registered_Events include is active
+function treasure_hunter_change(gain,th_count,name,target_table)
     ---------------------------------------
-    --put your treasure_hunter_change rules here
-    --gain = boolean
-    --count = number the count of the current th on mob
-    --mob_name = string name of the mob
+    --gain            boolean     true for if the effected target has gained a threasure hunter count, false if it had threasure hunter count before this
+    --th_count        number      The threasure hunter count on the effected target
+    --name            string      The effected targets name
+    --target_table    table       A table containing the effected targets data
+    ---------------------------------------
+    --change gear with
+    --equip(<setname>)
+    ---------------------------------------
+end
+function aggro_change(player,party,alliance,pet,total)
+    ---------------------------------------
+    --player      number  The aggro on the player
+    --party       number  The aggro on the party
+    --alliance    number  The aggro on the alliance
+    --pet         number  The aggro on the pet
+    --total       number  The total aggro on the player,party,alliance,pet
     ---------------------------------------
     --change gear with
     --equip(<setname>)

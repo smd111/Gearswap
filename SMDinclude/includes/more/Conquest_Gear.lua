@@ -55,14 +55,14 @@ function conq_gear.self_command(status,current_event,command)
                 for i,v in ipairs(conq_gear.neck.case) do
                     if v:lower() == command[3]:lower() then
                         conquest.neck.case_id = i
-                        add_to_chat(cc.mc, ('Conquest Neck'):color(cc.y1,cc.mc)..' set to '..(conq_gear.neck.case[conquest.neck.case_id]):color(cc.b2))
+                        add_to_chat(8, 'Conquest Neck'..' set to '..conq_gear.neck.case[conquest.neck.case_id])
                     end
                 end
             elseif command[2]:lower() == "cqring" then
                 for i,v in ipairs(conq_gear.ring.case) do
                     if v:lower() == command[3]:lower() then
                         conquest.ring.case_id = i
-                        add_to_chat(cc.mc, ('Conquest Ring'):color(cc.y1,cc.mc)..' set to '..(conq_gear.ring.case[conquest.ring.case_id]):color(cc.b2))
+                        add_to_chat(8, 'Conquest Ring set to '..conq_gear.ring.case[conquest.ring.case_id])
                     end
                 end
             end
@@ -70,16 +70,16 @@ function conq_gear.self_command(status,current_event,command)
     else
         if command == "cconneck" then
             conquest.neck.case_id = (conquest.neck.case_id % #conq_gear.neck.case) + 1
-            add_to_chat(cc.mc, ('Conquest Neck'):color(cc.y1,cc.mc)..' set to '..(conq_gear.neck.case[conquest.neck.case_id]):color(cc.b2))
+            add_to_chat(8, 'Conquest Neck set to '..conq_gear.neck.case[conquest.neck.case_id])
         elseif command == "cconring" then
             conquest.ring.case_id = (conquest.ring.case_id % #conq_gear.ring.case) + 1
-            add_to_chat(cc.mc, ('Conquest Ring'):color(cc.y1,cc.mc)..' set to '..(conq_gear.ring.case[conquest.ring.case_id]):color(cc.b2))
+            add_to_chat(8, 'Conquest Ring set to '..conq_gear.ring.case[conquest.ring.case_id])
         elseif command == 'tconneckchange' then
             conquest.neck.change = not conquest.neck.change
-            add_to_chat(cc.mc, 'Auto Conquest Neck Change '..(conquest.neck.change and ('Enabled'):color(cc.g1) or ('Disabled'):color(cc.r1)))
+            add_to_chat(8, 'Auto Conquest Neck Change '..(conquest.neck.change and 'Enabled' or 'Disabled'))
         elseif command == 'tconringchange' then
             conquest.ring.change = not conquest.ring.change
-            add_to_chat(cc.mc, 'Auto Conquest Ring Change '..(conquest.ring.change and ('Enabled'):color(cc.g1) or ('Disabled'):color(cc.r1)))
+            add_to_chat(8, 'Auto Conquest Ring Change '..(conquest.ring.change and 'Enabled' or 'Disabled'))
         end
     end
 end

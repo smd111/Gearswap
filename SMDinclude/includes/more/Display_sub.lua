@@ -1,4 +1,10 @@
 --this contains all the self created functions to make my display work
+menu.text = {font='Segoe UI Symbol',size=9}
+menu.bg = {alpha = 200}
+min_window = {text={font='Segoe UI Symbol',size=9},bg={alpha=200},flags={draggable=false},pos={x=0,y=300}}
+menu_set = 1
+window = texts.new(menu)
+button = texts.new(min_window)
 function c_w(a,b,x,y)
     return (_G[a] and _G[b] and _G[b]:hover(x, y) and _G[b]:visible()) or (_G[b] and _G[b]:hover(x, y) and _G[b]:visible()) or
             (type(_G[a]) == "table" and _G[a]:hover(x, y) and _G[a]:visible())
@@ -91,7 +97,7 @@ function get_window_pos(x,y,check)
     return my, mx, button_lines, hx, hy
 end
 function set_prim_loc(loc,name,tab,x,y)--gets location to highlight curenly selected option
-    local hide_button = S{'{mjob}','{mjob_lvl}','{skill_lvl|Updating}','{pagro|0}','{pragro|0}','{aagro|0},{ptgro|0}'}
+    local hide_button = S{'{mjob}','{mjob_lvl}','{skill_lvl|Updating}','{pagro|0}','{pragro|0}','{aagro|0}','{ptgro|0}'}
     for i, v in ipairs(loc) do
         if (y > v.ya and y < v.yb) then
             if type(switch[name][i]) == 'table' and not hide_button:contains(switch[name][i][1]) then
@@ -145,6 +151,95 @@ function remove_functions(name,iname)--cleans current gearswap memory of disable
             else
                 _G[name][i] = nil
             end
+        end
+    end
+end
+function extra_display(x,y,loc,hy,check)
+    for i, v in pairs(check) do
+        if v[1] then
+            local tab = {}
+            for k, v in  string.gmatch(v[3], "([%w_]+)%.([%w_]+)") do
+                tab[1] = k tab[2] = v
+            end
+            if _G[v[3]] then
+                _G[v[3]] = set_loc(loc,hy,v[2],get_vars(v[2],"code")) or 1
+            else
+                _G[tab[1]][tab[2]] = set_loc(loc,hy,v[2],get_vars(v[2],"code")) or 1
+            end
+            extra_menu = false
+            Display_change = true
+            kill_window(v[2])
+            switch[v[2]] = nil
+            windower.prim.set_visibility('window_button', false)
+            if file_write and file_write.write then
+                file_write.write()
+            end
+            if v[2] == "weapon_select_window" then
+                gearswap.equip_sets('equip_command',nil,sets.weapon[weapon_types[weapon_types_count]])
+            elseif v[2] == "range_select_window" then
+                gearswap.equip_sets('equip_command',nil,sets.range[range_types[range_types_count]])
+            elseif v[2] == "xpcpring_select_window" then
+                schedule_xpcp_ring()
+            end
+        end
+    end
+    updatedisplay()
+end
+function mouse(mtype, x, y, delta, blocked)
+    local check_windows = get_vars('nil',"check",x,y)
+    local my, mx, button_lines, hx, hy = get_window_pos(x,y,check_windows)
+    if button_lines == 0 then
+        windower.prim.set_visibility('window_button', false)
+        return
+    end
+    local location = {}
+    location.offset = my / button_lines
+    location[1] = {}
+    location[1].ya = 1
+    location[1].yb = location.offset 
+    local count = 2
+    while count <= button_lines do
+        location[count] = {}
+        location[count].ya = location[count - 1].yb
+        location[count].yb = location[count - 1].yb + location.offset
+        count = count + 1
+    end
+    if button:hover(x, y) and button:visible() and min_window.flags.draggable then
+        print(min_window.pos.x, min_window.pos.y)
+    end
+    if mtype == 0 then
+        if button:hover(x, y) and button:visible() then
+            windower.prim.set_position('window_button', min_window.pos.x, min_window.pos.y)
+            windower.prim.set_size('window_button', mx, my)
+            windower.prim.set_visibility('window_button', true)
+        else
+            for i, v in pairs(check_windows) do
+                if v[1] then
+                    set_prim_loc(location,v[2],i,mx,hy)
+                end
+            end
+        end
+    elseif mtype == 2 then
+        if window:hover(x, y) and window:visible() then
+            if not (table.length(gearswap.__raw.text.registry) > 2) then
+                for i, v in ipairs(location) do
+                    if (hy > v.ya and hy < v.yb) then
+                        if type(switch['window'][i]) == 'table' then
+                            if switch['window'][i][1] then
+                                menu_commands(switch['window'][i][1])
+                                updatedisplay()
+                            end
+                        end
+                    end
+                end
+            end
+        elseif button:hover(x, y) and button:visible() then
+            windower.prim.set_visibility('window_button', false)
+            button:hide()
+            window_hidden = false
+            window:show()
+        else
+            extra_display(x,y,location,hy,check_windows)
         end
     end
 end

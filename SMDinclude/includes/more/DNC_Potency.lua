@@ -92,13 +92,13 @@ end
                 -- status.end_spell=true
                 -- return
             -- elseif h_total == 0 then
-                -- add_to_chat(cc.mc, 'Canceling '..spell.name..' HP Loss At 0')
+                -- add_to_chat(8, 'Canceling '..spell.name..' HP Loss At 0')
                 -- status.end_event=true
                 -- status.end_spell=true
                 -- return
             -- else
                 -- if s_waltz_h_a and not showed then
-                    -- add_to_chat(cc.mc, 'Waltz Set To '..new_waltz)
+                    -- add_to_chat(8, 'Waltz Set To '..new_waltz)
                 -- end
             -- end
             -- sets.building[event] = set_combine(sets.building[event], set)

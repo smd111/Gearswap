@@ -1,15 +1,9 @@
 --include setup -------------------------------------------------------------------------------------------------------------------
 function include_setup()
-    --Disable All Includes (Default: false)
-    Disable_All = false
-    --Use Display Include (Default: true)
-    Display = true
-    --Start with minimized window (Default: false)
     window_hidden = true
-    --WeaponSkill after cast equip delay (Default: 2)
+    UseOrganizer = true
     WeaponSkill_aftercast_equip_delay = 2
 end
-include('organizer-lib')
 include('SMDinclude/includes/Include.lua')
 --Job functions
 function gear_setup()
@@ -88,12 +82,6 @@ function mf.file_load()
         send_command('gs org')
     end
 end
-function mf.file_unload(new_job)
-end
-function mf.status_change(status,current_event,new,old)
-end
-function mf.filtered_action(status,current_event,spell)
-end
 function mf.pretarget(status,current_event,spell)
     if spell.en == "Provoke" and player.sub_job == "DNC" and not check_recast('ability',spell.recast_id) then
         status.end_event=true status.end_spell=true
@@ -109,16 +97,8 @@ function mf.precast(status,current_event,spell)
     end
     local t = windower.ffxi.get_mob_by_target('t')
 end
-function mf.buff_change(status,current_event,name,gain,buff_table)
-end
 function mf.midcast(status,current_event,spell)
     if spell.action_type == "Ranged Attack" then
         sets.building[current_event] = set_combine(sets.building[current_event], {left_ring="Fistmele Ring",right_ring="Longshot Ring"})
     end
-end
-function mf.aftercast(status,current_event,spell)
-end
-function mf.self_command(status,current_event,command)
-end
-function mf.zone_change(new,old)
 end

@@ -1,9 +1,9 @@
-menu,auto_use_shards,File_Write,Registered_Events,ISr,tsstown,thfsub = {pos = {x = 100,y = 100}},false,true,true,true,true,false
+menu,auto_use_shards,File_Write,istratre,tsstown,thfsub,ocure = {pos = {x = 100,y = 100},flags={draggable=false}},false,true,true,true,false,false
 weapon_types_count,range_types_count,armor_types_count,xpcpcoring,rings_count,skill_count = 1,1,1,1,1,1 conquest = {ring={},neck={}}
 sets.armor,sets.pet_aftercast,sets.weapon,partynames,sets.pretarget,sets.precast,sets.midcast,sets.aftercast = {},{},{},{},{},{},{},{}
-sets.range,sets.building,sets.pet_midcast,cc = {['ThrowLVL.99+'] = {range="Halakaala",ammo=empty}},{},{},{mc=9,r1=11,r2=10,g1=158,g2=6,b1=5,b2=205,y1=36,y2=37}
+sets.range,sets.building,sets.pet_midcast = {['ThrowLVL.99+'] = {range="Halakaala",ammo=empty}},{},{}
 log_in_time = os.clock()
-towaltz,tosamba,towaltzc = false,false,false
+towaltz,tosamba,towaltzc,show_aggro,ws_head,Stopsteps = false,false,false,false,false,false
 equip_from_bags = {"inventory","wardrobe","wardrobe2","wardrobe3","wardrobe4"}
         --Weapon types--Range types--Armor types
 weapon_types,range_types,armor_types,rings = T{"Not Set"},T{"Not Set"},T{"Not Set"},T{"Not Set"}

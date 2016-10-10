@@ -12,6 +12,6 @@ function nin_tool.open(status,current_event,spell)
     elseif player.inventory[utb] ~= nil then
         return utb
     else
-        add_to_chat(cc.mc,"No Tools Available To Cast "..spell.name)
+        add_to_chat(8,"No Tools Available To Cast "..spell.name)
     end
 end

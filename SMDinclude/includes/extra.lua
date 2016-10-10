@@ -4,7 +4,7 @@ function load_include(a,b)
         if gearswap.pathsearch({"SMDinclude/includes/"..b}) then
             include("SMDinclude/includes/"..b)
         else
-            error("unable to find include file SMDinclude/includes/"..b)
+            error("Unable to find include file SMDinclude/includes/"..b)
         end
     end
 end
@@ -18,11 +18,8 @@ load_include(true, 'more/Spell_control.lua')
 function extra.filtered_action(status,event,spell)
     if nin_tool and nin_tool.open and spell.skill == "Ninjutsu" then
         local tool = nin_tool.open(status,event,spell)
-        if tool then
-            send_command('input /item "'..tool..'" <me>')
-        end
-        status.end_spell=true
-        status.end_event=true
+        if tool then send_command('input /item "'..tool..'" <me>') end
+        status.end_spell=true status.end_event=true
     end
 end
 function extra.pretarget(status,event,spell)
@@ -30,8 +27,7 @@ function extra.pretarget(status,event,spell)
         if Enable_auto_WS_aoe and aggro_count() >= (User_aggro_aoe and User_aggro_aoe or 2) and not S{"Archery","Marksmanship","Throwing"}:contains(spell.skill) then
             local new_ws = ws_to_aoews(spell)
             if spell.name ~= new_ws then
-                status.end_event=true
-                status.end_spell=true
+                status.end_event=true status.end_spell=true
                 send_command('input /ws "'..new_ws..'" <t>')
                 return
             end
@@ -45,36 +41,30 @@ function extra.precast(status,event,spell)
             local new_waltz,h_total = DNC.select_waltz(potency,received_pot,tpreduction)
             if new_waltz and spell.name ~= new_waltz then
                 send_command('input /ja "'..new_waltz..'" <me>')
-                status.end_event=true
-                status.end_spell=true
-                return
+                status.end_event=true status.end_spell=true return
             elseif h_total == 0 then
-                add_to_chat(cc.mc, 'Canceling '..(spell.name):color(cc.r1,cc.mc)..' HP Loss At 0')
-                status.end_event=true
-                status.end_spell=true
-                return
+                add_to_chat(8, 'Canceling '..spell.name..' HP Loss At 0')
+                status.end_event=true status.end_spell=true return
             else
                 if s_waltz_h_a and towaltzc then
-                    add_to_chat(cc.mc, 'Waltz Set To '..(new_waltz):color(cc.y1,cc.mc)..' for '..(tostring(h_total)):color(cc.g1))
+                    add_to_chat(8, 'Waltz Set To '..new_waltz..' for '..tostring(h_total))
                 end
             end
             sets.building[event] = set_combine(sets.building[event], set)
         end
-    elseif WHM and S{"Cure","Cure II","Cure III","Cure IV","Cure V","Cure VI"}:contains(spell.en) then
+    elseif WHM and ocure and S{"Cure","Cure II","Cure III","Cure IV","Cure V","Cure VI"}:contains(spell.en) then
         local set,potency,received_pot,cast_time_reduction = WHM.cure_pot(set_combine(cure_gear[lang[gearswap.language]], sets.cure))
         local new_cure = WHM.select_cure(potency,received_pot,spell.target.type)
         if new_cure and spell.en ~= new_cure then
             send_command('input /ma "'..new_cure..'" '..spell.target.raw)
-            status.end_event=true
-            status.end_spell=true
+            status.end_event=true status.end_spell=true
         end
         sets.building[event] = set_combine(sets.building[event], set)
     elseif DNC and tosamba and spell.type == "Samba" and spell.en:startswith('Drain Samba') then
         local new_Samba = (DNC.set_drain_samba() or false)
         if new_Samba and spell.en ~= new_Samba then
             send_command('input /ja "'..new_Samba..'" <me>')
-            status.end_event=true
-            status.end_spell=true
+            status.end_event=true status.end_spell=true
         end
     end
     if card and card.rule then
@@ -87,7 +77,7 @@ function extra.buff_change(status,event,name,gain,buff_table)
             send_command('input /ja "'..gearswap.res.job_abilities[194][gearswap.language]..'" <me>')
         end
     elseif name == "Reive Mark" and not gain then
-        if reg_event and reg_event.clear_aggro_count then
+        if reg_event.clear_aggro_count then
             reg_event.clear_aggro_count:schedule(1.5)
             if updatedisplay then
                 updatedisplay:schedule(1.5)
@@ -146,54 +136,39 @@ end
 function ws_to_aoews(spell)--returs the highest level AOE weaponskill you can use at this time
     for _,v in pairs(table.reverse(windower.ffxi.get_abilities().weapon_skills)) do
         local ws = gearswap.res.weapon_skills[v][gearswap.language]
-        if aoe_ws:contains(ws) then
-            return ws
-        end
-    end
-    return spell.name
+        if aoe_ws:contains(ws) then return ws end
+    end return spell.name
 end
 function aggro_count(typ)--returns aggro count
-     if reg_event and reg_event.attacker_count then
-        return reg_event.attacker_count(typ)
-     else
-        return 0
-     end
+     if reg_event.attacker_count then return reg_event.attacker_count(typ)
+     else return 0 end
 end
 function has_any_buff_of(buff_set)--returns true if you have any of the buffs given
     for i,v in pairs(buff_set) do
-        if buffactive[v] ~= nil then
-            return true
-        end
+        if buffactive[v] ~= nil then return true end
     end
 end
 function item_to_bag(name)
     for _,bag in ipairs(equip_from_bags) do
         local item = player[bag][name]
-        if item then
-            return bag
-        end
+        if item then return bag end
     end
 end
-function xp_cp_ring_equip(ring)--equips selected ring
-    if auto_ring then
-        enable("left_ring")
-        gearswap.equip_sets('equip_command',nil,{left_ring=ring,})
-        disable("left_ring")
-    end
-end
-function schedule_xpcp_ring()--scheduals equip of selected ring
+function schedule_xpcp_ring(stop)--scheduals equip of selected ring
     local ring = rings[rings_count]
-    local ex = player[item_to_bag(ring)][ring].extdata
-    local ring_time
-    if ex and ex.charges_remaining >= 1 then
-        ring_time = os.time(os.date("!*t", ex.next_use_time))-os.time()
+    local lock = true
+    local ring_time,ex = 1,nil
+    if ring == "Not Set" or stop then
+        gear_equip(nil,"XP-CP-Ring Stop")
+        ring = (sets.building["XP-CP-Ring Stop"].left_ring or empty)
+        lock = false
+        sets.building["XP-CP-Ring Stop"] = nil
     else
-        return
+        ex = player[item_to_bag(ring)][ring].extdata
+        if ex and ex.charges_remaining >= 1 then ring_time = os.time(os.date("!*t", ex.next_use_time))-os.time() else return end
     end
-    if type(xpcpcoring) == "thread" then
-        coroutine.close(xpcpcoring)
-    end
-    xpcpcoring = coroutine.schedule(xp_cp_ring_equip:prepare(ring),(ring_time > 0 and ring_time or 1))
+    if type(xpcpcoring) == "thread" then coroutine.close(xpcpcoring) end
+    xpcpcoring = coroutine.schedule(gearswap.equip_sets:prepare('Cp Xp Ring',nil,{left_ring=ring,},true,lock),(ring_time > 0 and ring_time or 1))
 end
 function check_in_party(name)--returs true if given name is in allience
      for pt_num,pt in ipairs(alliance) do
@@ -208,12 +183,9 @@ function check_ring_buff()-- returs true if you do not have the buff from xp cp 
     local xpcprings = {cp=S{"Vocation Ring","Trizek Ring","Capacity Ring"},
                        xp=S{"Undecennial Ring","Decennial Ring","Allied Ring","Novennial Ring","Kupofried's Ring","Anniversary Ring","Emperor Band",
                             "Empress Band","Chariot Band","Duodec. Ring","Expertise Ring"}}
-    if xpcprings.xp:contains(rings[rings_count]) and buffactive['Dedication'] == (check_in_party("Kupofried") and 1 or nil) then
-        return true
-    elseif xpcprings.cp:contains(rings[rings_count]) and not buffactive['Commitment'] then
-        return true
-    end
-    return false
+    if xpcprings.xp:contains(rings[rings_count]) and buffactive['Dedication'] == (check_in_party("Kupofried") and 1 or nil) then return true
+    elseif xpcprings.cp:contains(rings[rings_count]) and not buffactive['Commitment'] then return true
+    end return false
 end
 function partybuffcheck(name, buff) --return true if party member has any of buff list else it returns false
     local in_party = check_in_party(name)
@@ -225,26 +197,46 @@ function partybuffcheck(name, buff) --return true if party member has any of buf
          end
      end
 end
-function c_equip(delay, set, event)--delay equip
-    return gearswap.equip_sets:schedule(delay, event..'_delayed_equip', nil, set)
-end
 function dwsj()
-    if player.sub_job == "NIN" and player.sub_job_level >= 10 then
-        return true
-    elseif player.sub_job == "DNC" and player.sub_job_level >= 20 then
-        return true
-    end
-    return false
+    if player.sub_job == "NIN" and player.sub_job_level >= 10 then return true
+    elseif player.sub_job == "DNC" and player.sub_job_level >= 20 then return true
+    end return false
 end
 function load_rings()
     for _,ring in ipairs({"None","Vocation Ring","Trizek Ring","Capacity Ring","Undecennial Ring","Decennial Ring","Allied Ring","Novennial Ring","Kupofried's Ring",
-                         "Anniversary Ring","Emperor Band","Empress Band","Chariot Band","Duodec. Ring","Expertise Ring"}) do
+                          "Anniversary Ring","Emperor Band","Empress Band","Chariot Band","Duodec. Ring","Expertise Ring"}) do
         local item = item_to_bag(ring)
-        if item and not rings:contains(ring) then
-           rings:append(ring)
-        elseif not item and rings:contains(ring) then
-           rings:delete(ring)
+        if item and not rings:contains(ring) then rings:append(ring)
+        elseif not item and rings:contains(ring) then rings:delete(ring)
         end
     end
 end
+function getfield(f)
+    local v = _G
+    for w in string.gfind(f, "[%w_]+") do
+        v = v[w]
+    end
+    return v
+end
+function setfield(f, v)
+    local t = _G
+    for w, d in string.gfind(f, "([%w_]+)(.?)") do
+        if d == "." then
+            t[w] = t[w] or {}
+            t = t[w]
+        else
+            t[w] = v
+        end
+    end
+end
+function custom_equip(set,unlock,lock)
+    local slots = {}
+    for slot,_ in pairs(set) do
+    table.insert(slots,slot)
+    end
+    if unlock then enable(slots) end
+    equip(set)
+    if lock then disable(slots) end
+end
+_G['Cp Xp Ring'] = custom_equip
 load_rings()

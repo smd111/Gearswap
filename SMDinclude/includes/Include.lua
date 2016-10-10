@@ -16,7 +16,7 @@ function gearswap.refresh_item_list(itemlist)
     end
     return retarr
 end
-gearswap.parse.i[0x044] = function (data)
+gearswap.parse.i[0x044] = function (data) --add Automation skills to gearswap data
     if data:unpack('C',0x05) == 0x12 then
         gearswap.player.skills.automaton_melee = data:unpack('H',0x71)
         gearswap.player.skills.automaton_archery = data:unpack('H',0x75)
@@ -24,6 +24,9 @@ gearswap.parse.i[0x044] = function (data)
     end
 end
 gearswap.parse.i[0x01D] = function (data)
+    local cur_equip = table.reassign({},gearswap.items.equipment)
+    gearswap.player.equipment = gearswap.make_user_table()
+    table.reassign(gearswap.player.equipment,gearswap.to_names_set(cur_equip))
     for i,bag in pairs(gearswap.res.bags) do
         local bag_name = gearswap.to_windower_bag_api(bag.en)
         if gearswap.items[bag_name] then gearswap.player[bag_name] = gearswap.refresh_item_list(gearswap.items[bag_name]) end
@@ -34,10 +37,16 @@ gearswap.parse.i[0x01D] = function (data)
         if auto_ring and check_ring_buff() then
             schedule_xpcp_ring()
         end
+    else
+        gearswap.equip_sets('items_updated',nil,nil)
     end
 end
 if not loaded then
     mf = {}
+    local lastpacket = windower.packets.last_incoming(0x01D)
+    if lastpacket then
+        gearswap.parse.i[0x01D](lastpacket)
+    end
     return
 end
 include_setup()
@@ -55,7 +64,7 @@ end
 
 ----Include functions-------------------------------------------------------------------------------------------------------------
 function gear_equip_check(tab,event)
-    if type(tab) == "table" and tab.type and S{"WeaponSkill","Samba","Waltz"}:contains(tab.type) and event == "precast" then
+    if tab and type(tab) == "table" and tab.type and S{"WeaponSkill","Samba","Waltz"}:contains(tab.type) and event == "precast" then
         return false
     end
     return true
@@ -101,7 +110,7 @@ function run_event(status,a,b,c)
             local z = (type(a)=="table" and _G[a.type..'_'..event..'_equip_delay'] or nil)
         end
         if z and z >= 0 then
-            c_equip(z, sets.building[event], event)
+            gearswap.equip_sets:schedule(delay, 'custom_equip', nil, set)
         else
             equip(sets.building[event])
         end
@@ -116,7 +125,7 @@ function add_gear_modes(tbl,tbl_append)
     end
 end
 ----Gearswap basic functions------------------------------------------------------------------------------------------------------
-function get_sets()
+function start_up()
     gear_setup()
     if reg_event.skill_type:length() >= 1 then reg_event.skill_type:clear() end
     for i=1,57,1 do
@@ -279,7 +288,7 @@ function sub_job_change(new,old)
         include('Saves/job_'..player.main_job..'var.lua')
     end
     load_rings()
-    get_sets()
+    start_up:schedule(0.1)
 end
 function self_command(com)
     local status = {end_event=false,stop_swapping_gear=true}
@@ -304,14 +313,15 @@ function file_unload(new_job)
     end
 end
 --Load includes------------------------------------------------------------------------------------------------------------------
+if UseOrganizer then include('organizer-lib') end
 load_include(MJi, 'mjob/main_job_'..player.main_job..'.lua')
 load_include(SJi, 'sjob/sub_job_'..player.sub_job..'.lua')
 load_include((MSi and jobs.magic:contains(player.main_job)), 'more/MSi.lua')
 load_include((Ammo and jobs.ammo:contains(player.main_job)), 'more/Ammo.lua')
 load_include(Special_Weapons, 'more/Special_Weapons.lua')
 load_include(Conquest_Gear, 'more/Conquest_Gear.lua')
-load_include(Registered_Events, 'more/Registered_Events.lua')
+load_include(true, 'more/Registered_Events.lua')
 load_include(Debug, 'more/Debug.lua')
-load_include(Display, 'more/Display.lua')
+load_include(true, 'more/Display.lua')
 load_include(File_Write, 'more/File_Write.lua')
-get_sets()
+start_up:schedule(0.1)
