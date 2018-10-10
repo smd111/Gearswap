@@ -86,10 +86,12 @@ function spell_range_check(spell) --if target distance is greater then spells ma
     end
 end
 function gearchang_stopper(spell)--returs true if a spell will be blocked by a buff
-    if spell and spell.action_type == "Ability" and has_any_buff_of(unusable_buff.ability) then
-        return true
-    elseif spell and spell.action_type == "Magic" and has_any_buff_of(unusable_buff.spell) then
-        return true
+    if spell then
+        if spell.action_type == "Ability" and has_any_buff_of(unusable_buff.ability) then
+            return true
+        elseif spell.action_type == "Magic" and has_any_buff_of(unusable_buff.spell) then
+            return true
+        end
     end
     if ((S{"pet_midcast","pet_aftercast"}:contains(_global.current_event) and false or Watch_pet_midaction) and pet_midaction() or false) 
       or ((S{"midcast","aftercast"}:contains(_global.current_event) and false or Watch_midaction) and midaction() or false) then

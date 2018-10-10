@@ -129,7 +129,7 @@ function start_up()
     gear_setup()
     if reg_event.skill_type:length() >= 1 then reg_event.skill_type:clear() end
     for i=1,57,1 do
-        local tab = reg_event.job_skills[i]
+        local tab = job_skills[i]
         if tab and (tab:contains(player.main_job_id) or tab:contains(player.sub_job_id) or tab:contains("All")) then
             reg_event.skill_type:append(gearswap.res.skills[i].en)
         end
@@ -197,7 +197,7 @@ function midcast(spell)
 end
 function aftercast(spell)
     local status = {end_event=false,stop_swapping_gear=false}
-    if gearchang_stopper(spell) then
+    if spell.interrupted or gearchang_stopper(spell) then
         return
     end
     run_event(status,spell)
@@ -236,7 +236,7 @@ function pet_midcast(spell)
 end
 function pet_aftercast(spell)
     local status = {end_event=false,stop_swapping_gear=false}
-    if gearchang_stopper(spell) then
+    if spell.interrupted or gearchang_stopper(spell) then
         return
     end
     run_event(status,spell)
